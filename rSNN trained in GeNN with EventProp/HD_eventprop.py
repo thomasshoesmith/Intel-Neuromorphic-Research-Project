@@ -1,3 +1,5 @@
+#export CUDA_PATH=/usr/local/cuda
+
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -23,18 +25,23 @@ import random
 import librosa
 
 # constants
+params = {}
+params["NUM_INPUT"] = 40
+params["NUM_HIDDEN"] = 256
+params["NUM_OUTPUT"] = 20
+params["BATCH_SIZE"] = 128
+params["INPUT_FRAME_TIMESTEP"] = 2
+params["INPUT_SCALE"] = 0.008
+params["NUM_EPOCH"] = 50
+params["NUM_FRAMES"] = 80
+params["verbose"] = True
+params["lr"] = 0.01
 
-NUM_INPUT = 40
-NUM_HIDDEN = 256
-NUM_OUTPUT = 20
-
-NUM_EPOCH = 50
-
-BATCH_SIZE = 128
-
-INPUT_FRAME_TIMESTEP = 2
-
-INPUT_SCALE = 0.008
+#weights
+params["hidden_w_mean"] = 0.5
+params["hidden_w_sd"] = 4.0
+params["output_w_mean"] = 0.5
+params["output_w_sd"] = 1
 
 # readout parameters
 
@@ -43,11 +50,9 @@ verbose = True
 # change dir for readout files
 
 try:
-    os.mkdir("rSNN trained in GeNN with EventProp/HD_eventprop")
+    os.mkdir("HD_eventprop_output")
 except:
     pass
-
-os.chdir("rSNN trained in GeNN with EventProp/HD_eventprop")
 
 # Load testing data
 x_train = np.load("/its/home/ts468/data/rawHD/experimental_2/training_x_data.npy")
@@ -68,9 +73,9 @@ testing_images = testing_images + abs(np.floor(testing_images.min()))
 training_labels = y_train
 testing_labels = y_test
 
-if verbose: print(testing_details.head())
+if params.get("verbose"): print(testing_details.head())
 speaker_id = np.sort(testing_details.Speaker.unique())
-if verbose: print(np.sort(testing_details.Speaker.unique()))
+if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
 
 # readout class
 
@@ -99,37 +104,37 @@ class CSVTrainLog(Callback):
         self.file.flush()
         
 # Create sequential model
-serialiser = Numpy("latency_hd_checkpoints")
+serialiser = Numpy("HD_eventprop_output/latency_hd_checkpoints")
 network = SequentialNetwork(default_params)
 with network:
     # Populations
     input = InputLayer(LeakyIntegrateFireInput(v_thresh=4,
                                                tau_mem=10, 
-                                               input_frames=80, 
-                                               input_frame_timesteps=INPUT_FRAME_TIMESTEP),
-                        NUM_INPUT, 
+                                               input_frames=params.get("NUM_FRAMES"), 
+                                               input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
+                        params.get("NUM_INPUT"), 
                         record_spikes = True)
     
-    hidden = Layer(Dense(Normal(mean=0.5, # m = .5, sd = 4 ~ 68%
-                                sd=4.0)), 
+    hidden = Layer(Dense(Normal(mean = params.get("hidden_w_mean"), # m = .5, sd = 4 ~ 68%
+                                sd = params.get("hidden_w_sd"))), 
                    LeakyIntegrateFire(v_thresh=5.0, 
                                       tau_mem=20.0,
                                       tau_refrac=None),
-                   NUM_HIDDEN, 
+                   params.get("NUM_HIDDEN"), 
                    Exponential(5.0), #5
                    record_spikes=True)
     
-    output = Layer(Dense(Normal(mean=0.5, # m = 0.5, sd = 1 @ ~ 66
-                                sd=1)),
+    output = Layer(Dense(Normal(mean = params.get("output_w_mean"), # m = 0.5, sd = 1 @ ~ 66
+                                sd = params.get("output_w_sd"))),
                    LeakyIntegrate(tau_mem=20.0, 
                                   readout="avg_var"),
-                   NUM_OUTPUT, 
+                   params.get("NUM_OUTPUT"), 
                    Exponential(5.0), #5
                    record_spikes=True)
     
-compiler = EventPropCompiler(example_timesteps=80 * INPUT_FRAME_TIMESTEP,
+compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                          losses="sparse_categorical_crossentropy",
-                         optimiser=Adam(0.01), batch_size=BATCH_SIZE)
+                         optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"))
 compiled_net = compiler.compile(network)
 
 with compiled_net:
@@ -138,24 +143,24 @@ with compiled_net:
     start_epoch = 0
     callbacks = ["batch_progress_bar", 
                  Checkpoint(serialiser), 
-                 CSVTrainLog("train_output.csv", 
+                 CSVTrainLog("HD_eventprop_output/train_output.csv", 
                              output,
                              False)]
-    metrics  = compiled_net.train({input: training_images * INPUT_SCALE},
+    metrics  = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                       {output: training_labels},
-                                      num_epochs=NUM_EPOCH, 
+                                      num_epochs = params.get("NUM_EPOCH"), 
                                       shuffle=True,
-                                      validation_split=0.1,
-                                      callbacks=callbacks)
+                                      validation_split = 0.1,
+                                      callbacks = callbacks)
     
     
 # evaluate
 
-network.load((NUM_EPOCH - 1,), serialiser)
+network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
-compiler = InferenceCompiler(evaluate_timesteps=80 * INPUT_FRAME_TIMESTEP,
+compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                              reset_in_syn_between_batches=True,
-                             batch_size=BATCH_SIZE)
+                             batch_size = params.get("BATCH_SIZE"))
 compiled_net = compiler.compile(network)
 
 with compiled_net:
@@ -164,11 +169,11 @@ with compiled_net:
                  SpikeRecorder(hidden, key="hidden_spikes"),
                  SpikeRecorder(output, key="output_spikes"),
                  VarRecorder(output, "v", key="v_output")]
-    metrics, cb_data = compiled_net.evaluate({input: training_images * INPUT_SCALE},
+    metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
                                              {output: training_labels},
-                                             callbacks=callbacks)
+                                             callbacks = callbacks)
     
-if verbose:
+if params.get("verbose"):
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
     fig.suptitle('rawHD with EventProp on ml_genn')
 
@@ -179,23 +184,23 @@ if verbose:
     ax1.set_xlabel("Time [ms]")
     ax1.set_ylabel("Neuron ID")
     ax1.set_title("Hidden")
-    ax1.set_xlim(0, 80 * INPUT_FRAME_TIMESTEP)
-    ax1.set_ylim(0, 40)
+    ax1.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
+    ax1.set_ylim(0, params.get("NUM_INPUT"))
 
     ax2.scatter(cb_data["input_spikes"][0][value], 
                 cb_data["input_spikes"][1][value], s=1)
     ax2.set_xlabel("Time [ms]")
     ax2.set_ylabel("Neuron ID")
     ax2.set_title("Input")
-    ax2.set_xlim(0, 80 * INPUT_FRAME_TIMESTEP)
-    ax2.set_ylim(0, 40)
+    ax2.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
+    ax2.set_ylim(0, params.get("NUM_INPUT"))
 
     ax3.plot(cb_data["v_output"][value])
     ax3.set_xlabel("Time [ms]")
     ax3.set_ylabel("voltage (v)")
     ax3.set_title("Output voltage")
-    ax3.set_xlim(0, 80 * INPUT_FRAME_TIMESTEP)
-    #ax3.set_ylim(0, 40)
+    ax3.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
+    #ax3.set_ylim(0, params.get("NUM_INPUT"))
 
     sr = 22050
     img = librosa.display.specshow(x_train[value], 
@@ -225,8 +230,7 @@ if verbose:
             training.append(float(accuracy[i]))
         else:
             validation.append(float(accuracy[i]))
-            
-            
+                        
     plt.plot(training, label = "training")
     plt.plot(validation, label = "validation")
     plt.ylabel("accuracy (%)")
