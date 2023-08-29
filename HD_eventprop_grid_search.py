@@ -9,7 +9,7 @@ params["NUM_HIDDEN"] = 256
 params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
-params["INPUT_SCALE"] = 0.008
+params["INPUT_SCALE"] = 0.008 #0.008
 params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
@@ -30,8 +30,9 @@ hidden_w_sd = []
 output_w_mean = []
 output_w_sd = []
 
-no_of_val = 11
-div = 2.5
+range_of_val = 4
+no_of_val = 8
+div =  no_of_val / range_of_val
 
 for i in range(no_of_val):
     hidden_w_mean.append(i/div)
@@ -48,10 +49,13 @@ for hwm in hidden_w_mean:
                 combinations.append([hwm, hwsd, owm, owsd])
                 
                 
-file = open("grid_search_results", "w")
+file = open("grid_search_results.csv", "w")
 csv_writer = csv.writer(file, delimiter=",")
 
 csv_writer.writerow(["hidden weight mean", "hidden weight sd", "output weight mean", "output weight sd", "accuracy"])
+
+print(len(combinations))
+
                 
 for i in trange(len(combinations)):
     #weights
