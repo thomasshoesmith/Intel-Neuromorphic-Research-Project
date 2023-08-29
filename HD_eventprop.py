@@ -1,7 +1,9 @@
+#export CUDA_PATH=/usr/local/cuda
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import pandas as pd
+from tqdm import trange
 import os
 
 from ml_genn import InputLayer, Layer, SequentialNetwork
@@ -36,10 +38,10 @@ params["verbose"] = False
 params["lr"] = 0.01
 
 #weights
-params["hidden_w_mean"] = 0.5
-params["hidden_w_sd"] = 4.0
-params["output_w_mean"] = 0.5
-params["output_w_sd"] = 1
+params["hidden_w_mean"] = 0.0 #0.5
+params["hidden_w_sd"] = 3.5 #4.0
+params["output_w_mean"] = 3.0 #0.5
+params["output_w_sd"] = 1.5 #1
 
 file_path = "/its/home/ts468/data/rawHD/experimental_2/"
 
@@ -166,7 +168,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
         
     # evaluate
-
+    
     network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
     compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
@@ -175,11 +177,15 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     compiled_net = compiler.compile(network)
 
     with compiled_net:
-        callbacks = ["batch_progress_bar", 
-                    SpikeRecorder(input, key="input_spikes"), 
-                    SpikeRecorder(hidden, key="hidden_spikes"),
-                    SpikeRecorder(output, key="output_spikes"),
-                    VarRecorder(output, "v", key="v_output")]
+        if return_accuracy:
+            callbacks = [Checkpoint(serialiser)]
+        else:
+            callbacks = ["batch_progress_bar", 
+                        SpikeRecorder(input, key="input_spikes"), 
+                        SpikeRecorder(hidden, key="hidden_spikes"),
+                        SpikeRecorder(output, key="output_spikes"),
+                        VarRecorder(output, "v", key="v_output")]
+    
         metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
                                                 {output: training_labels},
                                                 callbacks = callbacks)
@@ -259,4 +265,10 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     if return_accuracy:
         return metrics[output].correct / metrics[output].total
 
-print(hd_eventprop(params, file_path, True))
+iterations, total = 5, 0
+for i in trange(iterations):
+    value = hd_eventprop(params, file_path, True)
+    print(value)
+    total += value
+
+print(total / iterations)
