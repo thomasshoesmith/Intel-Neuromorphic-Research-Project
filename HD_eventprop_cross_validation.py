@@ -117,8 +117,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     # Create sequential model
     serialisers = []
 
-    for i in range(len(speaker_id)):
-        serialisers.append(Numpy(f"serialiser_{i}"))
+    for s in speaker_id:
+        serialisers.append(Numpy(f"serialiser_{s}"))
         
     network = SequentialNetwork(default_params)
     with network:
@@ -151,10 +151,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             losses="sparse_categorical_crossentropy",
                             optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"))
 
-
     compiled_net = compiler.compile(network)
         
-    for speaker_left in speaker_id:
+    for count, speaker_left in enumerate(speaker_id):
         train= np.where(speaker != speaker_left)[0]
         evalu= np.where(speaker == speaker_left)[0]
         train_spikes= np.array([ training_images[i] for i in train ])
@@ -168,14 +167,15 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         #print(eval_labels)    
         
         print(f"speaker {speaker_left} of {len(speaker_id)}")
+        print("\ncount", count)
 
         with compiled_net:
             # Evaluate model on numpy dataset
             if return_accuracy:
-                callbacks = [Checkpoint(serialisers[speaker_left])]
+                callbacks = [Checkpoint(serialisers[count])]
             else:
                 callbacks = ["batch_progress_bar", 
-                            Checkpoint(serialisers[speaker_left]), 
+                            Checkpoint(serialisers[count]), 
                             CSVTrainLog(f"train_output_{speaker_left}.csv", 
                                         output,
                                         False)]
@@ -190,7 +190,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
     # evaluate
     
-    network.load((params.get("NUM_EPOCH") - 1,), serialisers[len(speaker_id)])
+    network.load((params.get("NUM_EPOCH") - 1,), serialisers[len(speaker_id) - 1])
 
     compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                                 reset_in_syn_between_batches=True,
@@ -254,31 +254,34 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
         plt.show()
         
-        data = pd.read_csv("train_output.csv")
-        df = pd.DataFrame(data, columns=['accuracy'])
+        # show accuracy log
+        for speaker_left in speaker_id:
+    
+            data = pd.read_csv(f"train_output_{speaker_left}.csv")
+            df = pd.DataFrame(data, columns=['accuracy'])
 
-        accuracy = np.array(df)
+            accuracy = np.array(df)
 
-        accuracy = accuracy * 100
+            accuracy = accuracy * 100
 
-        validation = []
-        training = []
+            validation = []
+            training = []
 
-        for i in range(len(accuracy)):
-            if i % 2 == 0:
-                training.append(float(accuracy[i]))
-            else:
-                validation.append(float(accuracy[i]))
-                            
-        plt.plot(training, label = "training")
-        plt.plot(validation, label = "validation")
+            for i in range(len(accuracy)):
+                if i % 2 == 0:
+                    training.append(float(accuracy[i]))
+                else:
+                    validation.append(float(accuracy[i]))
+                    
+                    
+            plt.plot(training, label = f"training_{speaker_left}")
+            #plt.plot(validation, label = f"validation_{speaker_left}")
         plt.ylabel("accuracy (%)")
         plt.xlabel("epochs")
         plt.title("accuracy during training")
         plt.legend()
         plt.show()
-
-
+    
     # reset directory
 
     os.chdir("..")
