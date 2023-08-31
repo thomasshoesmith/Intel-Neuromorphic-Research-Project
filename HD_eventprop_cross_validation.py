@@ -43,7 +43,7 @@ params["hidden_w_sd"] = 3.5 #4.0
 params["output_w_mean"] = 3.0 #0.5
 params["output_w_sd"] = 1.5 #1
 
-file_path = "/its/home/ts468/data/rawHD/experimental_2/"
+file_path = "/home/ts468/Documents/data/rawHD/experimental_2/"
 
 def hd_eventprop(params, file_path, return_accuracy = True):
     """
@@ -160,11 +160,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         eval_spikes= np.array([ training_images[i] for i in evalu ])
         train_labels= [ training_labels[i] for i in train ]
         eval_labels= [ training_labels[i] for i in evalu ]
-        
-        #print(train_spikes)
-        #print(eval_spikes)
-        #print(train_labels)
-        #print(eval_labels)    
         
         print(f"speaker {speaker_left} of {len(speaker_id)}")
         print("\ncount", count)
