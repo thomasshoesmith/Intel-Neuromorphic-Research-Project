@@ -1,4 +1,5 @@
 #export CUDA_PATH=/usr/local/cuda
+# sudo apt-get install python3-tk
 import numpy as np
 import matplotlib.pyplot as plt
 import csv
@@ -88,7 +89,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     speaker = list(training_details.loc[:, "Speaker"])
 
     # readout class
-
     class CSVTrainLog(Callback):
         def __init__(self, filename, output_pop, resume):
             # Create CSV writer
@@ -112,7 +112,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                     m.correct / m.total,
                                     perf_counter() - self.start_time])
             self.file.flush()
-            
     
     # Create sequential model
     serialisers = []
