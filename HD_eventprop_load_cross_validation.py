@@ -55,7 +55,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
       file_path - directory where training/testing/detail files are found
       return_accuracy - bool for if cvs train log is generated, or an accuracy returned
     """
-    
+
     # change dir for readout files
     try:
         os.mkdir("HD_eventprop_cross_validation_output")
@@ -83,9 +83,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     training_labels = y_train
     testing_labels = y_test
 
-    if params.get("verbose"): print(training_details.head())
     speaker_id = np.sort(training_details.Speaker.unique())
-    if params.get("verbose"): print(np.sort(training_details.Speaker.unique()))
     
     speaker = list(training_details.loc[:, "Speaker"])
 
@@ -113,12 +111,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                     m.correct / m.total,
                                     perf_counter() - self.start_time])
             self.file.flush()
-    
-    # Create sequential model
-    serialisers = []
-
-    for s in speaker_id:
-        serialisers.append(Numpy(f"serialiser_{s}"))
         
     network = SequentialNetwork(default_params)
     with network:
@@ -147,47 +139,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                     Exponential(5.0), #5
                     record_spikes=True)
         
-    compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
-                            losses="sparse_categorical_crossentropy",
-                            optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"))
-
-    compiled_net = compiler.compile(network)
-        
-    for count, speaker_left in enumerate(speaker_id):
-        train= np.where(speaker != speaker_left)[0]
-        evalu= np.where(speaker == speaker_left)[0]
-        train_spikes= np.array([ training_images[i] for i in train ])
-        eval_spikes= np.array([ training_images[i] for i in evalu ])
-        train_labels= [ training_labels[i] for i in train ]
-        eval_labels= [ training_labels[i] for i in evalu ]
-        
-        print(f"speaker {speaker_left} of {len(speaker_id)}")
-        print("\ncount", count)
-
-        with compiled_net:
-            # Evaluate model on numpy dataset
-            if return_accuracy:
-                callbacks = [Checkpoint(serialisers[count])]
-            else:
-                callbacks = ["batch_progress_bar", 
-                            Checkpoint(serialisers[count]), 
-                            CSVTrainLog(f"train_output_{speaker_left}.csv", 
-                                        output,
-                                        False)]
-            metrics  = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                            {output: train_labels},
-                                            num_epochs=params.get("NUM_EPOCH"), 
-                                            shuffle=True,
-                                            callbacks=callbacks,
-                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
-                                            validation_y= {output: eval_labels})
-        
     # pickle serialisers
-    with open('serialisers.pkl', 'wb') as f:
-        pickle.dump(serialisers, f)
+    with open('serialisers.pkl', 'rb') as f:
+        serialisers = pickle.load(f)
         
     # evaluate
-    
     network.load((params.get("NUM_EPOCH") - 1,), serialisers[len(speaker_id) - 1])
 
     compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
@@ -203,7 +159,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                         SpikeRecorder(input, key="input_spikes"), 
                         SpikeRecorder(hidden, key="hidden_spikes"),
                         SpikeRecorder(output, key="output_spikes"),
-                        VarRecorder(output, "v", key="v_output")]
+                        VarRecorder(output, "v", key="v_output"),
+                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
     
         metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
                                                 {output: training_labels},
@@ -214,7 +171,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
 
-        value = random.randint(0, len(x_test))
+        value = 100 #random.randint(0, len(x_test))
 
         ax1.scatter(cb_data["hidden_spikes"][0][value], 
                     cb_data["hidden_spikes"][1][value], s=1)
@@ -251,48 +208,50 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         fig.tight_layout()
 
         plt.show()
+
+        hidden_spike_counts = cb_data["hidden_spike_counts"]
+        hidden_spikes = cb_data["hidden_spikes"]
+
+        # Assert that manually-calculated spike counts from arbitrary example match those calculated using new system
+        assert np.array_equal(np.bincount(hidden_spikes[1][value], 
+                                          minlength=params.get("NUM_HIDDEN")),
+                                          hidden_spike_counts[value])
         
-        # show accuracy log
-        for speaker_left in speaker_id:
-    
-            data = pd.read_csv(f"train_output_{speaker_left}.csv")
-            df = pd.DataFrame(data, columns=['accuracy'])
+        # monitoring spikes in hidden layer
+        total_spikes = np.zeros(params.get("NUM_HIDDEN"))
+        for i in range(len(hidden_spike_counts)):
+            total_spikes = np.add(total_spikes, hidden_spike_counts[i])
+        #print(total_spikes.shape)
+        #print(total_spikes)
+        #print(hidden_spike_counts[0])
+        #print(hidden_spike_counts[1])
+        #print(np.add(hidden_spike_counts[0], hidden_spike_counts[1]))
 
-            accuracy = np.array(df)
-
-            accuracy = accuracy * 100
-
-            validation = []
-            training = []
-
-            for i in range(len(accuracy)):
-                if i % 2 == 0:
-                    training.append(float(accuracy[i]))
-                else:
-                    validation.append(float(accuracy[i]))
-                    
-                    
-            plt.plot(training, label = f"training_{speaker_left}")
-            #plt.plot(validation, label = f"validation_{speaker_left}")
-        plt.ylabel("accuracy (%)")
-        plt.xlabel("epochs")
-        plt.title("accuracy during training")
-        plt.legend()
+        plt.bar(list(range(len(total_spikes))), total_spikes)
+        plt.title("Hidden Spikes per neuron across trail")
+        plt.ylabel("total number of spikes across trial")
+        plt.xlabel("Neuron ID")
         plt.show()
+
+        #print(np.sort(total_spikes))
+
+        plt.bar(list(range(len(total_spikes))), np.sort(total_spikes))
+        plt.title("Sorted hidden layer Spikes with {} silent neurons out of {} neurons".format(np.count_nonzero(total_spikes == 0), params.get("NUM_HIDDEN")))
+        plt.ylabel("total number of spikes across trial")
+        plt.xticks([])
+        plt.xlim(0, params.get("NUM_HIDDEN"))
+        plt.show()
+
+        print(f"number of silent neurons: {np.count_nonzero(total_spikes == 0)}")
+        print("total", len(hidden_spike_counts))
     
     # reset directory
+
     os.chdir("..")
     
     if return_accuracy:
         return metrics[output].correct / metrics[output].total
 
-"""iterations, total = 1, 0
-for i in trange(iterations):
-    value = hd_eventprop(params, file_path, True)
-    print(value)
-    total += value
-
-print(total / iterations)"""
 
 params["verbose"] = True
 hd_eventprop(params, file_path, False)
