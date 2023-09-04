@@ -34,7 +34,7 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 50
+params["NUM_EPOCH"] = 1
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
@@ -45,7 +45,7 @@ params["hidden_w_sd"] = 3.5 #4.0
 params["output_w_mean"] = 3.0 #0.5
 params["output_w_sd"] = 1.5 #1
 
-file_path = "/home/ts468/Documents/data/rawHD/experimental_2/"
+file_path = "/its/home/ts468/data/rawHD/experimental_2/"#"/home/ts468/Documents/data/rawHD/experimental_2/"
 
 def hd_eventprop(params, file_path, return_accuracy = True):
     """
@@ -123,23 +123,23 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     network = SequentialNetwork(default_params)
     with network:
         # Populations
-        input = InputLayer(LeakyIntegrateFireInput(v_thresh=4,
-                                                tau_mem=10, 
+        input = InputLayer(LeakyIntegrateFireInput(v_thresh=4, #1
+                                                tau_mem=10, #20
                                                 input_frames=params.get("NUM_FRAMES"), 
                                                 input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
                             params.get("NUM_INPUT"), 
                             record_spikes = True)
         
-        hidden = Layer(Dense(Normal(mean = params.get("hidden_w_mean"), # m = .5, sd = 4 ~ 68%
+        hidden = Layer(Dense(Normal(mean = params.get("hidden_w_mean"),
                                     sd = params.get("hidden_w_sd"))), 
-                    LeakyIntegrateFire(v_thresh=5.0, 
+                    LeakyIntegrateFire(v_thresh=5.0, #1
                                         tau_mem=20.0,
                                         tau_refrac=None),
                     params.get("NUM_HIDDEN"), 
                     Exponential(5.0), #5
                     record_spikes=True)
         
-        output = Layer(Dense(Normal(mean = params.get("output_w_mean"), # m = 0.5, sd = 1 @ ~ 66
+        output = Layer(Dense(Normal(mean = params.get("output_w_mean"),
                                     sd = params.get("output_w_sd"))),
                     LeakyIntegrate(tau_mem=20.0, 
                                     readout="avg_var"),
@@ -149,7 +149,10 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
-                            optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"))
+                            optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"),
+                            reg_lambda_lower = 1e-9,
+                            reg_lambda_upper = 1e-9,
+                            reg_nu_upper= 20)
 
     compiled_net = compiler.compile(network)
         
@@ -173,7 +176,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             Checkpoint(serialisers[count]), 
                             CSVTrainLog(f"train_output_{speaker_left}.csv", 
                                         output,
-                                        False)]
+                                        False),
+                            SpikeRecorder(input, key="input_spikes")]
             metrics  = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                             {output: train_labels},
                                             num_epochs=params.get("NUM_EPOCH"), 
@@ -181,6 +185,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                             callbacks=callbacks,
                                             validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                             validation_y= {output: eval_labels})
+        
+    print(metrics)
+    
         
     # pickle serialisers
     with open('serialisers.pkl', 'wb') as f:

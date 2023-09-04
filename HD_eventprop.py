@@ -265,6 +265,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     if return_accuracy:
         return metrics[output].correct / metrics[output].total
 
+"""
 iterations, total = 5, 0
 for i in trange(iterations):
     value = hd_eventprop(params, file_path, True)
@@ -272,3 +273,4 @@ for i in trange(iterations):
     total += value
 
 print(total / iterations)
+"""
