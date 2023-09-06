@@ -274,3 +274,5 @@ for i in trange(iterations):
 
 print(total / iterations)
 """
+
+hd_eventprop(params, file_path, True)

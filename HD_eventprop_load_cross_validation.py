@@ -1,6 +1,9 @@
 #export CUDA_PATH=/usr/local/cuda
 # sudo apt-get install python3-tk
 import numpy as np
+#import matplotlib
+#import tkinter
+#matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
 import csv
 import pandas as pd

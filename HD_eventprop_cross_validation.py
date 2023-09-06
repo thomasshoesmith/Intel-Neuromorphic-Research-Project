@@ -152,7 +152,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"),
                             reg_lambda_lower = 1e-9,
                             reg_lambda_upper = 1e-9,
-                            reg_nu_upper= 20)
+                            reg_nu_upper= 20,
+                            kernel_profiling=True)
 
     compiled_net = compiler.compile(network)
         
@@ -178,15 +179,23 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                         output,
                                         False),
                             SpikeRecorder(input, key="input_spikes")]
-            metrics  = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+            """                
+            metrics = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                             {output: train_labels},
                                             num_epochs=params.get("NUM_EPOCH"), 
                                             shuffle=True,
                                             callbacks=callbacks,
                                             validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                             validation_y= {output: eval_labels})
+            """
+            callbacks = ["batch_progress_bar", Checkpoint(serialisers[count])]
+            metrics, _  = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                            {output: train_labels},
+                                            num_epochs=50,
+                                            callbacks=callbacks,
+                                            shuffle=True)
         
-    print(metrics)
+    print(metrics[input])
     
         
     # pickle serialisers
