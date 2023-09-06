@@ -34,7 +34,7 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 1
+params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
@@ -150,9 +150,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
                             optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"),
-                            reg_lambda_lower = 1e-9,
-                            reg_lambda_upper = 1e-9,
-                            reg_nu_upper= 20,
+                            reg_lambda_lower = 1e-6,
+                            reg_lambda_upper = 1e-6,
+                            reg_nu_upper= 2,
                             kernel_profiling=True)
 
     compiled_net = compiler.compile(network)
@@ -178,29 +178,25 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             CSVTrainLog(f"train_output_{speaker_left}.csv", 
                                         output,
                                         False),
-                            SpikeRecorder(input, key="input_spikes")]
-            """                
-            metrics = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                            {output: train_labels},
-                                            num_epochs=params.get("NUM_EPOCH"), 
-                                            shuffle=True,
-                                            callbacks=callbacks,
-                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
-                                            validation_y= {output: eval_labels})
-            """
-            callbacks = ["batch_progress_bar", Checkpoint(serialisers[count])]
-            metrics, _  = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                            {output: train_labels},
-                                            num_epochs=50,
-                                            callbacks=callbacks,
-                                            shuffle=True)
-        
-    print(metrics[input])
+                            #SpikeRecorder(input, key="input_spikes"),
+                            SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                           
+            metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                                                                            {output: train_labels},
+                                                                                            num_epochs=params.get("NUM_EPOCH"), 
+                                                                                            shuffle=True,
+                                                                                            callbacks=callbacks,
+                                                                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
+                                                                                            validation_y= {output: eval_labels})
     
         
     # pickle serialisers
     with open('serialisers.pkl', 'wb') as f:
         pickle.dump(serialisers, f)
+
+    # save hidden spike counts
+    with open('hidden_spike_counts_wo_reg.npy', 'wb') as f:
+        np.save(f, cb_data_training["hidden_spike_counts"])
         
     # evaluate
     
@@ -309,6 +305,7 @@ for i in trange(iterations):
     total += value
 
 print(total / iterations)"""
+
 
 params["verbose"] = True
 hd_eventprop(params, file_path, False)

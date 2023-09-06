@@ -5,6 +5,7 @@ import numpy as np
 #import tkinter
 #matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 import csv
 import pandas as pd
 from tqdm import trange
@@ -175,7 +176,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
 
-        value = 100 #random.randint(0, len(x_test))
+        value = random.randint(0, len(x_train))
 
         ax1.scatter(cb_data["hidden_spikes"][0][value], 
                     cb_data["hidden_spikes"][1][value], s=1)
@@ -200,14 +201,16 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         ax3.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
         #ax3.set_ylim(0, params.get("NUM_INPUT"))
 
-        sr = 22050
-        img = librosa.display.specshow(x_train[value], 
-                                x_axis='time', 
-                                y_axis='mel', 
-                                sr=sr, 
-                                cmap='viridis')
+        #sr = 22050
+        #img = librosa.display.specshow(x_train[value], x_axis='time', y_axis='mel', sr=sr, cmap='viridis')
+        plt.imshow(x_train[value], origin = "lower")
+        ax4.set_ylabel("Neuron ID")
+        ax4.set_xlabel("frames")
+        ax4.set_xlim(0, params.get("NUM_FRAMES"))
+        ax4.set_ylim(0, params.get("NUM_INPUT"))
+
         #fig.colorbar(img, ax = ax4)
-        ax4.set_title("mel encoding")
+        ax4.set_title("Input mel encoding")
 
         fig.tight_layout()
 
@@ -220,7 +223,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         assert np.array_equal(np.bincount(hidden_spikes[1][value], 
                                           minlength=params.get("NUM_HIDDEN")),
                                           hidden_spike_counts[value])
-        
+        """
         # monitoring spikes in hidden layer
         total_spikes = np.zeros(params.get("NUM_HIDDEN"))
         for i in range(len(hidden_spike_counts)):
@@ -248,6 +251,37 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
         print(f"number of silent neurons: {np.count_nonzero(total_spikes == 0)}")
         print("total", len(hidden_spike_counts))
+
+        """
+        #figure(figsize=(8, 6), dpi=200)
+        # show accuracy log
+        for speaker_left in speaker_id:
+    
+            data = pd.read_csv(f"train_output_{speaker_left}.csv")
+            df = pd.DataFrame(data, columns=['accuracy'])
+
+            accuracy = np.array(df)
+
+            accuracy = accuracy * 100
+
+            validation = []
+            training = []
+
+            for i in range(len(accuracy)):
+                if i % 2 == 0:
+                    training.append(float(accuracy[i]))
+                else:
+                    validation.append(float(accuracy[i]))
+                    
+                    
+            plt.plot(training, label = f"speaker {speaker_left}")
+            #plt.plot(validation, label = f"speaker {speaker_left}")
+        plt.ylabel("accuracy (%)")
+        plt.xlabel("epochs")
+        plt.title("accuracy of training data during training")
+        plt.ylim(0, 90)
+        plt.legend()
+        plt.show()
     
     # reset directory
 
