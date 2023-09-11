@@ -32,10 +32,10 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 50
+params["NUM_EPOCH"] = 500
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
-params["lr"] = 0.01
+params["lr"] = 0.001
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
@@ -43,7 +43,7 @@ params["hidden_w_sd"] = 3.5 #4.0
 params["output_w_mean"] = 3.0 #0.5
 params["output_w_sd"] = 1.5 #1
 
-file_path = "/its/home/ts468/data/rawHD/experimental_2/"
+file_path = os.path.expanduser("~/data/rawHD/experimental_2/")
 
 def hd_eventprop(params, file_path, return_accuracy = True):
     """
@@ -157,18 +157,21 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                         Checkpoint(serialiser), 
                         CSVTrainLog("train_output.csv", 
                                     output,
-                                    False)]
+                                    False),
+                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
             
-        metrics  = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                        {output: training_labels},
-                                        num_epochs = params.get("NUM_EPOCH"), 
-                                        shuffle=True,
-                                        validation_split = 0.1,
-                                        callbacks = callbacks)
+        metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                                        {output: training_labels},
+                                                                                        num_epochs = params.get("NUM_EPOCH"), 
+                                                                                        shuffle=True,
+                                                                                        validation_split = 0.1,
+                                                                                        callbacks = callbacks)
+        
+    with open('hidden_spike_counts.npy', 'wb') as f:
+        np.save(f, cb_data_training["hidden_spike_counts"])
         
         
     # evaluate
-    
     network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
     compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
@@ -266,6 +269,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         return metrics[output].correct / metrics[output].total
 
 """
+# repeated trials to generate more reliable accuracy
 iterations, total = 5, 0
 for i in trange(iterations):
     value = hd_eventprop(params, file_path, True)
@@ -275,4 +279,7 @@ for i in trange(iterations):
 print(total / iterations)
 """
 
-hd_eventprop(params, file_path, True)
+params["verbose"] = True
+rtn_acc = hd_eventprop(params, file_path, False)
+
+print(rtn_acc)
