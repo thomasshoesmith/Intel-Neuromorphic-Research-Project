@@ -11,7 +11,20 @@ with open('hidden_spike_counts_wo_reg.npy', 'rb') as f:
     hidden_spike_counts = np.load(f)
 
 
+print(len(hidden_spike_counts))
 
+epochs = 50
+samples_per_epoch = int(len(hidden_spike_counts) / epochs) #epochs
+print(samples_per_epoch)
+
+spikes_per_epoch = []
+for hsc_i in trange(len(hidden_spike_counts)):
+    spikes_per_epoch.append(np.sum(hidden_spike_counts[hsc_i]))
+
+plt.plot(spikes_per_epoch)
+plt.axvline(x=8156 * epochs, color='r', linestyle='-')
+plt.xlim(0, len(hidden_spike_counts))
+plt.show()
 
 exit()
 
