@@ -37,6 +37,7 @@ params["INPUT_SCALE"] = 0.008
 params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
+params["cross_validation_run_all"] = True
 params["lr"] = 0.01
 
 #weights
@@ -189,6 +190,31 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                                                                             validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                                                                             validation_y= {output: eval_labels})
     
+    if params.get("cross_validation_run_all"): 
+        if params.get("verbose"):
+            print("\n\nrun across all values ")
+        serialisers.append(Numpy(f"serialiser_all"))
+
+        with compiled_net:
+            # Evaluate model on numpy dataset
+            if return_accuracy:
+                callbacks = [Checkpoint(serialisers[-1])]
+            else:
+                callbacks = ["batch_progress_bar", 
+                            Checkpoint(serialisers[-1]), 
+                            CSVTrainLog(f"train_output_{speaker_left}.csv", 
+                                        output,
+                                        False),
+                            #SpikeRecorder(input, key="input_spikes"),
+                            SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                           
+            metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                                            {output: training_labels},
+                                                                                            num_epochs=params.get("NUM_EPOCH"), 
+                                                                                            shuffle=True,
+                                                                                            callbacks=callbacks,
+                                                                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
+                                                                                            validation_y= {output: eval_labels})
         
     # pickle serialisers
     with open('serialisers.pkl', 'wb') as f:
@@ -209,12 +235,13 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     with compiled_net:
         if return_accuracy:
-            callbacks = [Checkpoint(serialisers[11])]
+            callbacks = [Checkpoint(serialisers[-1])]
         else:
             callbacks = ["batch_progress_bar", 
+                        Checkpoint(serialisers[-1]),
                         SpikeRecorder(input, key="input_spikes"), 
                         SpikeRecorder(hidden, key="hidden_spikes"),
-                        SpikeRecorder(output, key="output_spikes"),
+                        #SpikeRecorder(output, key="output_spikes"),
                         VarRecorder(output, "v", key="v_output")]
     
         metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},

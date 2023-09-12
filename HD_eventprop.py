@@ -32,10 +32,10 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 500
+params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
-params["lr"] = 0.001
+params["lr"] = 0.01
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5

@@ -38,7 +38,7 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 2
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 1
+params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
@@ -149,7 +149,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         serialisers = pickle.load(f)
         
     # evaluate
-    network.load((params.get("NUM_EPOCH") - 1,), serialisers[len(speaker_id) - 1])
+    network.load((params.get("NUM_EPOCH") - 1,), serialisers[-1])
 
     compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                                 reset_in_syn_between_batches=True,
@@ -158,7 +158,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     with compiled_net:
         if return_accuracy:
-            callbacks = [Checkpoint(serialisers[11])]
+            callbacks = [Checkpoint(serialisers[-1])]
         else:
             callbacks = ["batch_progress_bar", 
                         SpikeRecorder(input, key="input_spikes"), 
@@ -223,16 +223,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         assert np.array_equal(np.bincount(hidden_spikes[1][value], 
                                           minlength=params.get("NUM_HIDDEN")),
                                           hidden_spike_counts[value])
-        """
+        
         # monitoring spikes in hidden layer
         total_spikes = np.zeros(params.get("NUM_HIDDEN"))
         for i in range(len(hidden_spike_counts)):
             total_spikes = np.add(total_spikes, hidden_spike_counts[i])
-        #print(total_spikes.shape)
-        #print(total_spikes)
-        #print(hidden_spike_counts[0])
-        #print(hidden_spike_counts[1])
-        #print(np.add(hidden_spike_counts[0], hidden_spike_counts[1]))
 
         plt.bar(list(range(len(total_spikes))), total_spikes)
         plt.title("Hidden Spikes per neuron across trail")
@@ -252,7 +247,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         print(f"number of silent neurons: {np.count_nonzero(total_spikes == 0)}")
         print("total", len(hidden_spike_counts))
 
-        """
         #figure(figsize=(8, 6), dpi=200)
         # show accuracy log
         for speaker_left in speaker_id:
@@ -291,5 +285,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         return metrics[output].correct / metrics[output].total
 
 
-params["verbose"] = True
-hd_eventprop(params, file_path, False)
+params["verbose"] = False
+accuracy = hd_eventprop(params, file_path, True)
+
+print(F"accuracy of the network is {accuracy * 100:.2f}%")
