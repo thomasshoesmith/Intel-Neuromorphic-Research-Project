@@ -1,6 +1,11 @@
 #export CUDA_PATH=/usr/local/cuda
+# sudo apt-get install python3-tk
 import numpy as np
+#import matplotlib
+#import tkinter
+#matplotlib.use("TKAgg")
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 import csv
 import pandas as pd
 from tqdm import trange
@@ -44,7 +49,8 @@ params["hidden_w_sd"] = 3.5 #4.0
 params["output_w_mean"] = 3.0 #0.5
 params["output_w_sd"] = 1.5 #1
 
-file_path = os.path.expanduser("~/data/rawHD/experimental_2/")
+file_path = os.path.expanduser("~/data/rawHD/experimental_2/")#"/its/home/ts468/data/rawHD/experimental_2/"#"/home/ts468/Documents/data/rawHD/experimental_2/"
+
 
 def hd_eventprop(params, file_path, return_accuracy = True):
     """
@@ -54,7 +60,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
       file_path - directory where training/testing/detail files are found
       return_accuracy - bool for if cvs train log is generated, or an accuracy returned
     """
-    
+
     # change dir for readout files
     try:
         os.mkdir("HD_eventprop_output")
@@ -82,12 +88,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     training_labels = y_train
     testing_labels = y_test
 
-    if params.get("verbose"): print(testing_details.head())
-    speaker_id = np.sort(testing_details.Speaker.unique())
-    if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
+    speaker_id = np.sort(training_details.Speaker.unique())
+    
+    speaker = list(training_details.loc[:, "Speaker"])
 
     # readout class
-
     class CSVTrainLog(Callback):
         def __init__(self, filename, output_pop, resume):
             # Create CSV writer
@@ -111,9 +116,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                     m.correct / m.total,
                                     perf_counter() - self.start_time])
             self.file.flush()
-            
-    # Create sequential model
-    serialiser = Numpy("latency_hd_checkpoints")
+        
     network = SequentialNetwork(default_params)
     with network:
         # Populations
@@ -141,49 +144,29 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                     Exponential(5.0), #5
                     record_spikes=True)
         
-    compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
-                            losses="sparse_categorical_crossentropy",
-                            optimiser=Adam(params.get("lr")), 
-                            batch_size = params.get("BATCH_SIZE"),
-                            reg_lambda_lower = 1e-6,
-                            reg_lambda_upper = 1e-6,
-                            reg_nu_upper= 2)
+    # pickle serialisers
+    with open('serialisers.pkl', 'rb') as f:
+        serialiser = pickle.load(f)
 
+    with open('hidden_spike_counts.npy', 'rb') as f:
+        hidden_spike_counts = np.load(f)
 
-    compiled_net = compiler.compile(network)
+    print(len(hidden_spike_counts))
+    print(len(training_images))
 
-    with compiled_net:
-        # Evaluate model on numpy dataset
-        start_epoch = 0
-        if return_accuracy:
-            callbacks = [Checkpoint(serialiser)]
-        else:
-            callbacks = ["batch_progress_bar", 
-                        Checkpoint(serialiser), 
-                        CSVTrainLog("train_output.csv", 
-                                    output,
-                                    False),
-                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
-            
-        metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                                                                        {output: training_labels},
-                                                                                        num_epochs = params.get("NUM_EPOCH"), 
-                                                                                        shuffle=False,
-                                                                                        validation_split = 0.1,
-                                                                                        callbacks = callbacks)
-        
-    
-        
+    print(np.sum(hidden_spike_counts[7000]))
+    print(np.sum(hidden_spike_counts[14424]))
 
-    if not return_accuracy:
-        # pickle serialisers
-        with open('serialisers.pkl', 'wb') as f:
-            pickle.dump(serialiser, f)
+    for i in range(256):
+        print(hidden_spike_counts[7000][i], "\t", hidden_spike_counts[14424][i])
 
-        # save hidden spike counts
-        with open('hidden_spike_counts.npy', 'wb') as f:
-            np.save(f, cb_data_training["hidden_spike_counts"])
-            
+    neuron_over_time = []
+    for i in range(50):
+        neuron_over_time.append(np.sum(hidden_spike_counts[7000 * i]))
+
+    plt.plot(neuron_over_time)
+    plt.show()
+    exit()
 
         
     # evaluate
@@ -202,7 +185,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                         SpikeRecorder(input, key="input_spikes"), 
                         SpikeRecorder(hidden, key="hidden_spikes"),
                         SpikeRecorder(output, key="output_spikes"),
-                        VarRecorder(output, "v", key="v_output")]
+                        VarRecorder(output, "v", key="v_output"),
+                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
     
         metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
                                                 {output: training_labels},
@@ -210,10 +194,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
     if params.get("verbose") and not return_accuracy:
         # cannot print verbose whilst requesting just accuracy
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
+        value = random.randint(0, len(x_train))
+        """        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
 
-        value = random.randint(0, len(x_test))
+        
 
         ax1.scatter(cb_data["hidden_spikes"][0][value], 
                     cb_data["hidden_spikes"][1][value], s=1)
@@ -221,7 +206,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         ax1.set_ylabel("Neuron ID")
         ax1.set_title("Hidden")
         ax1.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        ax1.set_ylim(0, params.get("NUM_INPUT"))
+        ax1.set_ylim(0, params.get("NUM_HIDDEN"))
 
         ax2.scatter(cb_data["input_spikes"][0][value], 
                     cb_data["input_spikes"][1][value], s=1)
@@ -238,61 +223,91 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         ax3.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
         #ax3.set_ylim(0, params.get("NUM_INPUT"))
 
-        sr = 22050
-        img = librosa.display.specshow(x_train[value], 
-                                x_axis='time', 
-                                y_axis='mel', 
-                                sr=sr, 
-                                cmap='viridis')
+        #sr = 22050
+        #img = librosa.display.specshow(x_train[value], x_axis='time', y_axis='mel', sr=sr, cmap='viridis')
+        plt.imshow(x_train[value], origin = "lower")
+        ax4.set_ylabel("Neuron ID")
+        ax4.set_xlabel("frames")
+        ax4.set_xlim(0, params.get("NUM_FRAMES"))
+        ax4.set_ylim(0, params.get("NUM_INPUT"))
+
         #fig.colorbar(img, ax = ax4)
-        ax4.set_title("mel encoding")
+        ax4.set_title("Input mel encoding")
 
         fig.tight_layout()
 
-        plt.show()
+        plt.show()"""
+
+        hidden_spike_counts = cb_data["hidden_spike_counts"]
+        hidden_spikes = cb_data["hidden_spikes"]
+
+        # Assert that manually-calculated spike counts from arbitrary example match those calculated using new system
+        assert np.array_equal(np.bincount(hidden_spikes[1][value], 
+                                          minlength=params.get("NUM_HIDDEN")),
+                                          hidden_spike_counts[value])
         
-        data = pd.read_csv("train_output.csv")
-        df = pd.DataFrame(data, columns=['accuracy'])
+        
+        # monitoring spikes in hidden layer
+        total_spikes = np.zeros(params.get("NUM_HIDDEN"))
+        for i in range(len(hidden_spike_counts)):
+            total_spikes = np.add(total_spikes, hidden_spike_counts[i])
+        """
 
-        accuracy = np.array(df)
+        plt.bar(list(range(len(total_spikes))), total_spikes)
+        plt.title("Hidden Spikes per neuron across trail")
+        plt.ylabel("total number of spikes across trial")
+        plt.xlabel("Neuron ID")
+        plt.show()
+        """
 
-        accuracy = accuracy * 100
+        #print(np.sort(total_spikes))
 
-        validation = []
-        training = []
+        plt.bar(list(range(len(total_spikes))), np.sort(total_spikes))
+        plt.title("Sorted hidden layer Spikes with {} silent neurons out of {} neurons".format(np.count_nonzero(total_spikes == 0), params.get("NUM_HIDDEN")))
+        plt.ylabel("total number of spikes across trial")
+        plt.xticks([])
+        plt.xlim(0, params.get("NUM_HIDDEN"))
+        plt.show()
 
-        for i in range(len(accuracy)):
-            if i % 2 == 0:
-                training.append(float(accuracy[i]))
-            else:
-                validation.append(float(accuracy[i]))
-                            
-        plt.plot(training, label = "training")
-        plt.plot(validation, label = "validation")
+        print(f"number of silent neurons: {np.count_nonzero(total_spikes == 0)}")
+        print("total", len(hidden_spike_counts))
+
+        #figure(figsize=(8, 6), dpi=200)
+        # show accuracy log
+        for speaker_left in speaker_id:
+    
+            data = pd.read_csv(f"train_output_{speaker_left}.csv")
+            df = pd.DataFrame(data, columns=['accuracy'])
+
+            accuracy = np.array(df)
+
+            accuracy = accuracy * 100
+
+            validation = []
+            training = []
+
+            for i in range(len(accuracy)):
+                if i % 2 == 0:
+                    training.append(float(accuracy[i]))
+                else:
+                    validation.append(float(accuracy[i]))
+                    
+                    
+            plt.plot(training, label = f"training speaker {speaker_left}")
+            plt.plot(validation, label = f"validation speaker {speaker_left}")
         plt.ylabel("accuracy (%)")
         plt.xlabel("epochs")
-        plt.title("accuracy during training")
+        plt.title("accuracy of training data during training")
+        plt.ylim(0, 90)
         plt.legend()
         plt.show()
-
-
+    
     # reset directory
-
     os.chdir("..")
     
     if return_accuracy:
         return metrics[output].correct / metrics[output].total
 
-"""
-# repeated trials to generate more reliable accuracy
-iterations, total = 5, 0
-for i in trange(iterations):
-    value = hd_eventprop(params, file_path, True)
-    print(value)
-    total += value
-
-print(total / iterations)
-"""
 
 params["verbose"] = True
 get_accuracy = False

@@ -198,7 +198,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         with compiled_net:
             # Evaluate model on numpy dataset
             if return_accuracy:
-                callbacks = [Checkpoint(serialisers[-1])]
+                callbacks = []
             else:
                 callbacks = ["batch_progress_bar", 
                             Checkpoint(serialisers[-1]), 
@@ -215,15 +215,15 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                                                                             callbacks=callbacks,
                                                                                             validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                                                                             validation_y= {output: eval_labels})
-        
-    # pickle serialisers
-    with open('serialisers.pkl', 'wb') as f:
-        pickle.dump(serialisers, f)
+    if not return_accuracy:
+        # pickle serialisers
+        with open('serialisers.pkl', 'wb') as f:
+            pickle.dump(serialisers, f)
 
-    # save hidden spike counts
-    with open('hidden_spike_counts_wo_reg.npy', 'wb') as f:
-        np.save(f, cb_data_training["hidden_spike_counts"])
-        
+        # save hidden spike counts
+        with open('hidden_spike_counts_wo_reg.npy', 'wb') as f:
+            np.save(f, cb_data_training["hidden_spike_counts"])
+            
     # evaluate
     
     network.load((params.get("NUM_EPOCH") - 1,), serialisers[len(speaker_id) - 1])
@@ -235,7 +235,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     with compiled_net:
         if return_accuracy:
-            callbacks = [Checkpoint(serialisers[-1])]
+            callbacks = []
         else:
             callbacks = ["batch_progress_bar", 
                         Checkpoint(serialisers[-1]),

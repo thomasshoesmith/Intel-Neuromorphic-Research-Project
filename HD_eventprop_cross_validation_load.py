@@ -73,9 +73,6 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     x_train = np.load(file_path + "training_x_data.npy")
     y_train = np.load(file_path + "training_y_data.npy")
 
-    print(len(x_train))
-    exit()
-
     x_test = np.load(file_path + "testing_x_data.npy")
     y_test = np.load(file_path + "testing_y_data.npy")
 
@@ -227,16 +224,19 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                           minlength=params.get("NUM_HIDDEN")),
                                           hidden_spike_counts[value])
         
+        
         # monitoring spikes in hidden layer
         total_spikes = np.zeros(params.get("NUM_HIDDEN"))
         for i in range(len(hidden_spike_counts)):
             total_spikes = np.add(total_spikes, hidden_spike_counts[i])
+        """
 
         plt.bar(list(range(len(total_spikes))), total_spikes)
         plt.title("Hidden Spikes per neuron across trail")
         plt.ylabel("total number of spikes across trial")
         plt.xlabel("Neuron ID")
         plt.show()
+        """
 
         #print(np.sort(total_spikes))
 
@@ -254,7 +254,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         # show accuracy log
         for speaker_left in speaker_id:
     
-            data = pd.read_csv(f"train_output_{speaker_left}.hidden_spike_countscsv")
+            data = pd.read_csv(f"train_output_{speaker_left}.csv")
             df = pd.DataFrame(data, columns=['accuracy'])
 
             accuracy = np.array(df)
@@ -271,8 +271,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                     validation.append(float(accuracy[i]))
                     
                     
-            plt.plot(training, label = f"speaker {speaker_left}")
-            #plt.plot(validation, label = f"speaker {speaker_left}")
+            plt.plot(training, label = f"training speaker {speaker_left}")
+            plt.plot(validation, label = f"validation speaker {speaker_left}")
         plt.ylabel("accuracy (%)")
         plt.xlabel("epochs")
         plt.title("accuracy of training data during training")
@@ -281,14 +281,14 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         plt.show()
     
     # reset directory
-
     os.chdir("..")
     
     if return_accuracy:
         return metrics[output].correct / metrics[output].total
 
 
-params["verbose"] = False
-accuracy = hd_eventprop(params, file_path, True)
+params["verbose"] = True
+get_accuracy = False
+accuracy = hd_eventprop(params, file_path, get_accuracy)
 
-print(F"accuracy of the network is {accuracy * 100:.2f}%")
+if get_accuracy: print(F"accuracy of the network is {accuracy * 100:.2f}%")
