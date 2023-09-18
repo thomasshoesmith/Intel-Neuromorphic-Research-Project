@@ -73,6 +73,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     x_train = np.load(file_path + "training_x_data.npy")
     y_train = np.load(file_path + "training_y_data.npy")
 
+    print(len(x_train))
+    exit()
+
     x_test = np.load(file_path + "testing_x_data.npy")
     y_test = np.load(file_path + "testing_y_data.npy")
 
@@ -251,7 +254,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         # show accuracy log
         for speaker_left in speaker_id:
     
-            data = pd.read_csv(f"train_output_{speaker_left}.csv")
+            data = pd.read_csv(f"train_output_{speaker_left}.hidden_spike_countscsv")
             df = pd.DataFrame(data, columns=['accuracy'])
 
             accuracy = np.array(df)
