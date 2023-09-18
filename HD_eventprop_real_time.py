@@ -32,10 +32,10 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
 params["INPUT_FRAME_TIMESTEP"] = 20
 params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 600
+params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
-params["lr"] = 0.001
+params["lr"] = 0.01
 params["dt"] = 1
 
 #weights
@@ -55,12 +55,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
       return_accuracy - bool for if cvs train log is generated, or an accuracy returned
     """
     
-    # change dir for readout files
-    try:
-        os.mkdir("HD_eventprop_output")
-    except:
-        pass
-
+                
     os.chdir("HD_eventprop_output")
 
     # Load testing data
@@ -153,7 +148,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         # Evaluate model on numpy dataset
         start_epoch = 0
         if return_accuracy:
-            callbacks = [Checkpoint(serialiser)]
+            callbacks = []
         else:
             callbacks = ["batch_progress_bar", 
                         Checkpoint(serialiser), 
@@ -168,9 +163,10 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                                                                                         shuffle=True,
                                                                                         validation_split = 0.1,
                                                                                         callbacks = callbacks)
-        
-    with open('hidden_spike_counts.npy', 'wb') as f:
-        np.save(f, cb_data_training["hidden_spike_counts"])
+    
+    if not return_accuracy:
+        with open('hidden_spike_counts.npy', 'wb') as f:
+            np.save(f, cb_data_training["hidden_spike_counts"])
         
         
     # evaluate
@@ -183,7 +179,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     with compiled_net:
         if return_accuracy:
-            callbacks = [Checkpoint(serialiser)]
+            callbacks = []
         else:
             callbacks = ["batch_progress_bar", 
                         SpikeRecorder(input, key="input_spikes"), 
@@ -281,7 +277,8 @@ for i in trange(iterations):
 print(total / iterations)
 """
 
-params["verbose"] = True
-rtn_acc = hd_eventprop(params, file_path, False)
+#params["verbose"] = True
 
-print(rtn_acc)
+#rtn_acc = hd_eventprop(params, file_path, False)
+
+#print(rtn_acc)
