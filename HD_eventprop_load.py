@@ -148,11 +148,24 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     with open('serialisers.pkl', 'rb') as f:
         serialiser = pickle.load(f)
 
-    with open('hidden_spike_counts.npy', 'rb') as f:
-        hidden_spike_counts = np.load(f)
+    #with open('hidden_spike_counts.npy', 'rb') as f:
+        #hidden_spike_counts = np.load(f)
 
-    print(len(hidden_spike_counts))
-    print(len(training_images))
+    for i in os.listdir():
+        if "hidden_spike_counts" in i:
+            with open(i, 'rb') as f:
+                hidden_spike_counts = np.load(f)
+
+            neuron_over_time = []
+            for e in range(50):
+                neuron_over_time.append(np.sum(hidden_spike_counts[7000 * e]))
+
+            plt.plot(neuron_over_time, label = i)
+
+    plt.legend()
+    plt.show()
+
+    exit()
 
     print(np.sum(hidden_spike_counts[7000]))
     print(np.sum(hidden_spike_counts[14424]))

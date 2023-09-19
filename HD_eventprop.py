@@ -38,6 +38,10 @@ params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
 
+params["reg_lambda_lower"] = 1e-8
+params["reg_lambda_upper"] = 1e-8
+params["reg_nu_upper"] = 2
+
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
 params["hidden_w_sd"] = 3.5 #4.0
@@ -145,9 +149,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             losses="sparse_categorical_crossentropy",
                             optimiser=Adam(params.get("lr")), 
                             batch_size = params.get("BATCH_SIZE"),
-                            reg_lambda_lower = 1e-6,
-                            reg_lambda_upper = 1e-6,
-                            reg_nu_upper= 2)
+                            reg_lambda_lower = params.get("reg_lambda_lower"),
+                            reg_lambda_upper = params.get("reg_lambda_upper"),
+                            reg_nu_upper = params.get("reg_nu_upper"))
 
 
     compiled_net = compiler.compile(network)
@@ -181,7 +185,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
             pickle.dump(serialiser, f)
 
         # save hidden spike counts
-        with open('hidden_spike_counts.npy', 'wb') as f:
+        with open(f'hidden_spike_counts_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}.npy', 'wb') as f:
             np.save(f, cb_data_training["hidden_spike_counts"])
             
 
