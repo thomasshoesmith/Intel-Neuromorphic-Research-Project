@@ -5,6 +5,7 @@ import csv
 import pandas as pd
 from tqdm import trange
 import os
+import pickle
 
 from ml_genn import InputLayer, Layer, SequentialNetwork
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
@@ -36,6 +37,10 @@ params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
+
+params["reg_lambda_lower"] = 1e-8
+params["reg_lambda_upper"] = 1e-8
+params["reg_nu_upper"] = 2
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
@@ -142,7 +147,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
-                            optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"))
+                            optimiser=Adam(params.get("lr")), 
+                            batch_size = params.get("BATCH_SIZE"),
+                            reg_lambda_lower = params.get("reg_lambda_lower"),
+                            reg_lambda_upper = params.get("reg_lambda_upper"),
+                            reg_nu_upper = params.get("reg_nu_upper"))
 
 
     compiled_net = compiler.compile(network)
@@ -163,13 +172,23 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                         {output: training_labels},
                                                                                         num_epochs = params.get("NUM_EPOCH"), 
-                                                                                        shuffle=True,
+                                                                                        shuffle=False,
                                                                                         validation_split = 0.1,
                                                                                         callbacks = callbacks)
         
-    with open('hidden_spike_counts.npy', 'wb') as f:
-        np.save(f, cb_data_training["hidden_spike_counts"])
+    
         
+
+    if not return_accuracy:
+        # pickle serialisers
+        with open('serialisers.pkl', 'wb') as f:
+            pickle.dump(serialiser, f)
+
+        # save hidden spike counts
+        with open(f'hidden_spike_counts_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}.npy', 'wb') as f:
+            np.save(f, cb_data_training["hidden_spike_counts"])
+            
+
         
     # evaluate
     network.load((params.get("NUM_EPOCH") - 1,), serialiser)
@@ -280,6 +299,7 @@ print(total / iterations)
 """
 
 params["verbose"] = True
-rtn_acc = hd_eventprop(params, file_path, False)
+get_accuracy = False
+accuracy = hd_eventprop(params, file_path, get_accuracy)
 
-print(rtn_acc)
+if get_accuracy: print(F"accuracy of the network is {accuracy * 100:.2f}%")

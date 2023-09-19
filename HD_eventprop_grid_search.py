@@ -3,6 +3,9 @@ from tqdm import trange
 import csv
 import os
 
+#nohup python HD_eventprop_grid_search.py >/dev/null
+
+
 # default parameters
 params = {}
 params["NUM_INPUT"] = 40
