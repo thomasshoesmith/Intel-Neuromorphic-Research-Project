@@ -277,8 +277,8 @@ for i in trange(iterations):
 print(total / iterations)
 """
 
-#params["verbose"] = True
+params["verbose"] = True
 
-#rtn_acc = hd_eventprop(params, file_path, False)
+rtn_acc = hd_eventprop(params, file_path, False)
 
-#print(rtn_acc)
+print(rtn_acc)
