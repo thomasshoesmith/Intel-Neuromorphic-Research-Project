@@ -158,11 +158,14 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
             neuron_over_time = []
             for e in range(50):
-                neuron_over_time.append(np.sum(hidden_spike_counts[7000 * e]))
+                neuron_over_time.append(np.sum(hidden_spike_counts[(7424 * e) + 7000]))
 
             plt.plot(neuron_over_time, label = i)
 
     plt.legend()
+    plt.xlabel("epochs")
+    plt.ylabel("Spike count")
+    plt.title("Spike count of hidden neurons at trial 7000 over time")
     plt.show()
 
     exit()

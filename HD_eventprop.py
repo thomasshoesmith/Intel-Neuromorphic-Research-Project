@@ -38,15 +38,15 @@ params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
 
-params["reg_lambda_lower"] = 0#1e-6
-params["reg_lambda_upper"] = 0#1e-6
-params["reg_nu_upper"] = 0#2
+params["reg_lambda_lower"] = 1e-9
+params["reg_lambda_upper"] = 1e-9
+params["reg_nu_upper"] = 2
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
 params["hidden_w_sd"] = 3.5 #4.0
-params["output_w_mean"] = 3.0 #0.5
-params["output_w_sd"] = 1.5 #1
+params["output_w_mean"] = 3.0
+params["output_w_sd"] = 1.5 
 
 file_path = os.path.expanduser("~/data/rawHD/experimental_2/")
 
@@ -162,11 +162,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         if return_accuracy:
             callbacks = [Checkpoint(serialiser)]
         else:
-            callbacks = ["batch_progress_bar", 
-                        Checkpoint(serialiser), 
-                        CSVTrainLog("train_output.csv", 
-                                    output,
-                                    False),
+            callbacks = ["batch_progress_bar",
                         SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
             
         metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},

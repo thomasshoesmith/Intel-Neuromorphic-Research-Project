@@ -30,13 +30,17 @@ params["NUM_INPUT"] = 40
 params["NUM_HIDDEN"] = 256
 params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 128
-params["INPUT_FRAME_TIMESTEP"] = 20
+params["INPUT_FRAME_TIMESTEP"] = 20 #2
 params["INPUT_SCALE"] = 0.008
 params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["lr"] = 0.01
-params["dt"] = 1
+params["dt"] = 1 #10
+
+params["reg_lambda_lower"] = 1e-9
+params["reg_lambda_upper"] = 1e-9
+params["reg_nu_upper"] = 20
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
@@ -139,6 +143,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
                             optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"),
+                            reg_lambda_lower = params.get("reg_lambda_lower"),
+                            reg_lambda_upper = params.get("reg_lambda_upper"),
+                            reg_nu_upper = params.get("reg_nu_upper"),
                             dt = params.get("dt"))
 
 
@@ -151,11 +158,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
             callbacks = []
         else:
             callbacks = ["batch_progress_bar", 
-                        Checkpoint(serialiser), 
-                        CSVTrainLog("train_output.csv", 
-                                    output,
-                                    False),
-                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                        Checkpoint(serialiser)]
             
         metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                         {output: training_labels},
@@ -204,7 +207,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         ax1.set_ylabel("Neuron ID")
         ax1.set_title("Hidden")
         ax1.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        ax1.set_ylim(0, params.get("NUM_INPUT"))
+        ax1.set_ylim(0, params.get("NUM_HIDDEN"))
 
         ax2.scatter(cb_data["input_spikes"][0][value], 
                     cb_data["input_spikes"][1][value], s=1)
