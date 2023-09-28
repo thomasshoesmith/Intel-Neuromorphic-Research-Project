@@ -63,11 +63,11 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     # change dir for readout files
     try:
-        os.mkdir("HD_eventprop_output")
+        os.mkdir("HD_eventprop_rt")
     except:
         pass
 
-    os.chdir("HD_eventprop_output")
+    os.chdir("HD_eventprop_rt")
 
     # Load testing data
     x_train = np.load(file_path + "training_x_data.npy")
@@ -143,6 +143,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                     params.get("NUM_OUTPUT"), 
                     Exponential(5.0), #5
                     record_spikes=True)
+    
         
     # pickle serialisers
     with open('serialisers.pkl', 'rb') as f:
@@ -152,13 +153,13 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         #hidden_spike_counts = np.load(f)
 
     for i in os.listdir():
-        if "hidden_spike_counts" in i:
+        if "hidden_spike_counts_rt" in i:
             with open(i, 'rb') as f:
                 hidden_spike_counts = np.load(f)
 
             neuron_over_time = []
             for e in range(50):
-                neuron_over_time.append(np.sum(hidden_spike_counts[(7424 * e) + 7000]))
+                neuron_over_time.append(np.sum(hidden_spike_counts[e]))
 
             plt.plot(neuron_over_time, label = i)
 

@@ -25,47 +25,28 @@ from ml_genn.compilers.event_prop_compiler import default_params
 import random
 import librosa
 
-# constants
-params = {}
-params["NUM_INPUT"] = 40
-params["NUM_HIDDEN"] = 256
-params["NUM_OUTPUT"] = 20
-params["BATCH_SIZE"] = 128
-params["INPUT_FRAME_TIMESTEP"] = 2
-params["INPUT_SCALE"] = 0.008
-params["NUM_EPOCH"] = 50
-params["NUM_FRAMES"] = 80
-params["verbose"] = False
-params["lr"] = 0.01
 
-params["reg_lambda_lower"] = 1e-9
-params["reg_lambda_upper"] = 1e-9
-params["reg_nu_upper"] = 2
-
-#weights
-params["hidden_w_mean"] = 0.0 #0.5
-params["hidden_w_sd"] = 3.5 #4.0
-params["output_w_mean"] = 3.0
-params["output_w_sd"] = 1.5 
-
-file_path = os.path.expanduser("~/data/rawHD/experimental_2/")
-
-def hd_eventprop(params, file_path, return_accuracy = True):
+def hd_eventprop(params, 
+                 file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
+                 output_dir = "HD_eventprop_output",
+                 model_description = ""):
     """
     Function to run hd classification using eventprop
     Parameters:
       params - a dictionary containing all parameters
       file_path - directory where training/testing/detail files are found
-      return_accuracy - bool for if cvs train log is generated, or an accuracy returned
+      debug - bool for if cvs train log is generated, or an accuracy returned
+      output_dir - directory to save genn outputs
+      model_description - used for saving of hidden spikes during debugging
     """
     
     # change dir for readout files
     try:
-        os.mkdir("HD_eventprop_output")
+        os.mkdir(output_dir)
     except:
         pass
 
-    os.chdir("HD_eventprop_output")
+    os.chdir(output_dir)
 
     # Load testing data
     x_train = np.load(file_path + "training_x_data.npy")
@@ -121,8 +102,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     network = SequentialNetwork(default_params)
     with network:
         # Populations
-        input = InputLayer(LeakyIntegrateFireInput(v_thresh=4,
-                                                tau_mem=10, 
+        input = InputLayer(LeakyIntegrateFireInput(v_thresh=1, #4
+                                                tau_mem=20,    #10
                                                 input_frames=params.get("NUM_FRAMES"), 
                                                 input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
                             params.get("NUM_INPUT"), 
@@ -130,7 +111,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         
         hidden = Layer(Dense(Normal(mean = params.get("hidden_w_mean"), # m = .5, sd = 4 ~ 68%
                                     sd = params.get("hidden_w_sd"))), 
-                    LeakyIntegrateFire(v_thresh=5.0, 
+                    LeakyIntegrateFire(v_thresh=1.0, 
                                         tau_mem=20.0,
                                         tau_refrac=None),
                     params.get("NUM_HIDDEN"), 
@@ -151,7 +132,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
                             batch_size = params.get("BATCH_SIZE"),
                             reg_lambda_lower = params.get("reg_lambda_lower"),
                             reg_lambda_upper = params.get("reg_lambda_upper"),
-                            reg_nu_upper = params.get("reg_nu_upper"))
+                            reg_nu_upper = params.get("reg_nu_upper"),
+                            dt = params.get("dt"))
 
 
     compiled_net = compiler.compile(network)
@@ -159,31 +141,37 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     with compiled_net:
         # Evaluate model on numpy dataset
         start_epoch = 0
-        if return_accuracy:
-            callbacks = [Checkpoint(serialiser)]
-        else:
+        if params.get("verbose"):
             callbacks = ["batch_progress_bar",
-                        SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                         CSVTrainLog(f"train_output.csv", 
+                                        output,
+                                        False),
+                         Checkpoint(serialiser),
+                         SpikeRecorder(hidden, 
+                                       key = "hidden_spike_counts", 
+                                       record_counts = True,
+                                       example_filter = list(range(7000, 371200, 7424)))]  
+        
+        else:
+            callbacks = [Checkpoint(serialiser)]
             
+                
         metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                         {output: training_labels},
                                                                                         num_epochs = params.get("NUM_EPOCH"), 
                                                                                         shuffle=False,
                                                                                         validation_split = 0.1,
-                                                                                        callbacks = callbacks)
-        
-    
-        
+                                                                                        callbacks = callbacks)      
 
-    if not return_accuracy:
+    if params.get("debug"):
         # pickle serialisers
         with open('serialisers.pkl', 'wb') as f:
             pickle.dump(serialiser, f)
 
         # save hidden spike counts
-        with open(f'hidden_spike_counts_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
-            np.save(f, cb_data_training["hidden_spike_counts"])
-            
+        with open(f'hidden_spike_counts_{model_description}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
+            hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
+            np.save(f, hidden_spike_counts)
 
         
     # evaluate
@@ -195,20 +183,22 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     compiled_net = compiler.compile(network)
 
     with compiled_net:
-        if return_accuracy:
-            callbacks = [Checkpoint(serialiser)]
-        else:
+        if params.get("verbose"):
             callbacks = ["batch_progress_bar", 
+                        Checkpoint(serialiser),
                         SpikeRecorder(input, key="input_spikes"), 
                         SpikeRecorder(hidden, key="hidden_spikes"),
                         SpikeRecorder(output, key="output_spikes"),
-                        VarRecorder(output, "v", key="v_output")]
+                        VarRecorder(output, "v", key="v_output"),
+                        VarRecorder(input, "v", key = "v_input"),]
+        else:
+            callbacks = [Checkpoint(serialiser)]
     
         metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
-                                                {output: training_labels},
+                                                 {output: training_labels},
                                                 callbacks = callbacks)
         
-    if params.get("verbose") and not return_accuracy:
+    if params.get("verbose"):
         # cannot print verbose whilst requesting just accuracy
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
@@ -221,7 +211,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         ax1.set_ylabel("Neuron ID")
         ax1.set_title("Hidden")
         ax1.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        ax1.set_ylim(0, params.get("NUM_INPUT"))
+        ax1.set_ylim(0, params.get("NUM_HIDDEN"))
 
         ax2.scatter(cb_data["input_spikes"][0][value], 
                     cb_data["input_spikes"][1][value], s=1)
@@ -270,6 +260,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         plt.plot(training, label = "training")
         plt.plot(validation, label = "validation")
         plt.ylabel("accuracy (%)")
+        plt.ylim(0, 100)
         plt.xlabel("epochs")
         plt.title("accuracy during training")
         plt.legend()
@@ -277,25 +268,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
 
     # reset directory
-
     os.chdir("..")
     
-    if return_accuracy:
+    if params.get("debug"):
+        return metrics[output].correct / metrics[output].total, cb_data["v_input"][500]
+    else:
         return metrics[output].correct / metrics[output].total
-
-"""
-# repeated trials to generate more reliable accuracy
-iterations, total = 5, 0
-for i in trange(iterations):
-    value = hd_eventprop(params, file_path, True)
-    print(value)
-    total += value
-
-print(total / iterations)
-"""
-
-params["verbose"] = True
-get_accuracy = False
-accuracy = hd_eventprop(params, file_path, get_accuracy)
-
-if get_accuracy: print(F"accuracy of the network is {accuracy * 100:.2f}%")

@@ -1,0 +1,1433 @@
+  0%|          | 0/50 [00:00<?, ?it/s]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+  2%|▏         | 1/50 [08:02<6:33:58, 482.43s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+  4%|▍         | 2/50 [15:39<6:14:01, 467.53s/it]./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+  6%|▌         | 3/50 [25:24<6:48:17, 521.23s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+  8%|▊         | 4/50 [33:34<6:30:07, 508.85s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 10%|█         | 5/50 [43:04<6:38:05, 530.80s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 12%|█▏        | 6/50 [52:35<6:39:15, 544.45s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 14%|█▍        | 7/50 [57:59<5:38:32, 472.38s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 16%|█▌        | 8/50 [1:06:08<5:34:31, 477.90s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 18%|█▊        | 9/50 [1:11:26<4:52:21, 427.85s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 20%|██        | 10/50 [1:17:45<4:35:05, 412.64s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', nmake: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 22%|██▏       | 11/50 [1:26:48<4:54:06, 452.47s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 24%|██▍       | 12/50 [1:33:10<4:33:03, 431.15s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 26%|██▌       | 13/50 [1:39:59<4:21:40, 424.33s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 28%|██▊       | 14/50 [1:45:16<3:55:08, 391.91s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 30%|███       | 15/50 [1:50:27<3:34:26, 367.62s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 32%|███▏      | 16/50 [1:55:42<3:19:20, 351.78s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(307): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 34%|███▍      | 17/50 [2:04:54<3:46:32, 411.90s/it]./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 36%|███▌      | 18/50 [2:11:24<3:36:14, 405.44s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 38%|███▊      | 19/50 [2:16:38<3:15:20, 378.07s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 40%|████      | 20/50 [2:25:49<3:35:01, 430.04s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+o destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator:make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 42%|████▏     | 21/50 [2:33:48<3:34:52, 444.58s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 44%|████▍     | 22/50 [2:40:12<3:19:01, 426.47s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 46%|████▌     | 23/50 [2:45:31<2:57:25, 394.29s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 48%|████▊     | 24/50 [2:50:50<2:40:59, 371.51s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 50%|█████     | 25/50 [2:57:11<2:35:57, 374.31s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 52%|█████▏    | 26/50 [3:05:55<2:47:42, 419.25s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 54%|█████▍    | 27/50 [3:14:52<2:54:16, 454.64s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 56%|█████▌    | 28/50 [3:23:35<2:54:10, 475.02s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 58%|█████▊    | 29/50 [3:28:50<2:29:31, 427.19s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 60%|██████    | 30/50 [3:38:20<2:36:40, 470.01s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 62%|██████▏   | 31/50 [3:47:29<2:36:17, 493.54s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+:CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 64%|██████▍   | 32/50 [3:56:55<2:34:38, 515.50s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 66%|██████▌   | 33/50 [4:02:13<2:09:17, 456.31s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 68%|██████▊   | 34/50 [4:07:35<1:50:53, 415.85s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 70%|███████   | 35/50 [4:16:22<1:52:20, 449.37s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 72%|███████▏  | 36/50 [4:21:40<1:35:36, 409.74s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 74%|███████▍  | 37/50 [4:30:46<1:37:40, 450.81s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 76%|███████▌  | 38/50 [4:36:03<1:22:05, 410.45s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 78%|███████▊  | 39/50 [4:44:46<1:21:26, 444.21s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 80%|████████  | 40/50 [4:50:04<1:07:43, 406.31s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 82%|████████▏ | 41/50 [4:55:26<57:09, 381.08s/it]  make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detectmake: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 84%|████████▍ | 42/50 [5:04:28<57:15, 429.46s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 86%|████████▌ | 43/50 [5:13:31<54:04, 463.55s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 88%|████████▊ | 44/50 [5:22:38<48:50, 488.40s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 90%|█████████ | 45/50 [5:27:55<36:25, 437.02s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 92%|█████████▏| 46/50 [5:34:47<28:38, 429.59s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 94%|█████████▍| 47/50 [5:43:48<23:09, 463.13s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 96%|█████████▌| 48/50 [5:49:13<14:03, 421.58s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+ 98%|█████████▊| 49/50 [5:58:17<07:38, 458.41s/it]make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+neuronUpdate.cc(192): warning #177-D: variable "lYTrue" was declared but never referenced
+
+synapseUpdate.cc(59): warning #177-D: variable "shLg" was declared but never referenced
+
+customUpdate.cc(425): warning #177-D: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+synapseUpdate.cc(49): warning #177-D: variable "synBatchOffset" was declared but never referenced
+
+make: Leaving directory '/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop_output/HD_eventpropInferenceCompiler_CODE'
+100%|██████████| 50/50 [6:03:30<00:00, 414.64s/it]100%|██████████| 50/50 [6:03:30<00:00, 436.21s/it]
+ed a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
