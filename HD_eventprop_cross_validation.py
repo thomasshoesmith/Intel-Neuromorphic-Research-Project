@@ -28,17 +28,17 @@ import librosa
 
 # constants
 params = {}
-params["NUM_INPUT"] = 40
-params["NUM_HIDDEN"] = 256
+params["NUM_INPUT"] = 80
+params["NUM_HIDDEN"] = 512#256
 params["NUM_OUTPUT"] = 20
-params["BATCH_SIZE"] = 128
-params["INPUT_FRAME_TIMESTEP"] = 2
-params["INPUT_SCALE"] = 0.008
+params["BATCH_SIZE"] = 256#128
+params["INPUT_FRAME_TIMESTEP"] = 20
+params["INPUT_SCALE"] = 0.00099
 params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
 params["verbose"] = False
 params["cross_validation_run_all"] = True
-params["lr"] = 0.01
+params["lr"] = 0.005
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
@@ -46,7 +46,7 @@ params["hidden_w_sd"] = 3.5 #4.0
 params["output_w_mean"] = 3.0 #0.5
 params["output_w_sd"] = 1.5 #1
 
-file_path = os.path.expanduser("~/data/rawHD/experimental_2/")
+file_path = os.path.expanduser("~/data/rawHD/experimental_3/")
 
 def hd_eventprop(params, file_path, return_accuracy = True):
     """
@@ -87,7 +87,7 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     if params.get("verbose"): print(training_details.head())
     speaker_id = np.sort(training_details.Speaker.unique())
     if params.get("verbose"): print(np.sort(training_details.Speaker.unique()))
-    
+
     speaker = list(training_details.loc[:, "Speaker"])
 
     # readout class
@@ -124,8 +124,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     network = SequentialNetwork(default_params)
     with network:
         # Populations
-        input = InputLayer(LeakyIntegrateFireInput(v_thresh=4, #1
-                                                tau_mem=10, #20
+        input = InputLayer(LeakyIntegrateFireInput(v_thresh=1,#4, #1
+                                                tau_mem=20,#10, #20
                                                 input_frames=params.get("NUM_FRAMES"), 
                                                 input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
                             params.get("NUM_INPUT"), 
@@ -151,9 +151,9 @@ def hd_eventprop(params, file_path, return_accuracy = True):
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
                             optimiser=Adam(params.get("lr")), batch_size = params.get("BATCH_SIZE"),
-                            reg_lambda_lower = 1e-6,
-                            reg_lambda_upper = 1e-6,
-                            reg_nu_upper= 2,
+                            reg_lambda_lower = 1e-12,
+                            reg_lambda_upper = 1e-12,
+                            reg_nu_upper= 20,
                             kernel_profiling=True)
 
     compiled_net = compiler.compile(network)
@@ -172,7 +172,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         with compiled_net:
             # Evaluate model on numpy dataset
             if return_accuracy:
-                callbacks = [Checkpoint(serialisers[count])]
+                callbacks = ["batch_progress_bar", 
+                             Checkpoint(serialisers[count])]
             else:
                 callbacks = ["batch_progress_bar", 
                             Checkpoint(serialisers[count]), 
@@ -198,7 +199,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
         with compiled_net:
             # Evaluate model on numpy dataset
             if return_accuracy:
-                callbacks = []
+                callbacks = ["batch_progress_bar", 
+                            Checkpoint(serialisers[-1])]
             else:
                 callbacks = ["batch_progress_bar", 
                             Checkpoint(serialisers[-1]), 
@@ -235,7 +237,8 @@ def hd_eventprop(params, file_path, return_accuracy = True):
 
     with compiled_net:
         if return_accuracy:
-            callbacks = []
+            callbacks = ["batch_progress_bar", 
+                        Checkpoint(serialisers[-1])]
         else:
             callbacks = ["batch_progress_bar", 
                         Checkpoint(serialisers[-1]),
@@ -335,4 +338,4 @@ print(total / iterations)"""
 
 
 params["verbose"] = True
-hd_eventprop(params, file_path, False)
+hd_eventprop(params, file_path, True)

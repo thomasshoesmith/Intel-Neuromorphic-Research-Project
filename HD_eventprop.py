@@ -1,6 +1,7 @@
 #export CUDA_PATH=/usr/local/cuda
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
 import csv
 import pandas as pd
 from tqdm import trange
@@ -53,26 +54,25 @@ def hd_eventprop(params,
     y_train = np.load(file_path + "training_y_data.npy")
 
     x_test = np.load(file_path + "testing_x_data.npy")
-    y_test = np.load(file_path + "testing_y_data.npy")
+    #y_test = np.load(file_path + "testing_y_data.npy")
 
     training_details = pd.read_csv(file_path + "training_details.csv")
     testing_details = pd.read_csv(file_path + "testing_details.csv")
 
     training_images = np.swapaxes(x_train, 1, 2) 
-    testing_images = np.swapaxes(x_test, 1, 2) 
+    #testing_images = np.swapaxes(x_test, 1, 2) 
 
     training_images = training_images + abs(np.floor(training_images.min()))
-    testing_images = testing_images + abs(np.floor(testing_images.min()))
+    #testing_images = testing_images + abs(np.floor(testing_images.min()))
 
     training_labels = y_train
-    testing_labels = y_test
+    #testing_labels = y_test
 
-    if params.get("verbose"): print(testing_details.head())
-    speaker_id = np.sort(testing_details.Speaker.unique())
+    if params.get("verbose"): print(training_details.head())
+    speaker_id = np.sort(training_details.Speaker.unique())
     if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
-
+    
     # readout class
-
     class CSVTrainLog(Callback):
         def __init__(self, filename, output_pop, resume):
             # Create CSV writer
@@ -135,69 +135,168 @@ def hd_eventprop(params,
                             reg_nu_upper = params.get("reg_nu_upper"),
                             dt = params.get("dt"))
 
-
     compiled_net = compiler.compile(network)
-
-    with compiled_net:
-        # Evaluate model on numpy dataset
-        start_epoch = 0
-        if params.get("verbose"):
-            callbacks = ["batch_progress_bar",
-                         CSVTrainLog(f"train_output.csv", 
-                                        output,
-                                        False),
-                         Checkpoint(serialiser),
-                         SpikeRecorder(hidden, 
-                                       key = "hidden_spike_counts", 
-                                       record_counts = True,
-                                       example_filter = list(range(7000, 371200, 7424)))]  
-        
-        else:
-            callbacks = [Checkpoint(serialiser)]
-            
-                
-        metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                                                                        {output: training_labels},
-                                                                                        num_epochs = params.get("NUM_EPOCH"), 
-                                                                                        shuffle=False,
-                                                                                        validation_split = 0.1,
-                                                                                        callbacks = callbacks)      
-
-    if params.get("debug"):
-        # pickle serialisers
-        with open('serialisers.pkl', 'wb') as f:
-            pickle.dump(serialiser, f)
-
-        # save hidden spike counts
-        with open(f'hidden_spike_counts_{model_description}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
-            hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
-            np.save(f, hidden_spike_counts)
-
-        
-    # evaluate
-    network.load((params.get("NUM_EPOCH") - 1,), serialiser)
-
-    compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
-                                reset_in_syn_between_batches=True,
-                                batch_size = params.get("BATCH_SIZE"))
-    compiled_net = compiler.compile(network)
-
-    with compiled_net:
-        if params.get("verbose"):
-            callbacks = ["batch_progress_bar", 
-                        Checkpoint(serialiser),
-                        SpikeRecorder(input, key="input_spikes"), 
-                        SpikeRecorder(hidden, key="hidden_spikes"),
-                        SpikeRecorder(output, key="output_spikes"),
-                        VarRecorder(output, "v", key="v_output"),
-                        VarRecorder(input, "v", key = "v_input"),]
-        else:
-            callbacks = [Checkpoint(serialiser)]
     
-        metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
-                                                 {output: training_labels},
-                                                callbacks = callbacks)
+    if params.get("cross_validation"):
+        # Create sequential model
+        serialisers = []
+        for s in speaker_id:
+            serialisers.append(Numpy(f"serialiser_{s}"))
         
+        print(speaker_id)
+        print(len(serialisers))
+        
+        speaker = list(training_details.loc[:, "Speaker"])
+        
+        for count, speaker_left in enumerate(speaker_id):
+            train= np.where(speaker != speaker_left)[0]
+            evalu= np.where(speaker == speaker_left)[0]
+            train_spikes= np.array([ training_images[i] for i in train ])
+            eval_spikes= np.array([ training_images[i] for i in evalu ])
+            train_labels= [ training_labels[i] for i in train ]
+            eval_labels= [ training_labels[i] for i in evalu ]
+            
+            print(f"speaker {speaker_left} of {len(speaker_id)}")
+            print("\ncount", count)
+
+            with compiled_net:
+                # Evaluate model on numpy dataset
+                if params.get("verbose"):
+                    callbacks = ["batch_progress_bar", 
+                                Checkpoint(serialisers[count]), 
+                                CSVTrainLog(f"train_output_{speaker_left}.csv", 
+                                            output,
+                                            False)]
+                                #SpikeRecorder(input, key="input_spikes"),
+                                #SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                
+                else:
+                    callbacks = ["batch_progress_bar",
+                                 Checkpoint(serialisers[count])]
+                            
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                                                                            {output: train_labels},
+                                                                                            num_epochs=params.get("NUM_EPOCH"), 
+                                                                                            shuffle=True,
+                                                                                            callbacks=callbacks,
+                                                                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
+                                                                                            validation_y= {output: eval_labels})
+        
+        if params.get("cross_validation_run_all"): 
+            print("\n\nrun across all values ")
+            combined_serialiser = Numpy("serialiser_all")
+
+            with compiled_net:
+                # Evaluate model on numpy dataset
+                if params.get("verbose"):
+                    callbacks = ["batch_progress_bar", 
+                                Checkpoint(combined_serialiser), 
+                                CSVTrainLog(f"train_output_{speaker_left}.csv", 
+                                            output,
+                                            False)]
+                                #SpikeRecorder(input, key="input_spikes"),
+                                #SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                else:
+                    callbacks = ["batch_progress_bar",
+                                 Checkpoint(combined_serialiser)]
+                    
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                {output: training_labels},
+                                                                num_epochs=params.get("NUM_EPOCH"), 
+                                                                shuffle=True,
+                                                                callbacks=callbacks,
+                                                                validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
+                                                                validation_y= {output: eval_labels})
+        
+        
+        # evaluate
+        network.load((params.get("NUM_EPOCH") - 1,), combined_serialiser)
+
+        compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
+                                    reset_in_syn_between_batches=True,
+                                    batch_size = params.get("BATCH_SIZE"))
+        compiled_net = compiler.compile(network)
+
+        with compiled_net:
+            
+            if params.get("verbose"):
+                callbacks = ["batch_progress_bar", 
+                            Checkpoint(combined_serialiser), 
+                            SpikeRecorder(input, key="input_spikes"), 
+                            SpikeRecorder(hidden, key="hidden_spikes"),
+                            #SpikeRecorder(output, key="output_spikes"),
+                            VarRecorder(output, "v", key="v_output")]
+                
+            else:
+                callbacks = [Checkpoint(combined_serialiser)]
+        
+            metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
+                                                    {output: training_labels},
+                                                    callbacks = callbacks)
+        
+        
+    #if params.get("cross_validation") == False:
+    else:
+        with compiled_net:
+            # Evaluate model on numpy dataset
+            start_epoch = 0
+            if params.get("verbose"):
+                callbacks = ["batch_progress_bar",
+                            CSVTrainLog(f"train_output.csv", 
+                                            output,
+                                            False),
+                            Checkpoint(serialiser),
+                            SpikeRecorder(hidden, 
+                                        key = "hidden_spike_counts", 
+                                        record_counts = True,
+                                        example_filter = list(range(7000, 371200, 7424)))]  
+            
+            else:
+                callbacks = [Checkpoint(serialiser)]
+                
+                    
+            metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                                            {output: training_labels},
+                                                                                            num_epochs = params.get("NUM_EPOCH"), 
+                                                                                            shuffle=False,
+                                                                                            validation_split = 0.1,
+                                                                                            callbacks = callbacks)    
+
+        if params.get("debug"):
+            # pickle serialisers
+            with open('serialisers.pkl', 'wb') as f:
+                pickle.dump(serialiser, f)
+
+            # save hidden spike counts
+            with open(f'hidden_spike_counts_{model_description}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
+                hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
+                np.save(f, hidden_spike_counts)
+
+            
+        # evaluate
+        network.load((params.get("NUM_EPOCH") - 1,), serialiser)
+
+        compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
+                                    reset_in_syn_between_batches=True,
+                                    batch_size = params.get("BATCH_SIZE"))
+        compiled_net = compiler.compile(network)
+
+        with compiled_net:
+            if params.get("verbose"):
+                callbacks = ["batch_progress_bar", 
+                            Checkpoint(serialiser),
+                            SpikeRecorder(input, key="input_spikes"), 
+                            SpikeRecorder(hidden, key="hidden_spikes"),
+                            SpikeRecorder(output, key="output_spikes"),
+                            VarRecorder(output, "v", key="v_output"),
+                            VarRecorder(input, "v", key = "v_input"),]
+            else:
+                callbacks = [Checkpoint(serialiser)]
+        
+            metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
+                                                    {output: training_labels},
+                                                    callbacks = callbacks)
+            
     if params.get("verbose"):
         # cannot print verbose whilst requesting just accuracy
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
@@ -238,34 +337,98 @@ def hd_eventprop(params,
         ax4.set_title("mel encoding")
 
         fig.tight_layout()
-
-        plt.show()
+        #figure(figsize=(8, 6), dpi=200)
+        plt.savefig('activity_across_layers.png')
+        plt.clf() 
         
-        data = pd.read_csv("train_output.csv")
-        df = pd.DataFrame(data, columns=['accuracy'])
+        if params.get("cross_validation"):
+            # show accuracy log
+            for speaker_left in speaker_id:
+        
+                data = pd.read_csv(f"train_output_{speaker_left}.csv")
+                df = pd.DataFrame(data, columns=['accuracy'])
 
-        accuracy = np.array(df)
+                accuracy = np.array(df)
 
-        accuracy = accuracy * 100
+                accuracy = accuracy * 100
 
-        validation = []
-        training = []
+                validation = []
+                training = []
 
-        for i in range(len(accuracy)):
-            if i % 2 == 0:
-                training.append(float(accuracy[i]))
-            else:
-                validation.append(float(accuracy[i]))
-                            
-        plt.plot(training, label = "training")
-        plt.plot(validation, label = "validation")
-        plt.ylabel("accuracy (%)")
-        plt.ylim(0, 100)
-        plt.xlabel("epochs")
-        plt.title("accuracy during training")
-        plt.legend()
-        plt.show()
+                for i in range(len(accuracy)):
+                    if i % 2 == 0:
+                        training.append(float(accuracy[i]))
+                    else:
+                        validation.append(float(accuracy[i]))
+                        
+                plt.plot(training, label = f"training_{speaker_left}")
+                #plt.plot(validation, label = f"validation_{speaker_left}")
+            plt.ylabel("accuracy (%)")
+            plt.xlabel("epochs")
+            plt.ylim(0, 100)
+            plt.title("accuracy during training")
+            plt.legend()
+            #figure(figsize=(8, 6), dpi=200)
+            plt.savefig('accuracy_over_time.png')
+            plt.clf() 
+            
+            # show accuracy log
+            for speaker_left in speaker_id:
+        
+                data = pd.read_csv(f"train_output_{speaker_left}.csv")
+                df = pd.DataFrame(data, columns=['accuracy'])
 
+                accuracy = np.array(df)
+
+                accuracy = accuracy * 100
+
+                validation = []
+                training = []
+
+                for i in range(len(accuracy)):
+                    if i % 2 == 0:
+                        training.append(float(accuracy[i]))
+                    else:
+                        validation.append(float(accuracy[i]))
+                        
+                #plt.plot(training, label = f"training_{speaker_left}")
+                plt.plot(validation, label = f"validation_{speaker_left}")
+            plt.ylabel("accuracy (%)")
+            plt.xlabel("epochs")
+            plt.ylim(0, 100)
+            plt.title("validation during training")
+            plt.legend()
+            #figure(figsize=(8, 6), dpi=200)
+            plt.savefig('validation_over_time.png')
+            plt.clf() 
+            
+        else:
+            data = pd.read_csv("train_output.csv")
+            df = pd.DataFrame(data, columns=['accuracy'])
+
+            accuracy = np.array(df)
+
+            accuracy = accuracy * 100
+
+            validation = []
+            training = []
+
+            for i in range(len(accuracy)):
+                if i % 2 == 0:
+                    training.append(float(accuracy[i]))
+                else:
+                    validation.append(float(accuracy[i]))
+                                
+            plt.plot(training, label = "training")
+            plt.plot(validation, label = "validation")
+            plt.ylabel("accuracy (%)")
+            plt.ylim(0, 100)
+            plt.xlabel("epochs")
+            plt.title("accuracy during training")
+            #figure(figsize=(8, 6), dpi=200)
+            plt.legend()
+            plt.savefig('v&a_over_time.png')
+            plt.clf() 
 
     # reset directory
     os.chdir("..")

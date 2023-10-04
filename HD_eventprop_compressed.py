@@ -29,22 +29,22 @@ from HD_eventprop import hd_eventprop
 
 # constants
 params = {}
-params["NUM_INPUT"] = 40
-params["NUM_HIDDEN"] = 256
+params["NUM_INPUT"] = 80
+params["NUM_HIDDEN"] = 512
 params["NUM_OUTPUT"] = 20
-params["BATCH_SIZE"] = 128
+params["BATCH_SIZE"] = 256
 params["INPUT_FRAME_TIMESTEP"] = 2
-params["INPUT_SCALE"] = 0.008
+params["INPUT_SCALE"] = 0.00099
 params["NUM_EPOCH"] = 50
 params["NUM_FRAMES"] = 80
-params["verbose"] = True
-params["debug"] = True
+params["verbose"] = False
+params["debug"] = False
 params["lr"] = 0.01
 params["dt"] = 1
 
-params["reg_lambda_lower"] = 1e-12
-params["reg_lambda_upper"] = 1e-12
-params["reg_nu_upper"] = 2
+params["reg_lambda_lower"] = 0#1e-12
+params["reg_lambda_upper"] = 0#1e-12
+params["reg_nu_upper"] = 0#2
 
 #weights
 params["hidden_w_mean"] = 0.0 #0.5
@@ -53,6 +53,7 @@ params["output_w_mean"] = 3.0
 params["output_w_sd"] = 1.5 
 
 accuracy = hd_eventprop(params, 
+                        file_path = os.path.expanduser("~/data/rawHD/experimental_3/"),
                         output_dir = "HD_eventprop_compressed",
                         model_description = "compressed")
 
