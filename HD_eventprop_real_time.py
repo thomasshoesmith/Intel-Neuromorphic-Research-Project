@@ -16,7 +16,7 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 256
 params["INPUT_FRAME_TIMESTEP"] = 20
 params["INPUT_SCALE"] = 0.00099 #0.008
-params["NUM_EPOCH"] = 100
+params["NUM_EPOCH"] = 10
 params["NUM_FRAMES"] = 80
 params["verbose"] = True
 params["debug"] = False
@@ -25,7 +25,7 @@ params["dt"] = 1
 
 params["reg_lambda_lower"] = 1e-12
 params["reg_lambda_upper"] = 1e-12
-params["reg_nu_upper"] = 15
+params["reg_nu_upper"] = 20
 
 #weights
 params["hidden_w_mean"] = 0.0
@@ -38,8 +38,8 @@ params["cross_validation_run_all"] = False
 
 accuracy = hd_eventprop(params, 
                         file_path = os.path.expanduser("~/data/rawHD/experimental_3/"),
-                        output_dir = "HD_eventprop_rt2",
-                        model_description = "rt")
+                        output_dir = "HD_eventprop_standard_validation_test",
+                        model_description = "sv_test")
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")
 

@@ -163,7 +163,7 @@ def hd_eventprop(params,
                 # Evaluate model on numpy dataset
                 if params.get("verbose"):
                     callbacks = ["batch_progress_bar", 
-                                Checkpoint(serialisers[count]), 
+                                Checkpoint(serialiser), 
                                 CSVTrainLog(f"train_output_{speaker_left}.csv", 
                                             output,
                                             False)]
@@ -171,8 +171,8 @@ def hd_eventprop(params,
                                 #SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
                 
                 else:
-                    callbacks = ["batch_progress_bar",
-                                 Checkpoint(serialisers[count])]
+                    callbacks = [#"batch_progress_bar",
+                                 Checkpoint(serialiser)]
                             
                 metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                             {output: train_labels},
@@ -210,7 +210,7 @@ def hd_eventprop(params,
         
         
         # evaluate
-        network.load((params.get("NUM_EPOCH") - 1,), combined_serialiser)
+        network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
         compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                                     reset_in_syn_between_batches=True,
@@ -221,14 +221,14 @@ def hd_eventprop(params,
             
             if params.get("verbose"):
                 callbacks = ["batch_progress_bar", 
-                            Checkpoint(combined_serialiser), 
+                            Checkpoint(serialiser), 
                             SpikeRecorder(input, key="input_spikes"), 
                             SpikeRecorder(hidden, key="hidden_spikes"),
                             #SpikeRecorder(output, key="output_spikes"),
                             VarRecorder(output, "v", key="v_output")]
                 
             else:
-                callbacks = [Checkpoint(combined_serialiser)]
+                callbacks = [Checkpoint(serialiser)]
         
             metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
                                                     {output: training_labels},
