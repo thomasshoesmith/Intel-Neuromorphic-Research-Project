@@ -26,6 +26,8 @@ from ml_genn.compilers.event_prop_compiler import default_params
 import random
 import librosa
 
+import augmentation_tools
+
 
 def hd_eventprop(params, 
                  file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
@@ -64,8 +66,11 @@ def hd_eventprop(params,
 
     training_images = training_images + abs(np.floor(training_images.min()))
     #testing_images = testing_images + abs(np.floor(testing_images.min()))
+    
+    #training_images, training_labels = augmentation_tools.combine_two_images_and_concatinate(training_images, y_train)
+    training_details, training_images, training_labels = augmentation_tools.duplicate_and_mod_dataset(training_details, training_images)
 
-    training_labels = y_train
+    #training_labels = y_train
     #testing_labels = y_test
 
     if params.get("verbose"): print(training_details.head())
@@ -362,7 +367,6 @@ def hd_eventprop(params,
                         validation.append(float(accuracy[i]))
                         
                 plt.plot(training, label = f"training_{speaker_left}")
-                #plt.plot(validation, label = f"validation_{speaker_left}")
             plt.ylabel("accuracy (%)")
             plt.xlabel("epochs")
             plt.ylim(0, 100)
@@ -372,7 +376,7 @@ def hd_eventprop(params,
             plt.savefig('accuracy_over_time.png')
             plt.clf() 
             
-            # show accuracy log
+            # show validation log
             for speaker_left in speaker_id:
         
                 data = pd.read_csv(f"train_output_{speaker_left}.csv")
@@ -391,7 +395,6 @@ def hd_eventprop(params,
                     else:
                         validation.append(float(accuracy[i]))
                         
-                #plt.plot(training, label = f"training_{speaker_left}")
                 plt.plot(validation, label = f"validation_{speaker_left}")
             plt.ylabel("accuracy (%)")
             plt.xlabel("epochs")

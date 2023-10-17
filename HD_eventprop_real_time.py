@@ -16,7 +16,7 @@ params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 256
 params["INPUT_FRAME_TIMESTEP"] = 20
 params["INPUT_SCALE"] = 0.00099 #0.008
-params["NUM_EPOCH"] = 10
+params["NUM_EPOCH"] = 100
 params["NUM_FRAMES"] = 80
 params["verbose"] = True
 params["debug"] = False
@@ -33,8 +33,8 @@ params["hidden_w_sd"] = 3.5
 params["output_w_mean"] = 3.0
 params["output_w_sd"] = 1.5 
 
-params["cross_validation"] = False
-params["cross_validation_run_all"] = False
+params["cross_validation"] = True
+params["cross_validation_run_all"] = True
 
 accuracy = hd_eventprop(params, 
                         file_path = os.path.expanduser("~/data/rawHD/experimental_3/"),
