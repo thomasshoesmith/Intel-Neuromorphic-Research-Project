@@ -150,8 +150,10 @@ def duplicate_and_mod_dataset(training_details, training_images):
     training_images_repeat = np.repeat(training_images, 2, axis = 0)
     training_details_repeat = pd.DataFrame(np.repeat(training_details.values, 2, axis = 0))
 
+    training_details_repeat.columns = training_details.columns
+
     for trial in trange(0, len(training_details_repeat), 2):
         training_images_repeat[trial] = neighbour_swap(training_images_repeat[trial])
         
-    return training_details_repeat, training_images_repeat, np.array(training_details_repeat.loc[:, 5], dtype = "int8")
+    return training_details_repeat, training_images_repeat, np.array(training_details_repeat.loc[:, "classification label"], dtype = "int8")
     
