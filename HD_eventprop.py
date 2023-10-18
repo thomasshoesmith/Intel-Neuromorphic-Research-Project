@@ -70,11 +70,13 @@ def hd_eventprop(params,
     #training_images, training_labels = augmentation_tools.combine_two_images_and_concatinate(training_images, y_train)
     training_details, training_images, training_labels = augmentation_tools.duplicate_and_mod_dataset(training_details, training_images)
 
-    training_labels = y_train
+    #training_labels = y_train
     #testing_labels = y_test
 
     if params.get("verbose"): print(training_details.head())
     speaker_id = np.sort(training_details.Speaker.unique())
+    speaker_id = speaker_id = speaker_id.astype('int8')  #np where is fussy with int
+  
     if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
     
     # readout class

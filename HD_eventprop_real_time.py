@@ -10,7 +10,7 @@ from HD_eventprop import hd_eventprop
 
 # constants
 params = {}
-params["NUM_INPUT"] = 80
+params["NUM_INPUT"] = 40
 params["NUM_HIDDEN"] = 512 #256
 params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 256
@@ -37,7 +37,7 @@ params["cross_validation"] = True
 params["cross_validation_run_all"] = True
 
 accuracy = hd_eventprop(params, 
-                        file_path = os.path.expanduser("~/data/rawHD/experimental_3/"),
+                        file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
                         output_dir = "HD_eventprop_standard_validation_test",
                         model_description = "sv_test")
 
