@@ -99,7 +99,7 @@ def hd_eventprop(params,
             
     # Create sequential model
     serialiser = Numpy("latency_hd_checkpoints")
-    network = Network()
+    network = Network(default_params)
     
     with network:
         # Populations
@@ -125,7 +125,7 @@ def hd_eventprop(params,
                                     sd = params.get("hidden_w_sd"))),
                     Exponential(2.0))
         
-        Connection(hidden, hidden, Dense(Normal(mean=0.0, sd=4.0)),
+        Connection(hidden, hidden, Dense(Normal(mean=4.0, sd=4.0)),
                    Exponential(2.0))
         
         Connection(hidden, output, Dense(Normal(mean = params.get("output_w_mean"),
@@ -440,6 +440,6 @@ def hd_eventprop(params,
     os.chdir("..")
     
     if params.get("debug"):
-        return metrics[output].correct / metrics[output].total, cb_data["v_input"][500]
+        return metrics[output].correct / metrics[output].total
     else:
-        return metrics[output].correct / metrics[output].total, cb_data["v_input"][500]
+        return metrics[output].correct / metrics[output].total

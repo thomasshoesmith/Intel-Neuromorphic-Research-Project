@@ -6,7 +6,7 @@ import pandas as pd
 from tqdm import trange
 import os 
 
-from HD_eventprop import hd_eventprop
+from HD_eventprop_recurrent import hd_eventprop
 
 # constants
 params = {}
@@ -14,9 +14,9 @@ params["NUM_INPUT"] = 40
 params["NUM_HIDDEN"] = 512 #256
 params["NUM_OUTPUT"] = 20
 params["BATCH_SIZE"] = 256
-params["INPUT_FRAME_TIMESTEP"] = 20
+params["INPUT_FRAME_TIMESTEP"] = 20#20
 params["INPUT_SCALE"] = 0.00099 #0.008
-params["NUM_EPOCH"] = 100
+params["NUM_EPOCH"] = 5
 params["NUM_FRAMES"] = 80
 params["verbose"] = True
 params["debug"] = False
@@ -33,12 +33,12 @@ params["hidden_w_sd"] = 3.5
 params["output_w_mean"] = 3.0
 params["output_w_sd"] = 1.5 
 
-params["cross_validation"] = True
-params["cross_validation_run_all"] = True
+params["cross_validation"] = False
+params["cross_validation_run_all"] = False
 
 accuracy = hd_eventprop(params, 
                         file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
-                        output_dir = "HD_eventprop_standard_validation_test",
+                        output_dir = "HD_eventprop_standard_validation_recurrent",
                         model_description = "sv_test")
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")

@@ -153,7 +153,7 @@ def duplicate_and_mod_dataset(training_details, training_images):
     training_details_repeat.columns = training_details.columns
 
     for trial in trange(0, len(training_details_repeat), 2):
-        training_images_repeat[trial] = neighbour_swap(training_images_repeat[trial])
+        training_images_repeat[trial] = neighbour_swap(training_images_repeat[trial], kSwap = 1)
         
     return training_details_repeat, training_images_repeat, np.array(training_details_repeat.loc[:, "classification label"], dtype = "int8")
     
