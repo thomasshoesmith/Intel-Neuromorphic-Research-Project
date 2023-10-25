@@ -113,7 +113,7 @@ def combine_two_images_and_concatinate(training_images, training_labels):
     # sort x training images into y categories for blending
     categories = [[] for i in range(np.max(training_labels) + 1)]
 
-    for i in range(training_labels.shape[0]):
+    for i in range(len(training_labels)):
         categories[training_labels[i]].append(i)
         
     combined_image_array = []
@@ -138,7 +138,7 @@ def combine_two_images_and_concatinate(training_images, training_labels):
     
     combined_training_labels = np.concatenate([training_labels,
                                                np.array(combined_class_array)])
-    
+
     # Shuffle in unison
     shuffler = np.random.permutation(len(combined_training_images))
     combined_training_images_shuffled = combined_training_images[shuffler]

@@ -166,6 +166,10 @@ def hd_eventprop(params,
             print(f"speaker {speaker_left} of {len(speaker_id)}")
             print("\ncount", count)
 
+            # Augmentation
+            if params.get("aug_combine_images"):
+                train_spikes, train_labels = augmentation_tools.combine_two_images_and_concatinate(train_spikes, train_labels)
+
             with compiled_net:
                 # Evaluate model on numpy dataset
                 if params.get("verbose"):
