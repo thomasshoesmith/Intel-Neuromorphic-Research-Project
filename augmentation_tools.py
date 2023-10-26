@@ -146,14 +146,10 @@ def combine_two_images_and_concatinate(training_images, training_labels):
     
     return combined_training_images_shuffled, combined_training_labels_shuffled
 
-def duplicate_and_mod_dataset(training_details, training_images):
-    training_images_repeat = np.repeat(training_images, 2, axis = 0)
-    training_details_repeat = pd.DataFrame(np.repeat(training_details.values, 2, axis = 0))
+def pixel_swap(training_images, kSwap = 1, pSwap = 0.2, tSwap = 0.1):
 
-    training_details_repeat.columns = training_details.columns
+    for trial in trange(0, len(training_images)):
+        if random.randint(0, 10) < tSwap:
+            training_images[trial] = neighbour_swap(training_images[trial], kSwap = kSwap, pSwap = pSwap)
 
-    for trial in trange(0, len(training_details_repeat), 2):
-        training_images_repeat[trial] = neighbour_swap(training_images_repeat[trial], kSwap = 1)
-        
-    return training_details_repeat, training_images_repeat, np.array(training_details_repeat.loc[:, "classification label"], dtype = "int8")
-    
+    return training_images     

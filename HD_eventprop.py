@@ -7,6 +7,7 @@ import pandas as pd
 from tqdm import trange
 import os
 import pickle
+import copy
 
 from ml_genn import InputLayer, Layer, SequentialNetwork
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
@@ -168,12 +169,13 @@ def hd_eventprop(params,
 
             # Augmentation
             if params.get("aug_combine_images"):
-                train_spikes, train_labels = augmentation_tools.combine_two_images_and_concatinate(train_spikes, train_labels)
+                train_spikes, train_labels = augmentation_tools.combine_two_images_and_concatinate(copy.deepcopy(train_spikes), 
+                                                                                                   train_labels)
 
             with compiled_net:
                 # Evaluate model on numpy dataset
                 if params.get("verbose"):
-                    callbacks = ["batch_progress_bar", 
+                    callbacks = [#"batch_progress_bar", 
                                 Checkpoint(serialiser), 
                                 CSVTrainLog(f"train_output_{speaker_left}.csv", 
                                             output,
@@ -184,14 +186,24 @@ def hd_eventprop(params,
                 else:
                     callbacks = [#"batch_progress_bar",
                                  Checkpoint(serialiser)]
-                            
-                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                                                                            {output: train_labels},
-                                                                                            num_epochs=params.get("NUM_EPOCH"), 
-                                                                                            shuffle=True,
-                                                                                            callbacks=callbacks,
-                                                                                            validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
-                                                                                            validation_y= {output: eval_labels})
+                    
+                for e in trange(params.get("NUM_EPOCH")):
+
+                    #complete augmentation\
+                    if params.get("aug_swap_pixels"):
+                        train_spikes = augmentation_tools.pixel_swap(copy.deepcopy(train_spikes),
+                                                                    params.get("aug_swap_pixels_kSwap"),
+                                                                    params.get("aug_swap_pixels_pSwap"),
+                                                                    params.get("aug_swap_pixels_tSwap"))
+
+                    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                                                                                {output: train_labels},
+                                                                                                start_epoch = e, 
+                                                                                                num_epochs = 1,
+                                                                                                shuffle=True,
+                                                                                                callbacks=callbacks,
+                                                                                                validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
+                                                                                                validation_y= {output: eval_labels})
         
         if params.get("cross_validation_run_all"): 
             print("\n\nrun across all values ")
