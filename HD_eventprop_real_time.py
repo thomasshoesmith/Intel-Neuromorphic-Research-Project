@@ -10,7 +10,8 @@ if len(sys.argv) == 2:
         params = json.load(f)
 
 else:
-    print("running local parameters")
+    print("please pass parameters in the form of a json file")
+    exit()
     # constants
     params = {}
     params["NUM_INPUT"] = 40
@@ -48,7 +49,7 @@ else:
 
 accuracy = hd_eventprop(params, 
                         file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
-                        output_dir = "HD_eventprop_cv_aug_both",
-                        model_description = "sv_test")
+                        output_dir = params.get("output_dir"),
+                        model_description = params.get("model_description"))
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")
