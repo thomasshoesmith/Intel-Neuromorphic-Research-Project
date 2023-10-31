@@ -20,11 +20,11 @@
     "output_w_sd": 1.5,
     "aug_combine_images": false,
     "aug_swap_pixels": true,
-    "aug_swap_pixels_kSwap": 1,
+    "aug_swap_pixels_kSwap": 0.2,
     "aug_swap_pixels_pSwap": 0.2,
     "aug_swap_pixels_tSwap": 0.1,
     "cross_validation": true,
     "cross_validation_run_all": true,
-    "output_dir": "jade_test_02_",
+    "output_dir": "jade_test_02_1",
     "model_description": "batch_size_range"
 }

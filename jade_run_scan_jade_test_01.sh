@@ -23,4 +23,4 @@
 
 # run the application
 # cd ~/PhD/Intel-Neuromorphic-Research-Project/
-python HD_eventprop_real_time.py jade_test_params_01/params_${SLURM_ARRAY_TASK_ID}.json
+python HD_eventprop_real_time.py jade_test_params_02/params_${SLURM_ARRAY_TASK_ID}.json

@@ -1,0 +1,58 @@
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning: variable "lYTrue" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/customUpdateCUDAOptim.cc(474): warning: variable "batchOffset" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/customUpdateCUDAOptim.cc(474): warning: variable "batchOffset" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/synapseUpdateCUDAOptim.cc(59): warning: variable "shLg" was declared but never referenced
+
+./HD_eventpropEventPropCompiler_CODE/neuronUpdateCUDAOptim.cc(192): warning: variable "lYTrue" was declared but never referenced
+
+make: Entering directory `/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/jade_test_02_3/HD_eventpropEventPropCompiler_CODE'
+make: Leaving directory `/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/jade_test_02_3/HD_eventpropEventPropCompiler_CODE'
+make: Entering directory `/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/jade_test_02_3/HD_eventpropEventPropCompiler_CODE'
+synapseUpdate.cc(59): warning: variable "shLg" was declared but never referenced
+
+neuronUpdate.cc(192): warning: variable "lYTrue" was declared but never referenced
+
+customUpdate.cc(474): warning: variable "batchOffset" was declared but never referenced
+
+make: Leaving directory `/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/jade_test_02_3/HD_eventpropEventPropCompiler_CODE'
+/jmain02/apps/python3/3.8.6/lib/python3.8/site-packages/setuptools/distutils_patch.py:25: UserWarning: Distutils was imported before Setuptools. This usage is discouraged and may exhibit undesirable behaviors or errors. Please use Setuptools' objects directly or at least import Setuptools first.
+  warnings.warn(
+running passed arguments
+   Unnamed: 0 Language  Speaker  Trial  Label  classification label
+0           0   german      2.0   38.0    4.0                  14.0
+1           1  english      9.0    2.0    7.0                   7.0
+2           2   german      2.0   35.0    7.0                  17.0
+3           3   german      2.0   30.0    3.0                  13.0
+4           4   german     11.0   21.0    0.0                  10.0
+[ 0.  1.  2.  3.  4.  5.  6.  7.  8.  9. 10. 11.]
+[ 0  1  2  3  6  7  8  9 10 11]
+10
+speaker 0 of 10
+
+count 0
+  0%|          | 0/100 [00:00<?, ?it/s]
+  0%|          | 0/7243 [00:00<?, ?it/s][A  0%|          | 12/7243 [00:00<00:10, 708.07it/s]
+  0%|          | 0/100 [00:00<?, ?it/s]
+swig/python detected a memory leak of type 'CodeGenerator::CUDA::Backend *', no destructor found.
+Traceback (most recent call last):
+  File "HD_eventprop_real_time.py", line 50, in <module>
+    accuracy = hd_eventprop(params, 
+  File "/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/HD_eventprop.py", line 194, in hd_eventprop
+    train_spikes = augmentation_tools.pixel_swap(copy.deepcopy(train_spikes),
+  File "/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/augmentation_tools.py", line 153, in pixel_swap
+    training_images[trial] = neighbour_swap(training_images[trial], kSwap = kSwap, pSwap = pSwap)
+  File "/jmain02/home/J2AD005/jck01/tts42-jck01/PhD/Intel-Neuromorphic-Research-Project/augmentation_tools.py", line 63, in neighbour_swap
+    k = np.random.randint(-kSwap, kSwap, 2)
+  File "mtrand.pyx", line 748, in numpy.random.mtrand.RandomState.randint
+  File "_bounded_integers.pyx", line 1247, in numpy.random._bounded_integers._rand_int64
+ValueError: high <= 0
+swig/python detected a memory leak of type 'CalcMaxLengthFunc *', no destructor found.
+swig/python detected a memory leak of type 'CalcMaxLengthFunc *', no destructor found.
+swig/python detected a memory leak of type 'CalcKernelSizeFunc *', no destructor found.
+swig/python detected a memory leak of type 'CalcMaxLengthFunc *', no destructor found.
+swig/python detected a memory leak of type 'CalcKernelSizeFunc *', no destructor found.
