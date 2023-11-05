@@ -79,7 +79,7 @@ def hd_eventprop(params,
             self.file = open(filename, "a" if resume else "w")
             self.csv_writer = csv.writer(self.file, delimiter=",")
 
-            # Write header row if we're not resuming from an existing training run
+            # Write header row if we're not resuming froif the m an existing training run
             if not resume:
                 self.csv_writer.writerow(["Epoch", "Num trials", "Number correct", "accuracy", "Time"])
 
@@ -122,10 +122,11 @@ def hd_eventprop(params,
 
         # Connections
         Connection(input, hidden, Dense(Normal(mean = params.get("hidden_w_mean"), 
-                                    sd = params.get("hidden_w_sd"))),
+                                               sd = params.get("hidden_w_sd"))),
                     Exponential(2.0))
         
-        Connection(hidden, hidden, Dense(Normal(mean=4.0, sd=4.0)),
+        Connection(hidden, hidden, Dense(Normal(mean = params.get("r_hidden_w_mean"), 
+                                                sd = params.get("r_hidden_w_sd"))),
                    Exponential(2.0))
         
         Connection(hidden, output, Dense(Normal(mean = params.get("output_w_mean"),

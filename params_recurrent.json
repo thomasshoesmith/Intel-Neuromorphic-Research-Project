@@ -5,7 +5,7 @@
     "BATCH_SIZE": 256,
     "INPUT_FRAME_TIMESTEP": 20,
     "INPUT_SCALE": 0.00099,
-    "NUM_EPOCH": 100,
+    "NUM_EPOCH": 50,
     "NUM_FRAMES": 80,
     "verbose": true,
     "debug": false,
@@ -15,7 +15,9 @@
     "reg_lambda_upper": 1e-12,
     "reg_nu_upper": 20,
     "hidden_w_mean": 0.0,
-    "hidden_w_sd": 3.5,
+    "hidden_w_sd": 3.0,
+    "r_hidden_w_mean": 0.0,
+    "r_hidden_w_sd": 0.0,
     "output_w_mean": 3.0,
     "output_w_sd": 1.5,
     "aug_combine_images": false,
@@ -23,8 +25,8 @@
     "aug_swap_pixels_kSwap": 1,
     "aug_swap_pixels_pSwap": 0.2,
     "aug_swap_pixels_tSwap": 0.1,
-    "cross_validation": true,
+    "cross_validation": false,
     "cross_validation_run_all": false,
-    "output_dir": "nested_epoch_error",
-    "model_description": "troubleshooting"
+    "output_dir": "recurrent_test",
+    "model_description": "recurrent"
 }
