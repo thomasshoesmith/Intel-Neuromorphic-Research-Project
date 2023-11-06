@@ -61,7 +61,7 @@ else:
     with open(sys.argv[1], "r") as f:
         params = json.load(f)
 
-combinations["r_hidden_w_sd"] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+combinations["aug_swap_pixels_pSwap"] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 # Writing to sample.json
 # horrid solution TODO: improve this code to support cross combinations

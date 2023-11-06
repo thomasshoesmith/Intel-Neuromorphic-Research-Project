@@ -196,15 +196,15 @@ def hd_eventprop(params,
                                  Checkpoint(serialiser)]
                     
                 for e in trange(params.get("NUM_EPOCH")):
-
+                    e_train_spikes = copy.deepcopy(train_spikes)
                     #complete augmentation\
                     if params.get("aug_swap_pixels"):
-                        train_spikes = augmentation_tools.pixel_swap(copy.deepcopy(train_spikes),
+                        e_train_spikes = augmentation_tools.pixel_swap(copy.deepcopy(train_spikes),
                                                                     params.get("aug_swap_pixels_kSwap"),
                                                                     params.get("aug_swap_pixels_pSwap"),
                                                                     params.get("aug_swap_pixels_tSwap"))
 
-                    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: e_train_spikes * params.get("INPUT_SCALE")},
                                                                                                 {output: train_labels},
                                                                                                 start_epoch = e, 
                                                                                                 num_epochs = 1,
