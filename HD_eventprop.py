@@ -9,7 +9,7 @@ import os
 import pickle
 import copy
 
-from ml_genn import InputLayer, Layer, SequentialNetwork
+from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
 from ml_genn.compilers import EventPropCompiler, InferenceCompiler
 from ml_genn.connectivity import Dense
@@ -107,32 +107,40 @@ def hd_eventprop(params,
             
     # Create sequential model
     serialiser = Numpy("latency_hd_checkpoints")
-    network = SequentialNetwork(default_params)
+    network = Network(default_params)
+    
     with network:
         # Populations
-        input = InputLayer(LeakyIntegrateFireInput(v_thresh=1, #4
+        input = Population(LeakyIntegrateFireInput(v_thresh=1, #4
                                                 tau_mem=20,    #10
                                                 input_frames=params.get("NUM_FRAMES"), 
                                                 input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
                             params.get("NUM_INPUT"), 
                             record_spikes = True)
         
-        hidden = Layer(Dense(Normal(mean = params.get("hidden_w_mean"), # m = .5, sd = 4 ~ 68%
-                                    sd = params.get("hidden_w_sd"))), 
-                    LeakyIntegrateFire(v_thresh=1.0, 
-                                        tau_mem=20.0,
-                                        tau_refrac=None),
+        hidden = Population(LeakyIntegrateFire(v_thresh=1.0, 
+                                        tau_mem=20.0),
                     params.get("NUM_HIDDEN"), 
-                    Exponential(5.0), #5
                     record_spikes=True)
         
-        output = Layer(Dense(Normal(mean = params.get("output_w_mean"), # m = 0.5, sd = 1 @ ~ 66
-                                    sd = params.get("output_w_sd"))),
-                    LeakyIntegrate(tau_mem=20.0, 
+        output = Population(LeakyIntegrate(tau_mem=20.0, 
                                     readout="avg_var"),
                     params.get("NUM_OUTPUT"), 
-                    Exponential(5.0), #5
                     record_spikes=True)
+
+        # Connections
+        Connection(input, hidden, Dense(Normal(mean = params.get("hidden_w_mean"), 
+                                               sd = params.get("hidden_w_sd"))),
+                    Exponential(2.0))
+        
+        if params.get("recurrent"):
+            Connection(hidden, hidden, Dense(Normal(mean = params.get("r_hidden_w_mean"), 
+                                                    sd = params.get("r_hidden_w_sd"))),
+                    Exponential(2.0))
+        
+        Connection(hidden, output, Dense(Normal(mean = params.get("output_w_mean"),
+                                    sd = params.get("output_w_sd"))),
+                   Exponential(2.0))
         
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",

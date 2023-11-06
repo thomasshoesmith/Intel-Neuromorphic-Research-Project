@@ -3,7 +3,7 @@ import os
 import sys
 #combinations
 combinations = {}
-directory_name = "jade_test_params_02"
+directory_name = "jade_test_params_03"
 params = {}
 
 previous_d = os.getcwd()
@@ -61,7 +61,7 @@ else:
     with open(sys.argv[1], "r") as f:
         params = json.load(f)
 
-combinations["aug_swap_pixels_tSwap"] = [0.1, 0.2, 0.3, 0.4]
+combinations["r_hidden_w_sd"] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 # Writing to sample.json
 # horrid solution TODO: improve this code to support cross combinations
