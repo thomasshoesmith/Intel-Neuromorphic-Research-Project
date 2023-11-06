@@ -69,7 +69,7 @@ len_output_dir = len(params.get("output_dir"))
 for c_count, c in enumerate(combinations):
     for i_count, i in enumerate(combinations.get(c)):
         params[c] = i
-        params["output_dir"] = "_" + params.get("output_dir")[:len_output_dir] + str(i_count + (c_count * len(combinations)))
+        params["output_dir"] = params.get("output_dir")[:len_output_dir] + "_" + str(i_count + (c_count * len(combinations)))
 
         json_object = json.dumps(params, indent = 4)
         print(json_object)
