@@ -65,10 +65,11 @@ combinations["r_hidden_w_sd"] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.
 
 # Writing to sample.json
 # horrid solution TODO: improve this code to support cross combinations
+len_output_dir = len(params.get("output_dir"))
 for c_count, c in enumerate(combinations):
     for i_count, i in enumerate(combinations.get(c)):
         params[c] = i
-        params["output_dir"] = params.get("output_dir")[:13] + str(i_count + (c_count * len(combinations)))
+        params["output_dir"] = "_" + params.get("output_dir")[:len_output_dir] + str(i_count + (c_count * len(combinations)))
 
         json_object = json.dumps(params, indent = 4)
         print(json_object)

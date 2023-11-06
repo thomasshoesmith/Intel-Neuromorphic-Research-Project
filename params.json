@@ -28,6 +28,6 @@
     "aug_swap_pixels_tSwap": 0.1,
     "cross_validation": false,
     "cross_validation_run_all": false,
-    "output_dir": "nested_epoch_error",
-    "model_description": "troubleshooting"
+    "output_dir": "r_hidden_sd_sweep",
+    "model_description": "weight_sweep"
 }
