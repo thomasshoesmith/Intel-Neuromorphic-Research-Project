@@ -148,7 +148,7 @@ def combine_two_images_and_concatinate(training_images, training_labels):
 
 def pixel_swap(training_images, kSwap = 1, pSwap = 0.2, tSwap = 0.1):
 
-    for trial in trange(0, len(training_images)):
+    for trial in range(0, len(training_images)):
         if random.randint(0, 10) < tSwap:
             training_images[trial] = neighbour_swap(training_images[trial], kSwap = kSwap, pSwap = pSwap)
 
