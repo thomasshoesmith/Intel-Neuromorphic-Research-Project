@@ -31,48 +31,43 @@ import augmentation_tools
 
 
 def hd_eventprop(params, 
-                 file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
-                 output_dir = "HD_eventprop_output",
-                 model_description = ""):
+                 file_path = os.path.expanduser("~/data/rawHD/experimental_2/")):
     """
     Function to run hd classification using eventprop
     Parameters:
       params - a dictionary containing all parameters
       file_path - directory where training/testing/detail files are found
-      debug - bool for if cvs train log is generated, or an accuracy returned
-      output_dir - directory to save genn outputs
-      model_description - used for saving of hidden spikes during debugging
     """
     
     # change dir for readout files
     try:
-        os.mkdir(output_dir)
+        os.makedirs(params.get("output_dir") + params.get("sweeping_suffix"))
     except:
         pass
 
-    os.chdir(output_dir)
+    os.chdir(params.get("output_dir") + params.get("sweeping_suffix"))
 
     # Load testing data
     x_train = np.load(file_path + "training_x_data.npy")
     y_train = np.load(file_path + "training_y_data.npy")
 
     x_test = np.load(file_path + "testing_x_data.npy")
-    #y_test = np.load(file_path + "testing_y_data.npy")
+    y_test = np.load(file_path + "testing_y_data.npy")
 
     training_details = pd.read_csv(file_path + "training_details.csv")
     testing_details = pd.read_csv(file_path + "testing_details.csv")
 
     training_images = np.swapaxes(x_train, 1, 2) 
-    #testing_images = np.swapaxes(x_test, 1, 2) 
+    testing_images = np.swapaxes(x_test, 1, 2) 
 
     training_images = training_images + abs(np.floor(training_images.min()))
-    #testing_images = testing_images + abs(np.floor(testing_images.min()))
+    testing_images = testing_images + abs(np.floor(testing_images.min()))
     
     #training_images, training_labels = augmentation_tools.combine_two_images_and_concatinate(training_images, y_train)
     #training_details, training_images, training_labels = augmentation_tools.duplicate_and_mod_dataset(training_details, training_images)
 
     training_labels = y_train
-    #testing_labels = y_test
+    testing_labels = y_test
 
     if params.get("verbose"): print(training_details.head())
     speaker_id = np.sort(training_details.Speaker.unique())
@@ -222,7 +217,7 @@ def hd_eventprop(params,
                 if params.get("verbose"):
                     callbacks = ["batch_progress_bar", 
                                 Checkpoint(combined_serialiser), 
-                                CSVTrainLog(f"train_output_{speaker_left}.csv", 
+                                CSVTrainLog(f"train_output_combined.csv", 
                                             output,
                                             False)]
                                 #SpikeRecorder(input, key="input_spikes"),
@@ -261,8 +256,8 @@ def hd_eventprop(params,
             else:
                 callbacks = [Checkpoint(serialiser)]
         
-            metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
-                                                    {output: training_labels},
+            metrics, cb_data = compiled_net.evaluate({input: testing_images * params.get("INPUT_SCALE")},
+                                                    {output: testing_labels},
                                                     callbacks = callbacks)
         
         
@@ -299,7 +294,7 @@ def hd_eventprop(params,
                 pickle.dump(serialiser, f)
 
             # save hidden spike counts
-            with open(f'hidden_spike_counts_{model_description}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
+            with open(f'hidden_spike_counts_{params.get("model_description")}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
 

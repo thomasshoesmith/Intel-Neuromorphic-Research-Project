@@ -14,9 +14,19 @@ else:
     with open("params.json", "r") as f:
         params = json.load(f)
 
+os.chdir("output")
+
+# nested directory for sweep
+if len(params.get("sweeping_suffix")) > 0:
+    # change dir for readout files
+    try:
+        os.makedirs(params.get("output_dir"))
+    except:
+        pass
+
+    os.chdir(params.get("output_dir"))
+
 accuracy = hd_eventprop(params, 
-                        file_path = os.path.expanduser("~/data/rawHD/experimental_2/"),
-                        output_dir = params.get("output_dir"),
-                        model_description = params.get("model_description"))
+                        file_path = os.path.expanduser("~/data/rawHD/experimental_2/"))
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")
