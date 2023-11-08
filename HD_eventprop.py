@@ -124,17 +124,17 @@ def hd_eventprop(params,
                     record_spikes=True)
 
         # Connections
-        Connection(input, hidden, Dense(Normal(mean = params.get("hidden_w_mean"), 
-                                               sd = params.get("hidden_w_sd"))),
+        Connection(input, hidden, Dense(Normal(mean = params.get("input_hidden_w_mean"), 
+                                               sd = params.get("input_hidden_w_sd"))),
                     Exponential(2.0))
         
         if params.get("recurrent"):
-            Connection(hidden, hidden, Dense(Normal(mean = params.get("r_hidden_w_mean"), 
-                                                    sd = params.get("r_hidden_w_sd"))),
+            Connection(hidden, hidden, Dense(Normal(mean = params.get("hidden_hidden_w_mean"), 
+                                                    sd = params.get("hidden_hidden_w_sd"))),
                     Exponential(2.0))
         
-        Connection(hidden, output, Dense(Normal(mean = params.get("output_w_mean"),
-                                    sd = params.get("output_w_sd"))),
+        Connection(hidden, output, Dense(Normal(mean = params.get("hidden_output_w_mean"),
+                                    sd = params.get("hidden_output_w_sd"))),
                    Exponential(2.0))
         
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
