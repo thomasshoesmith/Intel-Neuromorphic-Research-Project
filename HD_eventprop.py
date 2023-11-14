@@ -265,8 +265,8 @@ def hd_eventprop(params,
     else:
         with compiled_net:
             # Evaluate model on numpy dataset
-            start_epoch = 0
-            if params.get("verbose"):
+            if params.get("debug"):
+                print("!!!    debug")
                 callbacks = ["batch_progress_bar",
                             CSVTrainLog(f"train_output.csv", 
                                             output,
@@ -275,7 +275,13 @@ def hd_eventprop(params,
                             SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
-                                        example_filter = list(range(7000, 371200, 7424)))]  
+                                        example_filter = list(range(7000, 371200, 7424)))] 
+            elif params.get("verbose"):
+                callbacks = ["batch_progress_bar",
+                            CSVTrainLog(f"train_output.csv", 
+                                            output,
+                                            False),
+                            Checkpoint(serialiser)]
             
             else:
                 callbacks = [Checkpoint(serialiser)]
@@ -294,7 +300,7 @@ def hd_eventprop(params,
                 pickle.dump(serialiser, f)
 
             # save hidden spike counts
-            with open(f'hidden_spike_counts_{params.get("model_description")}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
+            with open(f'hidden_spike_counts.npy', 'wb') as f:     #_{params.get("model_description")}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
 
@@ -456,8 +462,17 @@ def hd_eventprop(params,
 
     # reset directory
     os.chdir("..")
-    
-    if params.get("debug"):
-        return metrics[output].correct / metrics[output].total, cb_data["v_input"][500]
-    else:
-        return metrics[output].correct / metrics[output].total
+
+    # if sweeping, save params and accuracy to csv
+    does_summary_file_exist = os.path.exists("summary.csv")
+    # Create CSV writer
+    file = open("summary.csv", "a" if does_summary_file_exist else "w")
+    csv_writer = csv.writer(file, delimiter=",")
+
+    # Write header row if we're not resuming from an existing training run
+    if not does_summary_file_exist:
+        csv_writer.writerow((list(params) + ["accuracy"]))
+
+    csv_writer.writerow((list(params.values()) + [metrics[output].correct / metrics[output].total]))
+
+    return metrics[output].correct / metrics[output].total
