@@ -7,7 +7,7 @@ from tqdm import trange
 from numba import cuda
 
 # get list of json param files
-param_dir = "rawSC_coarse_weight_sweep"
+param_dir = "jade_test_params_03"
 dir_list = os.listdir(param_dir)
 dir_cwd = os.getcwd()
 
@@ -39,4 +39,4 @@ for i in trange(len(dir_list)):
         os.chdir(params.get("output_dir"))
 
     accuracy = hd_eventprop(params, 
-                            file_path = os.path.expanduser("~/data/rawSC/experimental_2/"))
+                            file_path = os.path.expanduser("~/data/rawHD/experimental_2/"))
