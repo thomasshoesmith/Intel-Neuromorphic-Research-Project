@@ -1,9 +1,11 @@
 import json
 import os
 import sys
+import itertools
+
 #combinations
 combinations = {}
-directory_name = "jade_test_params_03"
+directory_name = "rawSC_coarse_weight_sweep"
 params = {}
 
 previous_d = os.getcwd()
@@ -20,27 +22,36 @@ os.chdir(previous_d) #fix this TODO:
 
 if len(sys.argv) != 2:
     print("running local parameters")
-    print("error: please pass json file")
-    exit()
+    with open("SC_params.json", "r") as f:
+        params = json.load(f)
 
 else:
     print("running passed arguments")
     with open(sys.argv[1], "r") as f:
         params = json.load(f)
 
-combinations["aug_swap_pixels_pSwap"] = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+# change the sweep parameters here
+combinations["input_hidden_w_mean"] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
+combinations["input_hidden_w_sd"] = [0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
+combinations["hidden_hidden_w_mean"] = [0.0]
+combinations["hidden_hidden_w_sd"] = [0.1, 0.2, 0.3, 0.4, 0.5]
+combinations["hidden_output_w_mean"] = [3.0]
+combinations["hidden_output_w_sd"] = [1.5]
 
-# Writing to sample.json
-# horrid solution TODO: improve this code to support cross combinations
-len_output_dir = len(params.get("output_dir"))
-for c_count, c in enumerate(combinations):
-    for i_count, i in enumerate(combinations.get(c)):
-        params[c] = i
-        #params["output_dir"] = params.get("output_dir")[:len_output_dir] + "_" + str(i_count + (c_count * len(combinations)))
-        params["sweeping_suffix"] = "-" + str(i_count + (c_count * len(combinations)))
+combined = []
 
-        json_object = json.dumps(params, indent = 4)
-        print(json_object)
-        with open(f"{directory_name}/params_{i_count + (c_count * len(combinations))}.json", "w") as outfile:
-            outfile.write(json_object)
+for c in combinations:
+    combined.append(combinations.get(c))
 
+unique_combo = list(itertools.product(*combined))
+
+for i_count, i in enumerate(unique_combo):
+    for c_count, c in enumerate(combinations):
+        params[c] = i[c_count]
+
+    params["sweeping_suffix"] = "-" + str(i_count)
+
+    json_object = json.dumps(params, indent = 4)
+    print(json_object)
+    with open(f"{directory_name}/params_{i_count}.json", "w") as outfile:
+        outfile.write(json_object)

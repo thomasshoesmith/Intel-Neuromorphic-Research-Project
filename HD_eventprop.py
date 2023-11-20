@@ -8,6 +8,7 @@ from tqdm import trange
 import os
 import pickle
 import copy
+import math
 
 from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
@@ -50,12 +51,23 @@ def hd_eventprop(params,
     # Load testing data
     x_train = np.load(file_path + "training_x_data.npy")
     y_train = np.load(file_path + "training_y_data.npy")
-
+    
+    if params.get("NETWORK_SCALE") < 1:
+        assert len(x_train) == len(y_train)
+        p = np.random.permutation(len(x_train))
+        x_train, y_train = x_train[p], y_train[p]
+        print(f"original network size: {len(x_train)}")
+        x_train = x_train[:int(len(x_train) * params.get("NETWORK_SCALE"))]
+        y_train = y_train[:int(len(y_train) * params.get("NETWORK_SCALE"))]
+        print(f"reduced network size: {len(x_train)}")
+        print("!! network reduced")
+        
     x_test = np.load(file_path + "testing_x_data.npy")
     y_test = np.load(file_path + "testing_y_data.npy")
 
-    training_details = pd.read_csv(file_path + "training_details.csv")
-    testing_details = pd.read_csv(file_path + "testing_details.csv")
+    if params.get("cross_validation"):
+        training_details = pd.read_csv(file_path + "training_details.csv")
+        testing_details = pd.read_csv(file_path + "testing_details.csv")
 
     training_images = np.swapaxes(x_train, 1, 2) 
     testing_images = np.swapaxes(x_test, 1, 2) 
@@ -68,12 +80,6 @@ def hd_eventprop(params,
 
     training_labels = y_train
     testing_labels = y_test
-
-    if params.get("verbose"): print(training_details.head())
-    speaker_id = np.sort(training_details.Speaker.unique())
-    speaker_id = speaker_id = speaker_id.astype('int8')  #np where is fussy with int
-  
-    if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
     
     # readout class
     class CSVTrainLog(Callback):
@@ -149,6 +155,13 @@ def hd_eventprop(params,
     compiled_net = compiler.compile(network)
     
     if params.get("cross_validation"):
+        
+        if params.get("verbose"): print(training_details.head())
+        speaker_id = np.sort(training_details.Speaker.unique())
+        speaker_id = speaker_id = speaker_id.astype('int8')  #np where is fussy with int
+    
+        if params.get("verbose"): print(np.sort(testing_details.Speaker.unique()))
+        
         # Create sequential model
         serialisers = []
         for s in speaker_id:
@@ -260,7 +273,6 @@ def hd_eventprop(params,
                                                     {output: testing_labels},
                                                     callbacks = callbacks)
         
-        
     #if params.get("cross_validation") == False:
     else:
         with compiled_net:
@@ -275,7 +287,9 @@ def hd_eventprop(params,
                             SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
-                                        example_filter = list(range(7000, 371200, 7424)))] 
+                                        example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
+                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                    int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"))))] #list(range(7000, 371200, 7424)))] 
             elif params.get("verbose"):
                 callbacks = ["batch_progress_bar",
                             CSVTrainLog(f"train_output.csv", 
@@ -286,7 +300,6 @@ def hd_eventprop(params,
             else:
                 callbacks = [Checkpoint(serialiser)]
                 
-                    
             metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                             {output: training_labels},
                                                                                             num_epochs = params.get("NUM_EPOCH"), 
@@ -319,9 +332,9 @@ def hd_eventprop(params,
                             Checkpoint(serialiser),
                             SpikeRecorder(input, key="input_spikes"), 
                             SpikeRecorder(hidden, key="hidden_spikes"),
-                            SpikeRecorder(output, key="output_spikes"),
-                            VarRecorder(output, "v", key="v_output"),
-                            VarRecorder(input, "v", key = "v_input"),]
+                            #SpikeRecorder(output, key="output_spikes"),
+                            VarRecorder(output, "v", key="v_output")]
+                            #VarRecorder(input, "v", key = "v_input"),]
             else:
                 callbacks = [Checkpoint(serialiser)]
         
@@ -334,7 +347,7 @@ def hd_eventprop(params,
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
 
-        value = random.randint(0, len(x_test))
+        value = random.randint(0, 1000) #len(x_test))
 
         ax1.scatter(cb_data["hidden_spikes"][0][value], 
                     cb_data["hidden_spikes"][1][value], s=1)
