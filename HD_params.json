@@ -1,5 +1,6 @@
 {
-    "NUM_INPUT": 80,
+    "dataset_directory" : "~/data/rawHD/rawHD_40input/", 
+    "NUM_INPUT": 40,
     "NUM_HIDDEN": 512,
     "NUM_OUTPUT": 20,
     "BATCH_SIZE": 256,

@@ -2,7 +2,7 @@ import os
 import sys
 import json
 import re
-from HD_eventprop import hd_eventprop
+from eventprop_main import eventprop
 from tqdm import trange
 from numba import cuda
 
@@ -38,5 +38,5 @@ for i in trange(len(dir_list)):
 
         os.chdir(params.get("output_dir"))
 
-    accuracy = hd_eventprop(params, 
+    accuracy = eventprop(params, 
                             file_path = os.path.expanduser("~/data/rawHD/experimental_2/"))

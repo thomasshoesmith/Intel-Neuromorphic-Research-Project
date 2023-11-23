@@ -1,7 +1,6 @@
 #export CUDA_PATH=/usr/local/cuda
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.pyplot import figure
 import csv
 import pandas as pd
 from tqdm import trange
@@ -22,7 +21,6 @@ from ml_genn.synapses import Exponential
 from time import perf_counter
 
 from ml_genn.utils.data import (calc_latest_spike_time, linear_latency_encode_data)
-
 from ml_genn.compilers.event_prop_compiler import default_params
 
 import random
@@ -30,9 +28,7 @@ import librosa
 
 import augmentation_tools
 
-
-def hd_eventprop(params, 
-                 file_path = os.path.expanduser("~/data/rawHD/experimental_2/")):
+def eventprop(params):
     """
     Function to run hd classification using eventprop
     Parameters:
@@ -48,9 +44,15 @@ def hd_eventprop(params,
 
     os.chdir(params.get("output_dir") + params.get("sweeping_suffix"))
 
-    # Load testing data
-    x_train = np.load(file_path + "training_x_data.npy")
-    y_train = np.load(file_path + "training_y_data.npy")
+    # Load dataset
+    x_train = np.load(os.path.expanduser(params.get("dataset_directory")) + "training_x_data.npy")
+    y_train = np.load(os.path.expanduser(params.get("dataset_directory")) + "training_y_data.npy")
+    
+    x_test = np.load(os.path.expanduser(params.get("dataset_directory")) + "testing_x_data.npy")
+    y_test = np.load(os.path.expanduser(params.get("dataset_directory")) + "testing_y_data.npy")
+    
+    #TODO: Redundant? any point to have a NUM_INPUT if data can be obtained through dataset shape
+    assert x_train.shape[1] == params.get("NUM_INPUT"), "dataset input size doesn't match passed input parameter size"
     
     if params.get("NETWORK_SCALE") < 1:
         assert len(x_train) == len(y_train)
@@ -61,22 +63,16 @@ def hd_eventprop(params,
         y_train = y_train[:int(len(y_train) * params.get("NETWORK_SCALE"))]
         print(f"reduced network size: {len(x_train)}")
         print("!! network reduced")
-        
-    x_test = np.load(file_path + "testing_x_data.npy")
-    y_test = np.load(file_path + "testing_y_data.npy")
 
     if params.get("cross_validation"):
-        training_details = pd.read_csv(file_path + "training_details.csv")
-        testing_details = pd.read_csv(file_path + "testing_details.csv")
+        training_details = pd.read_csv(os.path.expanduser(params.get("dataset_directory")) + "training_details.csv")
+        testing_details = pd.read_csv(os.path.expanduser(params.get("dataset_directory")) + "testing_details.csv")
 
     training_images = np.swapaxes(x_train, 1, 2) 
     testing_images = np.swapaxes(x_test, 1, 2) 
 
     training_images = training_images + abs(np.floor(training_images.min()))
     testing_images = testing_images + abs(np.floor(testing_images.min()))
-    
-    #training_images, training_labels = augmentation_tools.combine_two_images_and_concatinate(training_images, y_train)
-    #training_details, training_images, training_labels = augmentation_tools.duplicate_and_mod_dataset(training_details, training_images)
 
     training_labels = y_train
     testing_labels = y_test

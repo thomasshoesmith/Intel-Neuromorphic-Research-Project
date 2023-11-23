@@ -25,7 +25,7 @@ from ml_genn.compilers.event_prop_compiler import default_params
 import random
 import librosa
 
-from HD_eventprop import hd_eventprop
+from eventprop_main import hd_eventprop
 
 # constants
 params = {}

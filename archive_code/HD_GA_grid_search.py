@@ -11,7 +11,7 @@ import csv
 import pandas as pd
 from tqdm import trange
 
-from HD_eventprop import hd_eventprop
+from eventprop_main import hd_eventprop
 
 initial_pop = [0.0, 3.5, 3.0, 1.5]
 pop_size = 10
