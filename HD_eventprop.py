@@ -107,13 +107,13 @@ def hd_eventprop(params,
             self.file.flush()
             
     # Create sequential model
-    serialiser = Numpy("latency_hd_checkpoints")
+    serialiser = Numpy("latency_hd_checkpoints") #TODO:
     network = Network(default_params)
     
     with network:
         # Populations
-        input = Population(LeakyIntegrateFireInput(v_thresh=1, #4
-                                                tau_mem=20,    #10
+        input = Population(LeakyIntegrateFireInput(v_thresh=1, 
+                                                tau_mem=20,    
                                                 input_frames=params.get("NUM_FRAMES"), 
                                                 input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
                             params.get("NUM_INPUT"), 
@@ -125,7 +125,7 @@ def hd_eventprop(params,
                     record_spikes=True)
         
         output = Population(LeakyIntegrate(tau_mem=20.0, 
-                                    readout="avg_var"),
+                                    readout="avg_var_exp_weight"),
                     params.get("NUM_OUTPUT"), 
                     record_spikes=True)
 
@@ -298,13 +298,15 @@ def hd_eventprop(params,
                             Checkpoint(serialiser)]
             
             else:
-                callbacks = [Checkpoint(serialiser)]
+                callbacks = [CSVTrainLog(f"train_output.csv", 
+                                            output,
+                                            False),
+                             Checkpoint(serialiser)]
                 
             metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                             {output: training_labels},
                                                                                             num_epochs = params.get("NUM_EPOCH"), 
                                                                                             shuffle=False,
-                                                                                            validation_split = 0.1,
                                                                                             callbacks = callbacks)    
 
         if params.get("debug"):
