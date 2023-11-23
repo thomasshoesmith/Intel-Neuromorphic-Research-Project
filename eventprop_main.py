@@ -8,6 +8,7 @@ import os
 import pickle
 import copy
 import math
+import json
 
 from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
@@ -37,6 +38,7 @@ def eventprop(params):
     """
     
     # change dir for readout files
+    # lazy fix until a solution can be implemented with ml_genn to support output file directory change
     try:
         os.makedirs(params.get("output_dir") + params.get("sweeping_suffix"))
     except:
@@ -103,7 +105,7 @@ def eventprop(params):
             self.file.flush()
             
     # Create sequential model
-    serialiser = Numpy("latency_hd_checkpoints") #TODO:
+    serialiser = Numpy("hd_checkpoints") #TODO: give unique name?
     network = Network(default_params)
     
     with network:
@@ -302,7 +304,8 @@ def eventprop(params):
             metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                             {output: training_labels},
                                                                                             num_epochs = params.get("NUM_EPOCH"), 
-                                                                                            shuffle=False,
+                                                                                            shuffle = not(params.get("debug")),
+                                                                                            validation_split = 0.1,
                                                                                             callbacks = callbacks)    
 
         if params.get("debug"):
@@ -311,10 +314,14 @@ def eventprop(params):
                 pickle.dump(serialiser, f)
 
             # save hidden spike counts
-            with open(f'hidden_spike_counts.npy', 'wb') as f:     #_{params.get("model_description")}_{params.get("reg_lambda_lower")}_{params.get("reg_lambda_upper")}_{params.get("reg_nu_upper")}_@{metrics[output].correct / metrics[output].total * 100:.2f}.npy', 'wb') as f:
+            with open(f'hidden_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
 
+            # save parameters for reference
+            json_object = json.dumps(params, indent = 4)
+            with open("params.json", "w") as outfile:
+                outfile.write(json_object)
             
         # evaluate
         network.load((params.get("NUM_EPOCH") - 1,), serialiser)
@@ -330,9 +337,7 @@ def eventprop(params):
                             Checkpoint(serialiser),
                             SpikeRecorder(input, key="input_spikes"), 
                             SpikeRecorder(hidden, key="hidden_spikes"),
-                            #SpikeRecorder(output, key="output_spikes"),
                             VarRecorder(output, "v", key="v_output")]
-                            #VarRecorder(input, "v", key = "v_input"),]
             else:
                 callbacks = [Checkpoint(serialiser)]
         
