@@ -29,3 +29,4 @@ if len(params.get("sweeping_suffix")) > 0:
 accuracy = eventprop(params)
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")
+  

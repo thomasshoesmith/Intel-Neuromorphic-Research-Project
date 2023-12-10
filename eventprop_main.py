@@ -9,6 +9,7 @@ import pickle
 import copy
 import math
 import json
+from numba import cuda
 
 from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
@@ -20,6 +21,8 @@ from ml_genn.optimisers import Adam
 from ml_genn.serialisers import Numpy
 from ml_genn.synapses import Exponential
 from time import perf_counter
+
+from pynvml import *
 
 from ml_genn.utils.data import (calc_latest_spike_time, linear_latency_encode_data)
 from ml_genn.compilers.event_prop_compiler import default_params
@@ -34,7 +37,6 @@ def eventprop(params):
     Function to run hd classification using eventprop
     Parameters:
       params - a dictionary containing all parameters
-      file_path - directory where training/testing/detail files are found
     """
     
     # change dir for readout files
@@ -88,7 +90,7 @@ def eventprop(params):
 
             # Write header row if we're not resuming from an existing training run
             if not resume:
-                self.csv_writer.writerow(["Epoch", "Num trials", "Number correct", "accuracy", "Time"])
+                self.csv_writer.writerow(["Epoch", "Num trials", "Number correct", "accuracy", "Time", "memory"])
 
             self.output_pop = output_pop
 
@@ -96,12 +98,16 @@ def eventprop(params):
             self.start_time = perf_counter()
 
         def on_epoch_end(self, epoch, metrics):
+            nvmlInit()
+            handle = nvmlDeviceGetHandleByIndex(0)
+            info = nvmlDeviceGetMemoryInfo(handle)
             m = metrics[self.output_pop]
             self.csv_writer.writerow([epoch, 
                                     m.total, 
                                     m.correct,
                                     m.correct / m.total,
-                                    perf_counter() - self.start_time])
+                                    perf_counter() - self.start_time,
+                                    info.used / 1048576])
             self.file.flush()
             
     # Create sequential model
@@ -148,7 +154,8 @@ def eventprop(params):
                             reg_lambda_lower = params.get("reg_lambda_lower"),
                             reg_lambda_upper = params.get("reg_lambda_upper"),
                             reg_nu_upper = params.get("reg_nu_upper"),
-                            dt = params.get("dt"))
+                            dt = params.get("dt"),
+                            max_spikes=1500)
 
     compiled_net = compiler.compile(network)
     
@@ -171,6 +178,10 @@ def eventprop(params):
         speaker = list(training_details.loc[:, "Speaker"])
         
         for count, speaker_left in enumerate(speaker_id):
+            #reset gpu memory
+            device = cuda.get_current_device()
+            device.reset()
+            
             train= np.where(speaker != speaker_left)[0]
             evalu= np.where(speaker == speaker_left)[0]
             train_spikes= np.array([ training_images[i] for i in train ])
@@ -275,6 +286,8 @@ def eventprop(params):
     else:
         with compiled_net:
             # Evaluate model on numpy dataset
+            start_time = perf_counter()
+            
             if params.get("debug"):
                 print("!!!    debug")
                 callbacks = ["batch_progress_bar",
@@ -308,6 +321,9 @@ def eventprop(params):
                                                                                             validation_split = 0.1,
                                                                                             callbacks = callbacks)    
 
+            end_time = perf_counter()
+            print(f"Time = {end_time - start_time}s")
+            
         if params.get("debug"):
             # pickle serialisers
             with open('serialisers.pkl', 'wb') as f:
