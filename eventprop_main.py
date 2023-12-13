@@ -283,6 +283,9 @@ def eventprop(params):
                                             False),
                             Checkpoint(serialiser),
                             SpikeRecorder(hidden, 
+                                        key = "hidden_spike_counts_unfiltered", 
+                                        record_counts = True),
+                            SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
                                         example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
@@ -316,6 +319,11 @@ def eventprop(params):
             # save hidden spike counts
             with open(f'hidden_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
+                np.save(f, hidden_spike_counts)
+
+            # save hidden spike counts
+            with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
+                hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
 
             # save parameters for reference
