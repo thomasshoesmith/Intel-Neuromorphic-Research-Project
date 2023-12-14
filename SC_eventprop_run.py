@@ -26,7 +26,7 @@ if len(params.get("sweeping_suffix")) > 0:
 
     os.chdir(params.get("output_dir"))
 
-accuracy = eventprop(params, 
-                        file_path = os.path.expanduser("~/data/rawSC/experimental_2/"))
+accuracy = eventprop(params)
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")
+

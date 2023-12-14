@@ -81,6 +81,19 @@ def eventprop(params):
     training_labels = y_train
     testing_labels = y_test
     
+    # adding validation data if exists
+    validation_images = np.array([])
+    validation_labels = np.array([])
+    if os.path.isfile(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy"):
+        x_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_x_data.npy")
+        y_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy")
+        
+        validation_images = np.swapaxes(x_validation, 1, 2) 
+        validation_images = validation_images + abs(np.floor(validation_images.min()))
+        
+        validation_labels = y_validation
+        
+    
     # readout class
     class CSVTrainLog(Callback):
         def __init__(self, filename, output_pop, resume):
@@ -107,11 +120,11 @@ def eventprop(params):
                                     m.correct,
                                     m.correct / m.total,
                                     perf_counter() - self.start_time,
-                                    info.used / 1048576])
+                                    info.used / 1048576]) # to convert bytes to Mb
             self.file.flush()
             
     # Create sequential model
-    serialiser = Numpy("hd_checkpoints") #TODO: give unique name?
+    serialiser = Numpy(params.get("model_description"))
     network = Network(default_params)
     
     with network:
@@ -199,18 +212,27 @@ def eventprop(params):
 
             with compiled_net:
                 # Evaluate model on numpy dataset
-                if params.get("verbose"):
-                    callbacks = [#"batch_progress_bar", 
-                                Checkpoint(serialiser), 
-                                CSVTrainLog(f"train_output_{speaker_left}.csv", 
-                                            output,
-                                            False)]
-                                #SpikeRecorder(input, key="input_spikes"),
-                                #SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
+                callbacks = [Checkpoint(serialiser), 
+                             CSVTrainLog(f"train_output_{speaker_left}.csv", 
+                                         output,
+                                         False)]
                 
-                else:
-                    callbacks = [#"batch_progress_bar",
-                                 Checkpoint(serialiser)]
+                if params.get("verbose"):
+                    callbacks.append("batch_progress_bar")
+                
+                if params.get("debug"):
+                    print("!!!    debug")
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts", 
+                                            record_counts = True,
+                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
+                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                        int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+
+                if params.get("record_all_hidden_spikes"):
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts_unfiltered", 
+                                            record_counts = True))
                     
                 for e in trange(params.get("NUM_EPOCH")):
                     e_train_spikes = copy.deepcopy(train_spikes)
@@ -225,7 +247,7 @@ def eventprop(params):
                                                                                                 {output: train_labels},
                                                                                                 start_epoch = e, 
                                                                                                 num_epochs = 1,
-                                                                                                shuffle=True,
+                                                                                                shuffle = not(params.get("debug")),
                                                                                                 callbacks=callbacks,
                                                                                                 validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                                                                                 validation_y= {output: eval_labels})
@@ -236,26 +258,36 @@ def eventprop(params):
 
             with compiled_net:
                 # Evaluate model on numpy dataset
+                
+                callbacks = [Checkpoint(combined_serialiser), 
+                             CSVTrainLog(f"train_output_combined.csv", 
+                                         output,
+                                         False)]
+                
                 if params.get("verbose"):
-                    callbacks = ["batch_progress_bar", 
-                                Checkpoint(combined_serialiser), 
-                                CSVTrainLog(f"train_output_combined.csv", 
-                                            output,
-                                            False)]
-                                #SpikeRecorder(input, key="input_spikes"),
-                                #SpikeRecorder(hidden, key = "hidden_spike_counts", record_counts = True)]
-                else:
-                    callbacks = ["batch_progress_bar",
-                                 Checkpoint(combined_serialiser)]
+                    callbacks.append("batch_progress_bar")
+                
+                if params.get("debug"):
+                    print("!!!    debug")
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts", 
+                                            record_counts = True,
+                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
+                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                        int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+
+                if params.get("record_all_hidden_spikes"):
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts_unfiltered", 
+                                            record_counts = True))
                     
                 metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                 {output: training_labels},
-                                                                num_epochs=params.get("NUM_EPOCH"), 
-                                                                shuffle=True,
+                                                                num_epochs = params.get("NUM_EPOCH"), 
+                                                                shuffle = not(params.get("debug")),
                                                                 callbacks=callbacks,
                                                                 validation_x= {input: eval_spikes * params.get("INPUT_SCALE")},
                                                                 validation_y= {output: eval_labels})
-        
         
         # evaluate
         network.load((params.get("NUM_EPOCH") - 1,), serialiser)
@@ -288,38 +320,44 @@ def eventprop(params):
             # Evaluate model on numpy dataset
             start_time = perf_counter()
             
+            callbacks = [CSVTrainLog(f"train_output.csv", 
+                                    output,
+                                    False),
+                        Checkpoint(serialiser)]
+            
+            if params.get("verbose"):
+                callbacks.append("batch_progress_bar")
+                
             if params.get("debug"):
                 print("!!!    debug")
-                callbacks = ["batch_progress_bar",
-                            CSVTrainLog(f"train_output.csv", 
-                                            output,
-                                            False),
-                            Checkpoint(serialiser),
-                            SpikeRecorder(hidden, 
+                callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
                                         example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
                                                                     params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                    int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"))))] #list(range(7000, 371200, 7424)))] 
-            elif params.get("verbose"):
-                callbacks = ["batch_progress_bar",
-                            CSVTrainLog(f"train_output.csv", 
-                                            output,
-                                            False),
-                            Checkpoint(serialiser)]
+                                                                    int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+
+            if params.get("record_all_hidden_spikes"):
+                callbacks.append(SpikeRecorder(hidden, 
+                                        key = "hidden_spike_counts_unfiltered", 
+                                        record_counts = True))
             
-            else:
-                callbacks = [CSVTrainLog(f"train_output.csv", 
-                                            output,
-                                            False),
-                             Checkpoint(serialiser)]
+            if bool(validation_images.any()):    
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                                                {output: training_labels},
+                                                                                                num_epochs = params.get("NUM_EPOCH"), 
+                                                                                                shuffle = not(params.get("debug")),
+                                                                                                validation_split = 0.1,
+                                                                                                callbacks = callbacks)    
                 
-            metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                                                                            {output: training_labels},
-                                                                                            num_epochs = params.get("NUM_EPOCH"), 
-                                                                                            shuffle = not(params.get("debug")),
-                                                                                            validation_split = 0.1,
-                                                                                            callbacks = callbacks)    
+            else:
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+                                                                                                {output: training_labels},
+                                                                                                num_epochs = params.get("NUM_EPOCH"), 
+                                                                                                shuffle = not(params.get("debug")),
+                                                                                                callbacks = callbacks,
+                                                                                                validation_x = {input: validation_images * params.get("INPUT_SCALE")},
+                                                                                                validation_y = {output: validation_labels})  
 
             end_time = perf_counter()
             print(f"Time = {end_time - start_time}s")
@@ -333,11 +371,17 @@ def eventprop(params):
             with open(f'hidden_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
+            
+            # save all hidden spike counts
+            with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
+                hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
+                np.save(f, hidden_spike_counts)
 
             # save parameters for reference
             json_object = json.dumps(params, indent = 4)
             with open("params.json", "w") as outfile:
                 outfile.write(json_object)
+                
             
         # evaluate
         network.load((params.get("NUM_EPOCH") - 1,), serialiser)

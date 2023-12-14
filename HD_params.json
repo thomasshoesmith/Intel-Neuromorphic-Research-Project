@@ -7,10 +7,11 @@
     "INPUT_FRAME_TIMESTEP": 20,
     "INPUT_SCALE": 0.00099,
     "NETWORK_SCALE": 1,
-    "NUM_EPOCH": 200,
+    "NUM_EPOCH": 50,
     "NUM_FRAMES": 80,
     "verbose": true,
     "debug": false,
+    "record_all_hidden_spikes": false,
     "lr": 0.008,
     "dt": 1,
     "reg_lambda_lower": 1e-10,
@@ -29,9 +30,9 @@
     "aug_swap_pixels_kSwap": 1,
     "aug_swap_pixels_pSwap": 0.2,
     "aug_swap_pixels_tSwap": 0.1,
-    "cross_validation": true,
+    "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "HD_CV_200epoch",
-    "model_description": "run"
+    "output_dir": "HD_CV_50epoch",
+    "model_description": "HD_run"
 }
