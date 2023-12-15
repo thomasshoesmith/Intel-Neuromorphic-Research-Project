@@ -342,8 +342,9 @@ def eventprop(params):
                                         key = "hidden_spike_counts_unfiltered", 
                                         record_counts = True))
             
-            if bool(validation_images.any()):    
-                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
+            print(f"validation {validation_images.shape}")
+            if not bool(validation_images.any()):    
+                metrics, metrics_val, cb_data_training, cb_data_validation= compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
                                                                                                 {output: training_labels},
                                                                                                 num_epochs = params.get("NUM_EPOCH"), 
                                                                                                 shuffle = not(params.get("debug")),
@@ -372,10 +373,12 @@ def eventprop(params):
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
             
-            # save all hidden spike counts
-            with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
-                hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
-                np.save(f, hidden_spike_counts)
+            # get hidden spikes if param is true
+            if params.get("record_all_hidden_spikes"):
+                # save all hidden spike counts
+                with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
+                    hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
+                    np.save(f, hidden_spike_counts)
 
             # save parameters for reference
             json_object = json.dumps(params, indent = 4)
