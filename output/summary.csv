@@ -27,3 +27,8 @@
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reg_lr_sweep_1e2_reg_1e4,SC_run,0.21482809533853617
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reg_lr_sweep_1e2_reg_1e4,SC_run,0.18740771989031849
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,0.01,False,1,0,0,0,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_debug_wValidation,run,0.4545981860367011
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_full_reg_lr_sweep_1e2_reg_1e4,SC_run,0.16035646488082683
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reduced_dataset_set,SC_run,0.4007066019827041
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,1e-08,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reduced_dataset_set_reg_nu_10,SC_run,0.3388525627504746
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reduced_dataset_set_reg_nu_10,SC_run,0.4542290655979751
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,False,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_full,SC_run,0.4326647262296465

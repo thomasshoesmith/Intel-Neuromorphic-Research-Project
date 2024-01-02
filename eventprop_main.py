@@ -85,6 +85,7 @@ def eventprop(params):
     validation_images = np.array([])
     validation_labels = np.array([])
     if os.path.isfile(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy"):
+        print("!! validation dataset loaded successfully")
         x_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_x_data.npy")
         y_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy")
         
@@ -92,7 +93,6 @@ def eventprop(params):
         validation_images = validation_images + abs(np.floor(validation_images.min()))
         
         validation_labels = y_validation
-        
     
     # readout class
     class CSVTrainLog(Callback):
