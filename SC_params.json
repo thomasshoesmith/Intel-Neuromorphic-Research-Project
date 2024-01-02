@@ -14,8 +14,8 @@
     "record_all_hidden_spikes": false,
     "lr": 1e-2,
     "dt": 1,
-    "reg_lambda_lower": 1e-10,
-    "reg_lambda_upper": 1e-10,
+    "reg_lambda_lower": 1e-4,
+    "reg_lambda_upper": 1e-4,
     "reg_nu_upper": 20,
     "recurrent": false,
     "evaluate": false,
@@ -33,6 +33,6 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "SC_reg_full",
+    "output_dir": "SC_full_reg_lr_sweep_1e2_reg_1e4",
     "model_description": "SC_run"
 }

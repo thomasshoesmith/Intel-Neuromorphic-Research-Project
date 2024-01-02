@@ -225,7 +225,7 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
+                                            example_filter = list(range(700, # random sample from trial, in this case the trial chosen is 7000
                                                                         params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
                                                                         int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
@@ -333,7 +333,7 @@ def eventprop(params):
                 callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
-                                        example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
+                                        example_filter = list(range(700, # random sample from trial, in this case the trial chosen is 7000
                                                                     params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
                                                                     int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
