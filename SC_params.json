@@ -33,6 +33,6 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "SC_full_aug_combine_images",
+    "output_dir": "SC_full_updated_aug_combine_images",
     "model_description": "SC_run"
 }

@@ -325,8 +325,8 @@ def eventprop(params):
                                     False),
                         Checkpoint(serialiser)]
             
-            if params.get("verbose"):
-                callbacks.append("batch_progress_bar")
+            #if params.get("verbose"):
+            #    callbacks.append("batch_progress_bar")
                 
             if params.get("debug"):
                 print("!!!    debug")
@@ -342,23 +342,30 @@ def eventprop(params):
                                         key = "hidden_spike_counts_unfiltered", 
                                         record_counts = True))
             
-            print(f"validation {validation_images.shape}")
-            if not bool(validation_images.any()):    
-                metrics, metrics_val, cb_data_training, cb_data_validation= compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                                                                                {output: training_labels},
-                                                                                                num_epochs = params.get("NUM_EPOCH"), 
-                                                                                                shuffle = not(params.get("debug")),
-                                                                                                validation_split = 0.1,
-                                                                                                callbacks = callbacks)    
+            for e in trange(params.get("NUM_EPOCH")):    
                 
-            else:
-                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
-                                                                                                {output: training_labels},
-                                                                                                num_epochs = params.get("NUM_EPOCH"), 
-                                                                                                shuffle = not(params.get("debug")),
-                                                                                                callbacks = callbacks,
-                                                                                                validation_x = {input: validation_images * params.get("INPUT_SCALE")},
-                                                                                                validation_y = {output: validation_labels})  
+                # Augmentation
+                if params.get("aug_combine_images"):
+                    train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
+            
+                if not bool(validation_images.any()):    
+                    metrics, metrics_val, cb_data_training, cb_data_validation= compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                                                                                    {output: train_labels},
+                                                                                                    start_epoch = e,
+                                                                                                    num_epochs = 1,
+                                                                                                    shuffle = not(params.get("debug")),
+                                                                                                    validation_split = 0.1,
+                                                                                                    callbacks = callbacks)    
+                    
+                else:
+                    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                                                                                                    {output: train_labels},
+                                                                                                    start_epoch = e,
+                                                                                                    num_epochs = 1,
+                                                                                                    shuffle = not(params.get("debug")),
+                                                                                                    callbacks = callbacks,
+                                                                                                    validation_x = {input: validation_images * params.get("INPUT_SCALE")},
+                                                                                                    validation_y = {output: validation_labels})  
 
             end_time = perf_counter()
             print(f"Time = {end_time - start_time}s")

@@ -153,3 +153,38 @@ def pixel_swap(training_images, kSwap = 1, pSwap = 0.2, tSwap = 0.1):
             training_images[trial] = neighbour_swap(training_images[trial], kSwap = kSwap, pSwap = pSwap)
 
     return training_images     
+
+def combine_two_normalised_images(training_images, training_labels):
+    # sort x training images into y categories for blending
+    categories = [[] for i in range(np.max(training_labels) + 1)]
+
+    for i in range(len(training_labels)):
+        categories[training_labels[i]].append(i)
+        
+    combined_image_array = []
+    combined_class_array = []
+
+    for spoken_word in range(len(categories)):
+
+        random.shuffle(categories[spoken_word])
+
+        while len(categories[spoken_word]) > 1:
+            image1 = training_images[categories[spoken_word][0]]
+            image2 = training_images[categories[spoken_word][1]]
+
+            combined_image_array.append((image1 + image2) / 2)
+            categories[spoken_word].pop(0)
+            categories[spoken_word].pop(0)
+            
+            combined_class_array.append(spoken_word)
+    
+    combined_training_images = np.concatenate([training_images, np.array(combined_image_array)])
+    
+    combined_training_labels = np.concatenate([training_labels, np.array(combined_class_array)])
+
+    # Shuffle in unison
+    shuffler = np.random.permutation(len(combined_training_images))
+    combined_training_images_shuffled = combined_training_images[shuffler]
+    combined_training_labels_shuffled = combined_training_labels[shuffler]
+    
+    return combined_training_images_shuffled, combined_training_labels_shuffled
