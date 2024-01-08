@@ -26,7 +26,6 @@
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,50,100,True,True,False,0.001,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reg_lr_sweep_1e3_reg_1e4,SC_run,0.15249947268508754
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reg_lr_sweep_1e2_reg_1e4,SC_run,0.21482809533853617
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reg_lr_sweep_1e2_reg_1e4,SC_run,0.18740771989031849
-<<<<<<< HEAD
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,0.01,False,1,0,0,0,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_debug_wValidation,run,0.4545981860367011
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,0.0001,0.0001,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_full_reg_lr_sweep_1e2_reg_1e4,SC_run,0.16035646488082683
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_reduced_dataset_set,SC_run,0.4007066019827041
@@ -35,6 +34,25 @@
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,False,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_full,SC_run,0.4326647262296465
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,True,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_full_aug_combine_images,SC_run,0.43470007593014426
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,True,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_full_aug_combine_images,SC_run,0.5693495317641104
-=======
-~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.2,50,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.4,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_debug_wValidation,run,0.4545981860367011
->>>>>>> c127366c0c74bae2cf814017c7b104b6ea05e053
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,True,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_full_updated_aug_combine_images,SC_run,0.603570825951236
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,200,100,False,True,False,0.01,1,1e-10,1e-10,10,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_full_updated_aug_combine_images_200e,SC_run,0.6847422593436261
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,200,100,False,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_full_updated_aug_combine_images_nu20_200e,SC_run,0.6507529739306505
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,1,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.3420020248038471
+~/data/rawHD/rawHD_80input/,80,512,20,256,20,0.00099,1,10,80,True,True,True,0.008,1,1e-10,1e-10,20,False,True,0.0,3.5,0.0,0.02,3.0,1.5,False,False,1,0.2,0.1,False,True,,HD_gpu_mem_test,HD_run,0.7772192251103482
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,1,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.34017759217075844
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,1,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.25448754455905
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,1,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.24962911402195082
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,1,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.25651247653399145
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.24813564091740536
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.2487159642580736
+~/data/rawHD/rawHD_80input/,80,512,20,256,20,0.00099,1,10,80,True,True,True,0.008,1,1e-10,1e-10,20,False,True,0.0,3.5,0.0,0.02,3.0,1.5,False,False,1,0.2,0.1,False,True,,HD_gpu_mem_test,HD_run,0.7877636096125552
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.43109958024847606
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,25,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.4,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_gpu_mem_test,SC_run,0.48597664297215015
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,50,100,True,True,False,0.01,1,1e-10,1e-10,20,True,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_recurrent_test,SC_run,0.01580571902662645
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_record_test,SC_run,0.428462950072771
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_record_test_regOff,SC_run,0.43072693651697636
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.001,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.015267175572519083
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.001,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.014925373134328358
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.42958088126726995
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.001,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.08270676691729323
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.04,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.16238112011271574

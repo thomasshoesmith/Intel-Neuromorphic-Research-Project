@@ -33,6 +33,6 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "HD_CV_50epoch",
+    "output_dir": "HD_gpu_mem_test",
     "model_description": "HD_run"
 }

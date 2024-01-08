@@ -22,7 +22,7 @@ from ml_genn.serialisers import Numpy
 from ml_genn.synapses import Exponential
 from time import perf_counter
 
-from pynvml import *
+import nvsmi
 
 from ml_genn.utils.data import (calc_latest_spike_time, linear_latency_encode_data)
 from ml_genn.compilers.event_prop_compiler import default_params
@@ -74,7 +74,7 @@ def eventprop(params):
 
     training_images = np.swapaxes(x_train, 1, 2) 
     testing_images = np.swapaxes(x_test, 1, 2) 
-
+ 
     training_images = training_images + abs(np.floor(training_images.min()))
     testing_images = testing_images + abs(np.floor(testing_images.min()))
 
@@ -111,16 +111,15 @@ def eventprop(params):
             self.start_time = perf_counter()
 
         def on_epoch_end(self, epoch, metrics):
-            nvmlInit()
-            handle = nvmlDeviceGetHandleByIndex(0)
-            info = nvmlDeviceGetMemoryInfo(handle)
+            processes = nvsmi.get_gpu_processes()
+            process = next(p for p in processes if p.pid == os.getpid())
             m = metrics[self.output_pop]
             self.csv_writer.writerow([epoch, 
                                     m.total, 
                                     m.correct,
                                     m.correct / m.total,
                                     perf_counter() - self.start_time,
-                                    info.used / 1048576]) # to convert bytes to Mb
+                                    process.used_memory])
             self.file.flush()
             
     # Create sequential model
@@ -225,7 +224,7 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(700, # random sample from trial, in this case the trial chosen is 7000
+                                            example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7000
                                                                         params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
                                                                         int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
@@ -306,7 +305,6 @@ def eventprop(params):
                             SpikeRecorder(hidden, key="hidden_spikes"),
                             #SpikeRecorder(output, key="output_spikes"),
                             VarRecorder(output, "v", key="v_output")]
-                
             else:
                 callbacks = [Checkpoint(serialiser)]
         
@@ -325,31 +323,38 @@ def eventprop(params):
                                     False),
                         Checkpoint(serialiser)]
             
-            #if params.get("verbose"):
-            #    callbacks.append("batch_progress_bar")
+            if params.get("verbose"):
+                callbacks.append("batch_progress_bar")
                 
             if params.get("debug"):
                 print("!!!    debug")
                 callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
-                                        example_filter = list(range(700, # random sample from trial, in this case the trial chosen is 7000
-                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                    int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+                                        example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
+                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                    int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
             if params.get("record_all_hidden_spikes"):
                 callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts_unfiltered", 
                                         record_counts = True))
             
+            # main dictionaries for tracking data # TODO: fix so debugging can be switched off
+            metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {"hidden_spike_counts": []}, {"hidden_spike_counts": []}
+            
             for e in trange(params.get("NUM_EPOCH")):    
+                train_spikes = training_images
+                train_labels = training_labels
                 
                 # Augmentation
                 if params.get("aug_combine_images"):
                     train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
-            
+
+                # save to t (temporary) dictionaries
+                
                 if not bool(validation_images.any()):    
-                    metrics, metrics_val, cb_data_training, cb_data_validation= compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
@@ -358,7 +363,7 @@ def eventprop(params):
                                                                                                     callbacks = callbacks)    
                     
                 else:
-                    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
@@ -366,7 +371,21 @@ def eventprop(params):
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
-
+                print(t_cb_data_training.get("hidden_spike_counts"))
+                
+                # combined dictionaries
+                #c_metrics = {key: value + t_metrics[key] for key, value in metrics.items()}
+                #c_metrics_val = {key: value + t_metrics_val[key] for key, value in metrics_val.items()}
+                c_cb_data_training = {key: value + t_cb_data_training[key] for key, value in cb_data_training.items()}
+                c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
+                
+                # TODO: inefficent and unnecessary, to add smarter index adding later
+                #metrics = copy.deepcopy(c_metrics)
+                #metrics_val = copy.deepcopy(c_metrics_val)
+                cb_data_training = copy.deepcopy(c_cb_data_training)
+                cb_data_validation = copy.deepcopy(c_cb_data_validation)
+                
+            #print(type(t_cb_data_training.get("hidden_spike_counts")))
             end_time = perf_counter()
             print(f"Time = {end_time - start_time}s")
             
@@ -375,9 +394,14 @@ def eventprop(params):
             with open('serialisers.pkl', 'wb') as f:
                 pickle.dump(serialiser, f)
 
-            # save hidden spike counts
-            with open(f'hidden_spike_counts.npy', 'wb') as f:     
+            # save hidden training spike counts
+            with open(f'hidden_training_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
+                np.save(f, hidden_spike_counts)
+                
+            # save hidden training spike counts
+            with open(f'hidden_validation_spike_counts.npy', 'wb') as f:     
+                hidden_spike_counts = np.array(cb_data_validation["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
             
             # get hidden spikes if param is true
@@ -394,28 +418,29 @@ def eventprop(params):
                 
             
         # evaluate
-        network.load((params.get("NUM_EPOCH") - 1,), serialiser)
+        if params.get("evaluate"):
+            network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
-        compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
-                                    reset_in_syn_between_batches=True,
-                                    batch_size = params.get("BATCH_SIZE"))
-        compiled_net = compiler.compile(network)
+            compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
+                                        reset_in_syn_between_batches=True,
+                                        batch_size = params.get("BATCH_SIZE"))
+            compiled_net = compiler.compile(network)
 
-        with compiled_net:
-            if params.get("verbose"):
-                callbacks = ["batch_progress_bar", 
-                            Checkpoint(serialiser),
-                            SpikeRecorder(input, key="input_spikes"), 
-                            SpikeRecorder(hidden, key="hidden_spikes"),
-                            VarRecorder(output, "v", key="v_output")]
-            else:
-                callbacks = [Checkpoint(serialiser)]
-        
-            metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
-                                                    {output: training_labels},
-                                                    callbacks = callbacks)
+            with compiled_net:
+                if params.get("verbose"):
+                    callbacks = ["batch_progress_bar", 
+                                Checkpoint(serialiser),
+                                SpikeRecorder(input, key="input_spikes"), 
+                                SpikeRecorder(hidden, key="hidden_spikes"),
+                                VarRecorder(output, "v", key="v_output")]
+                else:
+                    callbacks = [Checkpoint(serialiser)]
             
-    if params.get("verbose"):
+                metrics, cb_data = compiled_net.evaluate({input: training_images * params.get("INPUT_SCALE")},
+                                                        {output: training_labels},
+                                                        callbacks = callbacks)
+            
+    if params.get("verbose") and params.get("evaluate"):
         # cannot print verbose whilst requesting just accuracy
         fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
         fig.suptitle('rawHD with EventProp on ml_genn')
