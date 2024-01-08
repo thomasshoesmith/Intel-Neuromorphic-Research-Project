@@ -352,6 +352,7 @@ def eventprop(params):
                     train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
 
                 # save to t (temporary) dictionaries
+                # to be reverted back to original
                 
                 if not bool(validation_images.any()):    
                     metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
