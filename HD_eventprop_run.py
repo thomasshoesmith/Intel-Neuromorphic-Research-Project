@@ -2,7 +2,7 @@ import os
 import sys
 import json
 
-from HD_eventprop import hd_eventprop
+from eventprop_main import eventprop
 
 if len(sys.argv) == 2:
     print("running passed arguments")
@@ -11,7 +11,7 @@ if len(sys.argv) == 2:
 
 else:
     print("please pass parameters in the form of a json file")
-    with open("params.json", "r") as f:
+    with open("HD_params.json", "r") as f:
         params = json.load(f)
 
 os.chdir("output")
@@ -26,7 +26,6 @@ if len(params.get("sweeping_suffix")) > 0:
 
     os.chdir(params.get("output_dir"))
 
-accuracy = hd_eventprop(params, 
-                        file_path = os.path.expanduser("~/data/rawHD/experimental_2/"))
+accuracy = eventprop(params)
 
 print(f"accuracy of the network is {accuracy * 100:.2f}%")

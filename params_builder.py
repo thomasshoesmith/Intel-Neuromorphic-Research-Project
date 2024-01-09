@@ -5,7 +5,11 @@ import itertools
 
 #combinations
 combinations = {}
+<<<<<<< HEAD
 directory_name = "rawHD_coarse_weight_sweep"
+=======
+directory_name = "rawSC_coarse_weight_sweep"
+>>>>>>> 72b1b68a16d84efdf8f34b55091924d257f4b947
 params = {}
 
 previous_d = os.getcwd()
