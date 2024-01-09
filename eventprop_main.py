@@ -331,62 +331,33 @@ def eventprop(params):
                 callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts", 
                                         record_counts = True,
-                                        example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
-                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                    int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+                                        example_filter = list(range(70, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
+                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                    int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
             if params.get("record_all_hidden_spikes"):
                 callbacks.append(SpikeRecorder(hidden, 
                                         key = "hidden_spike_counts_unfiltered", 
                                         record_counts = True))
-            
-            # main dictionaries for tracking data # TODO: fix so debugging can be switched off
-            metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {"hidden_spike_counts": []}, {"hidden_spike_counts": []}
-            
-            for e in trange(params.get("NUM_EPOCH")):    
-                train_spikes = training_images
-                train_labels = training_labels
-                
-                # Augmentation
-                if params.get("aug_combine_images"):
-                    train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
 
-                # save to t (temporary) dictionaries
-                # to be reverted back to original
                 
-                if not bool(validation_images.any()):    
-                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                                                                                    {output: train_labels},
-                                                                                                    start_epoch = e,
-                                                                                                    num_epochs = 1,
-                                                                                                    shuffle = not(params.get("debug")),
-                                                                                                    validation_split = 0.1,
-                                                                                                    callbacks = callbacks)    
-                    
-                else:
-                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
-                                                                                                    {output: train_labels},
-                                                                                                    start_epoch = e,
-                                                                                                    num_epochs = 1,
-                                                                                                    shuffle = not(params.get("debug")),
-                                                                                                    callbacks = callbacks,
-                                                                                                    validation_x = {input: validation_images * params.get("INPUT_SCALE")},
-                                                                                                    validation_y = {output: validation_labels})  
-                print(t_cb_data_training.get("hidden_spike_counts"))
+            if not bool(validation_images.any()):    
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: testing_images * params.get("INPUT_SCALE")},
+                                                                                                {output: testing_labels},
+                                                                                                num_epochs = params.get("NUM_EPOCH"),
+                                                                                                shuffle = not(params.get("debug")),
+                                                                                                validation_split = 0.1,
+                                                                                                callbacks = callbacks)    
                 
-                # combined dictionaries
-                #c_metrics = {key: value + t_metrics[key] for key, value in metrics.items()}
-                #c_metrics_val = {key: value + t_metrics_val[key] for key, value in metrics_val.items()}
-                c_cb_data_training = {key: value + t_cb_data_training[key] for key, value in cb_data_training.items()}
-                c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
-                
-                # TODO: inefficent and unnecessary, to add smarter index adding later
-                #metrics = copy.deepcopy(c_metrics)
-                #metrics_val = copy.deepcopy(c_metrics_val)
-                cb_data_training = copy.deepcopy(c_cb_data_training)
-                cb_data_validation = copy.deepcopy(c_cb_data_validation)
-                
-            #print(type(t_cb_data_training.get("hidden_spike_counts")))
+            else:
+                metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: testing_images * params.get("INPUT_SCALE")},
+                                                                                                {output: testing_labels},
+                                                                                                num_epochs = params.get("NUM_EPOCH"),
+                                                                                                shuffle = not(params.get("debug")),
+                                                                                                callbacks = callbacks,
+                                                                                                validation_x = {input: validation_images * params.get("INPUT_SCALE")},
+                                                                                                validation_y = {output: validation_labels})  
+
             end_time = perf_counter()
             print(f"Time = {end_time - start_time}s")
             
