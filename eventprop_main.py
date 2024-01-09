@@ -271,9 +271,9 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000
-                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                        int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+                                            example_filter = list(range(70, # random sample from trial, in this case the trial chosen is 7000
+                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                        int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
@@ -318,28 +318,6 @@ def eventprop(params):
             # Evaluate model on numpy dataset
             start_time = perf_counter()
             
-            callbacks = [CSVTrainLog(f"train_output.csv", 
-                                    output,
-                                    False),
-                        Checkpoint(serialiser)]
-            
-            if params.get("verbose"):
-                callbacks.append("batch_progress_bar")
-                
-            if params.get("debug"):
-                print("!!!    debug")
-                callbacks.append(SpikeRecorder(hidden, 
-                                        key = "hidden_spike_counts", 
-                                        record_counts = True,
-                                        example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
-                                                                    params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                    int(math.ceil((len(x_train) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
-
-            if params.get("record_all_hidden_spikes"):
-                callbacks.append(SpikeRecorder(hidden, 
-                                        key = "hidden_spike_counts_unfiltered", 
-                                        record_counts = True))
-            
             # main dictionaries for tracking data # TODO: fix so debugging can be switched off
             metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {"hidden_spike_counts": []}, {"hidden_spike_counts": []}
             
@@ -350,6 +328,28 @@ def eventprop(params):
                 # Augmentation
                 if params.get("aug_combine_images"):
                     train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
+
+                callbacks = [CSVTrainLog(f"train_output.csv", 
+                                    output,
+                                    e > 0),
+                        Checkpoint(serialiser)]
+            
+                if params.get("verbose"):
+                    callbacks.append("batch_progress_bar")
+                    
+                if params.get("debug"):
+                    print("!!!    debug")
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts", 
+                                            record_counts = True,
+                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
+                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                        int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+
+                if params.get("record_all_hidden_spikes"):
+                    callbacks.append(SpikeRecorder(hidden, 
+                                            key = "hidden_spike_counts_unfiltered", 
+                                            record_counts = True))
 
                 # save to t (temporary) dictionaries
                 
