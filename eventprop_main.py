@@ -319,7 +319,7 @@ def eventprop(params):
             start_time = perf_counter()
             
             # main dictionaries for tracking data # TODO: fix so debugging can be switched off
-            metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {"hidden_spike_counts": []}, {"hidden_spike_counts": []}
+            metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {}, {}
             
             for e in trange(params.get("NUM_EPOCH")):    
                 train_spikes = training_images
@@ -334,15 +334,15 @@ def eventprop(params):
                                     e > 0),
                         Checkpoint(serialiser)]
             
-                if params.get("verbose"):
-                    callbacks.append("batch_progress_bar")
+                #if params.get("verbose"):
+                #    callbacks.append("batch_progress_bar")
                     
                 if params.get("debug"):
                     print("!!!    debug")
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(7000, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
+                                            example_filter = list(range(70, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
                                                                         params.get("NUM_EPOCH") * int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
                                                                         int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
@@ -371,7 +371,6 @@ def eventprop(params):
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
-                print(t_cb_data_training.get("hidden_spike_counts"))
                 
                 # combined dictionaries
                 #c_metrics = {key: value + t_metrics[key] for key, value in metrics.items()}

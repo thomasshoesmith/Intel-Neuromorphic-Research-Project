@@ -56,3 +56,15 @@
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.42958088126726995
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.001,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.08270676691729323
 ~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.04,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.16238112011271574
+~/data/rawSC/rawSC_80input/,80,512,35,2,20,0.0009,0.04,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.24252023935234074
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.04,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.037346660608814176
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,0.04,10,100,True,True,False,0.01,1,0,0,0,False,False,0.0,4.0,0.0,0.0,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.037346660608814176
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.037346660608814176
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.037437528396183556
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,False,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.10377119716527461
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.43211204623594673
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.43211204623594673
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.43215423231875805
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test,SC_run,0.43064256435135384
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,False,False,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test_run,SC_run,0.43257609314687084
+~/data/rawSC/rawSC_80input/,80,512,35,256,20,0.0009,1,10,100,True,True,False,0.01,1,1e-10,1e-10,20,False,False,0.0,4.0,0.0,0.0,3.0,1.5,True,False,1,0.2,0.1,False,True,,SC_test_run,SC_run,0.4307058434755707
