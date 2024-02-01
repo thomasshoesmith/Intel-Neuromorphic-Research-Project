@@ -47,23 +47,25 @@ def shift_x_axis(image_array, shift_value = np.random.randint(-5, 5)):
     return new_image_array
 
 
-def neighbour_swap(image_array, pSwap = 0.2, kSwap = 3):
+def neighbour_swap(image_array, pSwap = 0.2, kSwap = 3, iSwap = 0.3):
     """
     Randomly switches values with neighbouring values
 
     :param image_array: image array to have values switched
-    :param spSwap: Probability of swapping, default is 0.2
+    :param pSwap: Probability of swapping, default is 0.2
     :param kSwap: Distance of neighbours to swap, default is 3
+    :param iSwap: Probability of image having pixels swapped
     :return: new image array with swapped values
     """
     new_image_array = copy.deepcopy(image_array)
     for x in range(image_array.shape[0]):
-        for y in range(image_array.shape[1]):
-            if np.random.uniform() > pSwap:
-                k = np.random.randint(-kSwap, kSwap, 2)
-                kx, ky = x + k[0], y + k[1]
-                if kx > -1 and kx < image_array.shape[0] and ky > -1 and ky < image_array.shape[1]:
-                    new_image_array[kx, ky] = image_array[x, y]
+        if np.random.uniform() > iSwap:
+            for y in range(image_array.shape[1]):
+                if np.random.uniform() > pSwap:
+                    k = np.random.randint(-kSwap, kSwap, 2)
+                    kx, ky = x + k[0], y + k[1]
+                    if kx > -1 and kx < image_array.shape[0] and ky > -1 and ky < image_array.shape[1]:
+                        new_image_array[kx, ky] = image_array[x, y]
     return new_image_array
 
 
@@ -184,7 +186,9 @@ def combine_two_normalised_images(training_images, training_labels):
 
     # Shuffle in unison
     shuffler = np.random.permutation(len(combined_training_images))
-    combined_training_images_shuffled = combined_training_images[shuffler]
-    combined_training_labels_shuffled = combined_training_labels[shuffler]
+    #combined_training_images_shuffled = combined_training_images[shuffler]
+    #combined_training_labels_shuffled = combined_training_labels[shuffler]
     
-    return combined_training_images_shuffled, combined_training_labels_shuffled
+    #return combined_training_images_shuffled, combined_training_labels_shuffled
+    
+    return combined_training_images, combined_training_labels 

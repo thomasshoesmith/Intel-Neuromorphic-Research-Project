@@ -12,7 +12,7 @@ import json
 from numba import cuda
 
 from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
-from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback
+from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback, OptimiserParamSchedule
 from ml_genn.compilers import EventPropCompiler, InferenceCompiler
 from ml_genn.connectivity import Dense
 from ml_genn.initializers import Normal
@@ -229,9 +229,14 @@ def eventprop(params):
                                                                         int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
                 if params.get("record_all_hidden_spikes"):
+                    """
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_unfiltered", 
                                             record_counts = True))
+                    """
+                    callbacks.append(SpikeRecorder(hidden, key="hidden_spike_counts_record", record_counts=True))
+                    
+                    
                     
                 for e in trange(params.get("NUM_EPOCH")):
                     e_train_spikes = copy.deepcopy(train_spikes)
@@ -277,7 +282,7 @@ def eventprop(params):
 
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
-                                            key = "hidden_spike_counts_unfiltered", 
+                                            key = "hidden_spike_counts_record", 
                                             record_counts = True))
                     
                 metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: training_images * params.get("INPUT_SCALE")},
@@ -321,24 +326,51 @@ def eventprop(params):
             # main dictionaries for tracking data # TODO: fix so debugging can be switched off
             metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {}, {}
             
+            if params.get("debug"):
+                cb_data_training["hidden_spike_counts"] = []
+                cb_data_validation["hidden_spike_counts"] = []
+                
+            start = params.get("lr") / 10
+            target = params.get("lr")
+            buildup = 9
+
+            difference = (target - start) / buildup
+            
+            # epoch wise LR changes (alpha is lr in Adam)
+            def alpha_schedule(epoch, alpha):
+                if epoch == 0:
+                    return params.get("lr") / 10
+                if epoch < buildup + 1 and epoch != 0:
+                    alpha = alpha + difference
+                    print(alpha)
+                    return alpha
+                else:
+                    print(alpha)
+                    return alpha
+            
             for e in trange(params.get("NUM_EPOCH")):    
+                                
                 train_spikes = training_images
                 train_labels = training_labels
                 
                 # Augmentation
                 if params.get("aug_combine_images"):
                     train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
+                    
+                    #train_spikes = augmentation_tools.neighbour_swap(train_spikes)
 
                 callbacks = [CSVTrainLog(f"train_output.csv", 
                                     output,
                                     e > 0),
-                        Checkpoint(serialiser)]
+                            Checkpoint(serialiser)]
+            
+                if params.get("recurrent"):
+                    callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
             
                 #if params.get("verbose"):
                 #    callbacks.append("batch_progress_bar")
                     
                 if params.get("debug"):
-                    print("!!!    debug")
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
@@ -402,18 +434,18 @@ def eventprop(params):
             with open(f'hidden_validation_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_validation["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
-            
-            # get hidden spikes if param is true
-            if params.get("record_all_hidden_spikes"):
-                # save all hidden spike counts
-                with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
-                    hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
-                    np.save(f, hidden_spike_counts)
 
             # save parameters for reference
             json_object = json.dumps(params, indent = 4)
             with open("params.json", "w") as outfile:
                 outfile.write(json_object)
+                
+         # get hidden spikes if param is true
+        if params.get("record_all_hidden_spikes"):
+            # save all hidden spike counts
+            with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     
+                hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
+                np.save(f, hidden_spike_counts)
                 
             
         # evaluate
