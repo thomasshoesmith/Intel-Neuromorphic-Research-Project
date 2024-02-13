@@ -276,10 +276,12 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(70, # random sample from trial, in this case the trial chosen is 7000
-                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                        int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
-
+                                            example_filter = 70))
+                
+                """list(range(70, # random sample from trial, in this case the trial chosen is 7000
+                                            params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                            int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+                """
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_record", 
@@ -330,6 +332,10 @@ def eventprop(params):
                 cb_data_training["hidden_spike_counts"] = []
                 cb_data_validation["hidden_spike_counts"] = []
                 
+            if params.get("record_all_hidden_spikes"):
+                cb_data_training["hidden_spike_counts_unfiltered"] = []
+                cb_data_validation["hidden_spike_counts_unfiltered"] = []
+                
             start = params.get("lr") / 10
             target = params.get("lr")
             buildup = 9
@@ -342,10 +348,10 @@ def eventprop(params):
                     return params.get("lr") / 10
                 if epoch < buildup + 1 and epoch != 0:
                     alpha = alpha + difference
-                    print(alpha)
+                    #print(alpha)
                     return alpha
                 else:
-                    print(alpha)
+                    #print(alpha)
                     return alpha
             
             for e in trange(params.get("NUM_EPOCH")):    
@@ -365,7 +371,9 @@ def eventprop(params):
                             Checkpoint(serialiser)]
             
                 if params.get("recurrent"):
-                    callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
+                    pass
+                    # callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
+                    
             
                 #if params.get("verbose"):
                 #    callbacks.append("batch_progress_bar")
@@ -390,7 +398,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = not(params.get("debug")),
+                                                                                                    shuffle = True, #not(params.get("debug")),
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                     
@@ -399,7 +407,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = not(params.get("debug")),
+                                                                                                    shuffle = True, #not(params.get("debug")),
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
@@ -608,6 +616,8 @@ def eventprop(params):
     # if sweeping, save params and accuracy to csv
     does_summary_file_exist = os.path.exists("summary.csv")
     # Create CSV writer
+    print("Writing summary")
+    print(os.getcwd())
     file = open("summary.csv", "a" if does_summary_file_exist else "w")
     csv_writer = csv.writer(file, delimiter=",")
 
