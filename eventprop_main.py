@@ -10,6 +10,7 @@ import copy
 import math
 import json
 from numba import cuda
+from datetime import datetime
 
 from ml_genn import InputLayer, Layer, SequentialNetwork, Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback, OptimiserParamSchedule
@@ -262,7 +263,6 @@ def eventprop(params):
 
             with compiled_net:
                 # Evaluate model on numpy dataset
-                
                 callbacks = [Checkpoint(combined_serialiser), 
                              CSVTrainLog(f"train_output_combined.csv", 
                                          output,
@@ -354,6 +354,11 @@ def eventprop(params):
                     #print(alpha)
                     return alpha
             
+            # TODO: delete after testing shuffle w/ TJT    
+            #shuffler = np.random.permutation(len(training_images))
+            #training_images = training_images[shuffler]
+            #training_labels = training_labels[shuffler]
+            
             for e in trange(params.get("NUM_EPOCH")):    
                                 
                 train_spikes = training_images
@@ -375,8 +380,8 @@ def eventprop(params):
                     # callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
                     
             
-                #if params.get("verbose"):
-                #    callbacks.append("batch_progress_bar")
+                if params.get("verbose"):
+                    callbacks.append("batch_progress_bar")
                     
                 if params.get("debug"):
                     callbacks.append(SpikeRecorder(hidden, 
@@ -394,20 +399,20 @@ def eventprop(params):
                 # save to t (temporary) dictionaries
                 
                 if not bool(validation_images.any()):    
-                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                    metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True, #not(params.get("debug")),
+                                                                                                    shuffle = False, #not(params.get("debug")),
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                     
                 else:
-                    metrics, t_metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
+                    metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True, #not(params.get("debug")),
+                                                                                                    shuffle = False, #not(params.get("debug")),
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
@@ -443,10 +448,10 @@ def eventprop(params):
                 hidden_spike_counts = np.array(cb_data_validation["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
 
-            # save parameters for reference
-            json_object = json.dumps(params, indent = 4)
-            with open("params.json", "w") as outfile:
-                outfile.write(json_object)
+        # save parameters for reference
+        json_object = json.dumps(params, indent = 4)
+        with open("params.json", "w") as outfile:
+            outfile.write(json_object)
                 
          # get hidden spikes if param is true
         if params.get("record_all_hidden_spikes"):
@@ -623,8 +628,11 @@ def eventprop(params):
 
     # Write header row if we're not resuming from an existing training run
     if not does_summary_file_exist:
-        csv_writer.writerow((list(params) + ["accuracy"]))
+        csv_writer.writerow((list(params) + ["accuracy", "validation", "date"]))
 
-    csv_writer.writerow((list(params.values()) + [metrics[output].correct / metrics[output].total]))
+    csv_writer.writerow((list(params.values()) + \
+                         [round(metrics[output].correct / metrics[output].total, 5),
+                          round(metrics_val[output].correct / metrics_val[output].total, 5),
+                          (str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))]))
 
     return metrics[output].correct / metrics[output].total
