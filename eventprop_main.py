@@ -403,7 +403,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = False, #not(params.get("debug")),
+                                                                                                    shuffle = True, #not(params.get("debug")),
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                     
@@ -412,7 +412,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = False, #not(params.get("debug")),
+                                                                                                    shuffle = True, #not(params.get("debug")),
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
