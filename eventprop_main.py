@@ -28,6 +28,8 @@ import nvsmi
 from ml_genn.utils.data import (calc_latest_spike_time, linear_latency_encode_data)
 from ml_genn.compilers.event_prop_compiler import default_params
 
+from pygenn.genn_wrapper.CUDABackend import DeviceSelect_MANUAL
+
 import random
 import librosa
 
@@ -168,7 +170,9 @@ def eventprop(params):
                             reg_lambda_upper = params.get("reg_lambda_upper"),
                             reg_nu_upper = params.get("reg_nu_upper"),
                             dt = params.get("dt"),
-                            max_spikes=1500)
+                            max_spikes=1500,
+                            selectGPUByDeviceID=True, 
+                            deviceSelectMethod=DeviceSelect_MANUAL)
 
     compiled_net = compiler.compile(network)
     
@@ -230,12 +234,9 @@ def eventprop(params):
                                                                         int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
                 if params.get("record_all_hidden_spikes"):
-                    """
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_unfiltered", 
                                             record_counts = True))
-                    """
-                    callbacks.append(SpikeRecorder(hidden, key="hidden_spike_counts_record", record_counts=True))
                     
                     
                     
@@ -277,11 +278,7 @@ def eventprop(params):
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
                                             example_filter = 70))
-                
-                """list(range(70, # random sample from trial, in this case the trial chosen is 7000
-                                            params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                            int(math.ceil((len(x_train) * 1) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
-                """
+
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_record", 
@@ -353,12 +350,7 @@ def eventprop(params):
                 else:
                     #print(alpha)
                     return alpha
-            
-            # TODO: delete after testing shuffle w/ TJT    
-            #shuffler = np.random.permutation(len(training_images))
-            #training_images = training_images[shuffler]
-            #training_labels = training_labels[shuffler]
-            
+                
             for e in trange(params.get("NUM_EPOCH")):    
                                 
                 train_spikes = training_images
@@ -367,8 +359,6 @@ def eventprop(params):
                 # Augmentation
                 if params.get("aug_combine_images"):
                     train_spikes, train_labels = augmentation_tools.combine_two_normalised_images(copy.deepcopy(training_images), training_labels)
-                    
-                    #train_spikes = augmentation_tools.neighbour_swap(train_spikes)
 
                 callbacks = [CSVTrainLog(f"train_output.csv", 
                                     output,
@@ -387,10 +377,8 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(70, # random sample from trial, in this case the trial chosen is 7000 # x1.0 is for validation split!
-                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                        int(math.ceil((len(train_spikes) * 1.0) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
-
+                                            example_filter = 70))
+                    
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_unfiltered", 
@@ -403,7 +391,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True, #not(params.get("debug")),
+                                                                                                    shuffle = True,
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                     
@@ -412,20 +400,15 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True, #not(params.get("debug")),
+                                                                                                    shuffle = True,
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
                 
                 # combined dictionaries
-                #c_metrics = {key: value + t_metrics[key] for key, value in metrics.items()}
-                #c_metrics_val = {key: value + t_metrics_val[key] for key, value in metrics_val.items()}
                 c_cb_data_training = {key: value + t_cb_data_training[key] for key, value in cb_data_training.items()}
                 c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
-                
-                # TODO: inefficent and unnecessary, to add smarter index adding later
-                #metrics = copy.deepcopy(c_metrics)
-                #metrics_val = copy.deepcopy(c_metrics_val)
+
                 cb_data_training = copy.deepcopy(c_cb_data_training)
                 cb_data_validation = copy.deepcopy(c_cb_data_validation)
                 
@@ -484,137 +467,6 @@ def eventprop(params):
                                                         {output: training_labels},
                                                         callbacks = callbacks)
             
-    if params.get("verbose") and params.get("evaluate"):
-        # cannot print verbose whilst requesting just accuracy
-        fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
-        fig.suptitle('rawHD with EventProp on ml_genn')
-
-        value = random.randint(0, 1000) #len(x_test))
-
-        ax1.scatter(cb_data["hidden_spikes"][0][value], 
-                    cb_data["hidden_spikes"][1][value], s=1)
-        ax1.set_xlabel("Time [ms]")
-        ax1.set_ylabel("Neuron ID")
-        ax1.set_title("Hidden")
-        ax1.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        ax1.set_ylim(0, params.get("NUM_HIDDEN"))
-
-        ax2.scatter(cb_data["input_spikes"][0][value], 
-                    cb_data["input_spikes"][1][value], s=1)
-        ax2.set_xlabel("Time [ms]")
-        ax2.set_ylabel("Neuron ID")
-        ax2.set_title("Input")
-        ax2.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        ax2.set_ylim(0, params.get("NUM_INPUT"))
-
-        ax3.plot(cb_data["v_output"][value])
-        ax3.set_xlabel("Time [ms]")
-        ax3.set_ylabel("voltage (v)")
-        ax3.set_title("Output voltage")
-        ax3.set_xlim(0, params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"))
-        #ax3.set_ylim(0, params.get("NUM_INPUT"))
-
-        sr = 22050
-        img = librosa.display.specshow(x_train[value], 
-                                x_axis='time', 
-                                y_axis='mel', 
-                                sr=sr, 
-                                cmap='viridis')
-        #fig.colorbar(img, ax = ax4)
-        ax4.set_title("mel encoding")
-
-        fig.tight_layout()
-        #figure(figsize=(8, 6), dpi=200)
-        plt.savefig('activity_across_layers.png')
-        plt.clf() 
-        
-        if params.get("cross_validation"):
-            # show accuracy log
-            for speaker_left in speaker_id:
-        
-                data = pd.read_csv(f"train_output_{speaker_left}.csv")
-                df = pd.DataFrame(data, columns=['accuracy'])
-
-                accuracy = np.array(df)
-
-                accuracy = accuracy * 100
-
-                validation = []
-                training = []
-
-                for i in range(len(accuracy)):
-                    if i % 2 == 0:
-                        training.append(float(accuracy[i]))
-                    else:
-                        validation.append(float(accuracy[i]))
-                        
-                plt.plot(training, label = f"training_{speaker_left}")
-            plt.ylabel("accuracy (%)")
-            plt.xlabel("epochs")
-            plt.ylim(0, 100)
-            plt.title("accuracy during training")
-            plt.legend()
-            #figure(figsize=(8, 6), dpi=200)
-            plt.savefig('accuracy_over_time.png')
-            plt.clf() 
-            
-            # show validation log
-            for speaker_left in speaker_id:
-        
-                data = pd.read_csv(f"train_output_{speaker_left}.csv")
-                df = pd.DataFrame(data, columns=['accuracy'])
-
-                accuracy = np.array(df)
-
-                accuracy = accuracy * 100
-
-                validation = []
-                training = []
-
-                for i in range(len(accuracy)):
-                    if i % 2 == 0:
-                        training.append(float(accuracy[i]))
-                    else:
-                        validation.append(float(accuracy[i]))
-                        
-                plt.plot(validation, label = f"validation_{speaker_left}")
-            plt.ylabel("accuracy (%)")
-            plt.xlabel("epochs")
-            plt.ylim(0, 100)
-            plt.title("validation during training")
-            plt.legend()
-            #figure(figsize=(8, 6), dpi=200)
-            plt.savefig('validation_over_time.png')
-            plt.clf() 
-            
-        else:
-            data = pd.read_csv("train_output.csv")
-            df = pd.DataFrame(data, columns=['accuracy'])
-
-            accuracy = np.array(df)
-
-            accuracy = accuracy * 100
-
-            validation = []
-            training = []
-
-            for i in range(len(accuracy)):
-                if i % 2 == 0:
-                    training.append(float(accuracy[i]))
-                else:
-                    validation.append(float(accuracy[i]))
-                                
-            plt.plot(training, label = "training")
-            plt.plot(validation, label = "validation")
-            plt.ylabel("accuracy (%)")
-            plt.ylim(0, 100)
-            plt.xlabel("epochs")
-            plt.title("accuracy during training")
-            #figure(figsize=(8, 6), dpi=200)
-            plt.legend()
-            plt.savefig('v&a_over_time.png')
-            plt.clf() 
-
     # reset directory
     os.chdir("..")
 
