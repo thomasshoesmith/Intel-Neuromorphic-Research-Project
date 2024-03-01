@@ -35,6 +35,8 @@ import librosa
 
 import augmentation_tools
 
+schedule_epoch_total = 0
+
 def eventprop(params):
     """
     Function to run hd classification using eventprop
@@ -332,27 +334,16 @@ def eventprop(params):
             if params.get("record_all_hidden_spikes"):
                 cb_data_training["hidden_spike_counts_unfiltered"] = []
                 cb_data_validation["hidden_spike_counts_unfiltered"] = []
-                
-            start = params.get("lr") / 10
-            target = params.get("lr")
-            buildup = 9
-
-            difference = (target - start) / buildup
             
-            # epoch wise LR changes (alpha is lr in Adam)
+            # alpha decay after 1st epoch at a rate of 0.95
             def alpha_schedule(epoch, alpha):
-                if epoch == 0:
-                    return params.get("lr") / 10
-                if epoch < buildup + 1 and epoch != 0:
-                    alpha = alpha + difference
-                    #print(alpha)
-                    return alpha
-                else:
-                    #print(alpha)
-                    return alpha
-                
-            for e in trange(params.get("NUM_EPOCH")):    
-                                
+                global schedule_epoch_total # TODO: remove this
+                schedule_epoch_total = schedule_epoch_total + 1
+                if schedule_epoch_total % 2 != 0 and epoch != 0:
+                    return alpha * 0.95
+                return alpha
+                        
+            for e in trange(params.get("NUM_EPOCH")):
                 train_spikes = training_images
                 train_labels = training_labels
                 
@@ -366,10 +357,9 @@ def eventprop(params):
                             Checkpoint(serialiser)]
             
                 if params.get("recurrent"):
+                    callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
                     pass
-                    # callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
-                    
-            
+
                 if params.get("verbose"):
                     callbacks.append("batch_progress_bar")
                     
@@ -394,7 +384,7 @@ def eventprop(params):
                                                                                                     shuffle = True,
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
-                    
+                     
                 else:
                     metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
@@ -443,7 +433,6 @@ def eventprop(params):
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts_unfiltered"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
                 
-            
         # evaluate
         if params.get("evaluate"):
             network.load((params.get("NUM_EPOCH") - 1,), serialiser)
