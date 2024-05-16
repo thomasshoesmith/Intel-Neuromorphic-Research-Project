@@ -339,7 +339,7 @@ def eventprop(params):
             def alpha_schedule(epoch, alpha):
                 global schedule_epoch_total # TODO: remove this
                 schedule_epoch_total = schedule_epoch_total + 1
-                print(schedule_epoch_total, params.get("lr_decay_rate") * 2, schedule_epoch_total % (params.get("lr_decay_rate") * 2) != 0)
+                #print(schedule_epoch_total, params.get("lr_decay_rate") * 2, schedule_epoch_total % (params.get("lr_decay_rate") * 2) != 0)
                 if params.get("lr_decay_rate") > 0 and schedule_epoch_total % (params.get("lr_decay_rate") * 2) != 0 and epoch != 0:
                     return alpha * params.get("lr_decay")
                 return alpha
