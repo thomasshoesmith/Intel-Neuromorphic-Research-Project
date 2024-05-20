@@ -11,6 +11,7 @@ def wav2mel(wav_filename,
     for converting a wav audio file to mel spectrogram
 
     :param wav_filename: directory of the wav file
+    :param sample_rate: sample rate of audio file TODO: automate this
     :param fft_size: fast fourier transform bins
     :param num_channels: number of channels (y axis)
     :param num_frames: number of frames (x axis)
