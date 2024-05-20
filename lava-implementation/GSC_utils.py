@@ -58,3 +58,11 @@ class GSCDataset(Dataset):
     
     def __len__(self):
         return len(self.data)
+    
+
+def rescale_factor(w, bits):
+    rng = float(2**(bits-1))
+    mx = max(np.percentile(w,99), np.percentile(-w,99))
+    fac = (rng-1)/mx
+    mn = -(rng-2)/fac
+    return (fac, mn, mx)
