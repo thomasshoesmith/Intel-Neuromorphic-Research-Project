@@ -2,6 +2,7 @@ import numpy as np
 import librosa
 
 def wav2mel(wav_filename,
+            sample_rate = 20510,
             fft_size = 512,
             num_channels = 80,
             num_frames = 100):
@@ -16,7 +17,7 @@ def wav2mel(wav_filename,
     :return: np.array of mel spectrogram
     """ 
 
-    audio, sr = librosa.load(wav_filename, sr = 20510, mono=True)
+    audio, sr = librosa.load(wav_filename, sr = sample_rate, mono=True)
     
     # Apply pre-emphasis filter
     pre_emphasis = 0.95
