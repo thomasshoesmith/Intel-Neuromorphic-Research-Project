@@ -13,7 +13,6 @@ from matplotlib import pyplot as plt
 from tqdm import tqdm
 from lava.magma.core.process.process import LogConfig
 import logging
-import utils
 import GSC_utils
 from lava.utils.system import Loihi2
 import os
@@ -62,17 +61,16 @@ do_plots= True
 weight_bits= 8
 
 # Z is speaker ID
-X_train, Y_train, Z_train, X_test, Y_test, Z_test = utils.load_data_SHD(p,num_samples=p["NUM_SAMPLES"])
-print(X_train.shape)
-print(Y_train.shape)
-print(Z_train.shape)
+#X_train, Y_train, Z_train, X_test, Y_test, Z_test = utils.load_data_SHD(p,num_samples=p["NUM_SAMPLES"])
+#print(X_train.shape)
+#print(Y_train.shape)
+#print(Z_train.shape)
 
-x_train, y_train, x_test, y_test = GSC_utils.load_data_GSC(dataset_dir = "/mnt/data0/ts468/data/rawSC/rawSC_80input/",
+x_train, y_train, x_test, y_test = GSC_utils.load_data_GSC(dataset_dir = "/homes/ts468/data/rawSC/rawSC_80input/",
                                                            network_scale = 1,
                                                            num_samples = 1)
 print(x_train.shape)
 print(y_train.shape)
-
 # transform some parmeters
 tau_mem_fac = 1.0-np.exp(-p["DT_MS"]/p["TAU_MEM"])
 tau_mem_fac_int = int(np.round(tau_mem_fac*(2**12)))
@@ -91,7 +89,7 @@ w_h2h = np.load("lava-implementation/quant8-Conn_Pop1_Pop1-g.npy")
 w_h2h = w_h2h.reshape((params.get("NUM_HIDDEN"), params.get("NUM_HIDDEN"))).T
 w_h2h *= tau_mem_fac
 w = np.hstack([w_i2h,w_h2h])
-w_2h_fac, mn, mx = utils.rescale_factor(w,weight_bits)
+w_2h_fac, mn, mx = GSC_utils.rescale_factor(w,weight_bits)
 w_i2h[w_i2h > mx] = mx
 w_i2h[w_i2h < mn] = mn
 w_i2h_int = np.round(w_i2h*w_2h_fac).astype(np.int8)
@@ -100,6 +98,7 @@ if do_plots:
     plt.figure()
     plt.hist(w_i2h_int)
     plt.savefig("output_1.png")
+    
 w_h2h[w_h2h > mx] = mx
 w_h2h[w_h2h < mn] = mn
 w_h2h_int = np.round(w_h2h*w_2h_fac).astype(np.int8)
@@ -108,7 +107,7 @@ print(f"h2h: mn == {np.amin(w_h2h_int)}, mx == {np.amax(w_h2h_int)}")
 w_h2o = np.load("lava-implementation/quant8-Conn_Pop1_Pop2-g.npy")
 w_h2o = w_h2o.reshape((params.get("NUM_HIDDEN"), params.get("NUM_OUTPUT"))).T
 w_h2o *= tau_mem_fac
-w_2o_fac, mn, mx = utils.rescale_factor(w_h2o,weight_bits)
+w_2o_fac, mn, mx = GSC_utils.rescale_factor(w_h2o,weight_bits)
 w_2o_fac /= 2.0
 mn *= 2.0
 mx *= 2.0
@@ -120,14 +119,14 @@ print(f"h2o: mn == {np.amin(w_h2o_int)}, mx == {np.amax(w_h2o_int)}")
 vth_hid = w_2h_fac
 vth_hid_int = int(np.round(vth_hid))
 
-X_test= np.hstack(X_test)
+X_test= np.hstack(x_test)
 print(X_test.shape)
 # Create processes
 input = RingBuffer(data=X_test)
 
 py2nx_inp = PyToNxAdapter(shape=(X_test.shape[0],))
 
-hidden = LIFReset(shape=(1024, ),                         # Number and topological layout of units in the process
+hidden = LIFReset(shape=(512, ),                         # Number and topological layout of units in the process
                   vth=vth_hid_int,                             # Membrane threshold
                   dv=tau_mem_fac_int,                              # Inverse membrane time-constant
                   du=tau_syn_fac_int,                              # Inverse synaptic time-constant
@@ -136,7 +135,7 @@ hidden = LIFReset(shape=(1024, ),                         # Number and topologic
                   reset_interval=1024,
                   log_config=log_config)
 
-output = LIFReset(shape=(20, ),                         # Number and topological layout of units in the process
+output = LIFReset(shape=(35, ),                         # Number and topological layout of units in the process
                   vth=2**30,                             # Membrane threshold
                   dv=tau_mem_fac_int,                              # Inverse membrane time-constant
                   du=tau_syn_fac_int,                              # Inverse synaptic time-constant
@@ -165,15 +164,15 @@ hidden.s_out.connect(hid_to_out.s_in)
 hid_to_hid.a_out.connect(hidden.a_in)
 hid_to_out.a_out.connect(output.a_in)
 
-out = SpikeOut(shape=(20,), buffer=X_test.shape[1])
-v_read_adapter = StateReader(shape=(20,), offset=0, interval=1)
+out = SpikeOut(shape=(35,), buffer=X_test.shape[1])
+v_read_adapter = StateReader(shape=(35,), offset=0, interval=1)
 v_read_adapter.connect_var(output.v)
 v_read_adapter.out.connect(out.a_in)
 
 # monitor outputs
 
 # monitor_output = Monitor()
-num_steps = int(1000/p["DT_MS"])
+num_steps = int(100*20/p["DT_MS"])
 
 # monitor_output.probe(output.v, X_test.shape[1])
 
@@ -189,6 +188,7 @@ loihi2hw_exception_map = {
 run_cfg = Loihi2HwCfg(exception_proc_model_map=loihi2hw_exception_map,callback_fxs=[probe_v])
 # run_config.select(conn_proto_readout,[PyDenseModelBitAcc])
 output._log_config.level = logging.INFO
+input._log_config.level = logging.INFO
 
 n_sample = X_test.shape[1]//num_steps
 for i in tqdm(range(n_sample)):
@@ -196,11 +196,14 @@ for i in tqdm(range(n_sample)):
 
 #print("Weight: ", probe_v.time_series[::10])
 #output_v = out.data.get()
-print(probe_v.time_series[:num_steps])
+#print(probe_v.time_series[:num_steps])
 output.stop()
-output_v = probe_v.time_series.reshape(num_steps,20).T
+output_v = probe_v.time_series.reshape(num_steps, params.get("NUM_OUTPUT")).T
+input_v = probe_v.time_series.reshape(num_steps, params.get("NUM_INPUT")).T
 print(output_v.shape)
 print(output_v)
+print(input_v.shape)
+print(input_v)
 # output_v = monitor_output.get_data()
 good = 0
 for i in range(n_sample):
@@ -208,15 +211,15 @@ for i in range(n_sample):
     print(np.sum(output_v))
     sum_v = np.sum(out_v,axis=1)
     print(sum_v)
-    print(Y_test[i])
+    print(y_test[i])
     pred = np.argmax(sum_v)
     # print(f"Pred: {pred}, True:{Y_test[i]}")
-    if pred == Y_test[i]:
+    if pred == y_test[i]:
         good += 1
     if do_plots:
         plt.figure()
         plt.plot(out_v.T)
-        plt.show()
+        plt.savefig("output_2.png")
 
 print(f"test accuracy: {good/n_sample*100}")
 

@@ -6,7 +6,8 @@ from torch.utils.data import Dataset
 
 def load_data_GSC(dataset_dir,
                   network_scale,
-                  num_samples = None):
+                  num_samples = None,
+                  INPUT_FRAME_TIMESTEP = 20):
     
     """
     loads Google Speexch Commands dataset.
@@ -15,6 +16,7 @@ def load_data_GSC(dataset_dir,
     :param dataset_dir: location of dataset
     :param network_scale: scale of the dataset returned (0 - 1)
     :param num_samples: how many samples to return
+    :param INPUT_FRAME_TIMESTEP: duration of frames within input layer
     :return: (x_train, y_train, x_test, y_test)
     """ 
 
@@ -38,6 +40,17 @@ def load_data_GSC(dataset_dir,
     # to invert the dataset (emphasised with positive values, not negative)
     x_train = x_train + abs(np.floor(x_train.min()))
     x_test = x_test + abs(np.floor(x_test.min()))
+
+    # scaling up values
+    x_train = np.repeat(x_train, 
+                        INPUT_FRAME_TIMESTEP, 
+                        axis = 2)
+    
+    x_test = np.repeat(x_test, 
+                       INPUT_FRAME_TIMESTEP, 
+                       axis = 2)
+
+    print(f"the dimensions of the dataset are {x_train.shape}")
 
     # scaled to the number of samples passed
     return (x_train[:num_samples], y_train[:num_samples], 
