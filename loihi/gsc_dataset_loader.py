@@ -11,7 +11,8 @@ def load_gsc(dataset_directory,
              NETWORK_SCALE,
              NUM_INPUT,
              num_samples,
-             to_concatenate, 
+             to_concatenate,
+             scale_value = 0.0009, 
              num_frames = 20):
     
     params = {}
@@ -81,6 +82,11 @@ def load_gsc(dataset_directory,
     test_x = test_x[shuffler]
     test_y = test_y[shuffler]
 
+    # scale values 
+    train_x = train_x * scale_value
+    validation_x = validation_x * scale_value
+    test_x = test_x * scale_value
+
     # to concatenate
     if to_concatenate:
         train_x = np.concatenate(train_x, axis = 0)
@@ -89,11 +95,14 @@ def load_gsc(dataset_directory,
 
     return train_x, train_y, validation_x, validation_y, test_x, test_y
 
+
+"""
 train_x, train_y, validation_x, validation_y, test_x, test_y = load_gsc("/its/home/ts468/data/rawSC/rawSC_80input/", 
                                                                         1, 
                                                                         80,
                                                                         10,
                                                                         False)
+"""
 
 #plt.imshow(np.rot90(train_x), aspect="auto")
 #plt.savefig("temp.png")
