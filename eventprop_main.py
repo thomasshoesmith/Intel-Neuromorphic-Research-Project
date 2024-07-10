@@ -231,7 +231,7 @@ def eventprop(params):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
-                                            example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7000
+                                            example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7
                                                                         params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
                                                                         int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
@@ -328,6 +328,9 @@ def eventprop(params):
             metrics, metrics_val, cb_data_training, cb_data_validation = {}, {}, {}, {}
             
             if params.get("debug"):
+                cb_data_training["input_spike_counts"] = []
+                cb_data_validation["input_spike_counts"] = []
+
                 cb_data_training["hidden_spike_counts"] = []
                 cb_data_validation["hidden_spike_counts"] = []
                 
@@ -365,10 +368,17 @@ def eventprop(params):
                     callbacks.append("batch_progress_bar")
                     
                 if params.get("debug"):
+                    callbacks.append(SpikeRecorder(input, 
+                                            key = "input_spike_counts", 
+                                            record_counts = False,
+                                            example_filter = 7))
+
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts", 
-                                            record_counts = True,
-                                            example_filter = 70))
+                                            record_counts = False,
+                                            example_filter = 7))
+                    
+                    callbacks.append(VarRecorder(output, var = "v"))
                     
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
@@ -397,13 +407,16 @@ def eventprop(params):
                                                                                                     validation_y = {output: validation_labels})  
                 
                 # combined dictionaries
-                c_cb_data_training = {key: value + t_cb_data_training[key] for key, value in cb_data_training.items()}
-                c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
+                #c_cb_data_training = {key: value + t_cb_data_training[key] for key, value in cb_data_training.items()}
+                #c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
 
-                cb_data_training = copy.deepcopy(c_cb_data_training)
-                cb_data_validation = copy.deepcopy(c_cb_data_validation)
-                
-            #print(type(t_cb_data_training.get("hidden_spike_counts")))
+                for key in list(cb_data_training.keys()):
+                    cb_data_training[key].append([t_cb_data_training[key]])
+                    cb_data_validation[key].append([t_cb_data_validation[key]])
+
+                #cb_data_training = copy.deepcopy(c_cb_data_training)
+                #cb_data_validation = copy.deepcopy(c_cb_data_validation)
+        
             end_time = perf_counter()
             print(f"Time = {end_time - start_time}s")
             
@@ -412,16 +425,16 @@ def eventprop(params):
             with open('serialisers.pkl', 'wb') as f:
                 pickle.dump(serialiser, f)
 
+            # save input training spike counts # old way, can do this in 1 line?
+            with open(f'input_training_spike_counts.npy', 'wb') as f:     
+                input_spike_counts = np.array(cb_data_training["input_spike_counts"], dtype=np.int16)
+                np.save(f, input_spike_counts)
+
             # save hidden training spike counts
             with open(f'hidden_training_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
                 
-            # save hidden training spike counts
-            with open(f'hidden_validation_spike_counts.npy', 'wb') as f:     
-                hidden_spike_counts = np.array(cb_data_validation["hidden_spike_counts"], dtype=np.int16)
-                np.save(f, hidden_spike_counts)
-
         # save parameters for reference
         json_object = json.dumps(params, indent = 4)
         with open("params.json", "w") as outfile:
