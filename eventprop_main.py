@@ -392,7 +392,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True,
+                                                                                                    shuffle = False,
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                      
@@ -401,7 +401,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = True,
+                                                                                                    shuffle = False,
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
@@ -411,8 +411,8 @@ def eventprop(params):
                 #c_cb_data_validation = {key: value + t_cb_data_validation[key] for key, value in cb_data_validation.items()}
 
                 for key in list(cb_data_training.keys()):
-                    cb_data_training[key].append([t_cb_data_training[key]])
-                    cb_data_validation[key].append([t_cb_data_validation[key]])
+                    cb_data_training[key].append(t_cb_data_training[key])
+                    cb_data_validation[key].append(t_cb_data_validation[key])
 
                 #cb_data_training = copy.deepcopy(c_cb_data_training)
                 #cb_data_validation = copy.deepcopy(c_cb_data_validation)
