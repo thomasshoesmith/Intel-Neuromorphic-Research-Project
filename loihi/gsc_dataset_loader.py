@@ -13,8 +13,10 @@ def load_gsc(dataset_directory,
              num_samples,
              to_concatenate,
              scale_value = 0.0009, 
-             num_frames = 20):
+             num_frames = 10,
+             shuffle = True):
     
+    print("loading ...")
     params = {}
     params["dataset_directory"] = dataset_directory
     params["NETWORK_SCALE"] = NETWORK_SCALE
@@ -28,7 +30,6 @@ def load_gsc(dataset_directory,
     
     #TODO: Redundant? any point to have a NUM_INPUT if data can be obtained through dataset shape
     assert train_x.shape[1] == params.get("NUM_INPUT"), "dataset input size doesn't match passed input parameter size"
-    
     if params.get("NETWORK_SCALE") < 1:
         assert len(train_x) == len(train_y)
         p = np.random.permutation(len(train_x))
@@ -58,16 +59,17 @@ def load_gsc(dataset_directory,
         validation_x = np.swapaxes(validation_x, 1, 2) 
         validation_x = validation_x + abs(np.floor(validation_x.min()))
 
-    # shuffle array before stacking (stacking like ring buffer) 
-    shuffler = np.random.permutation(len(train_x))
-    train_x = train_x[shuffler]
-    train_y = train_y[shuffler]
-    shuffler = np.random.permutation(len(validation_x))
-    validation_x = validation_x[shuffler]
-    validation_y = validation_y[shuffler]
-    shuffler = np.random.permutation(len(test_x))
-    test_x = test_x[shuffler]
-    test_y = test_y[shuffler]
+    if shuffle:
+        # shuffle array before stacking (stacking like ring buffer) 
+        shuffler = np.random.permutation(len(train_x))
+        train_x = train_x[shuffler]
+        train_y = train_y[shuffler]
+        # shuffler = np.random.permutation(len(validation_x))
+        # validation_x = validation_x[shuffler]
+        # validation_y = validation_y[shuffler]
+        # shuffler = np.random.permutation(len(test_x))
+        # test_x = test_x[shuffler]
+        # test_y = test_y[shuffler]
 
     # crop the num of samples
     train_x, train_y = train_x[:num_samples], train_y[:num_samples]
@@ -90,6 +92,11 @@ def load_gsc(dataset_directory,
         validation_x = np.concatenate(validation_x, axis = 0)
         test_x = np.concatenate(test_x, axis = 0)
 
+    #plt.figure()
+    #plt.imshow(train_x[2000:4000,:].T)
+    #plt.gca().set_box_aspect(1.0)
+    #plt.gca().set_aspect('auto')
+    #plt.show()
     return train_x, train_y, validation_x, validation_y, test_x, test_y
 
 
