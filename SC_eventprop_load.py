@@ -22,7 +22,7 @@ from ml_genn.compilers.event_prop_compiler import default_params
 
 from pygenn.genn_wrapper.CUDABackend import DeviceSelect_MANUAL
 
-dir = "~/PhD/Intel-Neuromorphic-Research-Project/output/SC_final_run_2/"
+dir = "~/PhD/Intel-Neuromorphic-Research-Project/output/full_100_epoch/"
 
 output = pd.read_csv(os.path.expanduser(dir + "train_output.csv"))
 
@@ -123,16 +123,42 @@ network.load((params.get("NUM_EPOCH") - 1,), serialiser)
 
 compiler = InferenceCompiler(evaluate_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             reset_in_syn_between_batches=True,
-                            quantise_num_weight_bits=8,
-                            quantise_weight_percentile=99,
+                            #quantise_num_weight_bits=8,
+                            #quantise_weight_percentile=99,
                             batch_size = params.get("BATCH_SIZE"))
 compiled_net = compiler.compile(network)
 
 with compiled_net:
 
+    callbacks = [SpikeRecorder(input, 
+                               key = "input_spikes",
+                               example_filter = 1)]
+
     metrics, cb_data = compiled_net.evaluate({input: testing_images * params.get("INPUT_SCALE")},
-                                             {output: testing_labels})
+                                             {output: testing_labels},
+                                             callbacks = callbacks)
     
-    compiled_net.save(("quant8",), serialiser)
+    #compiled_net.save(("quant8",), serialiser)
 
     print(f"Accuracy = {100 * metrics[output].result}%")
+
+
+print(cb_data.keys())
+input_spikes = cb_data[list(cb_data.keys())[0]]
+
+print(input_spikes)
+
+x = input_spikes[0][0]
+y = input_spikes[1][0]
+print(len(testing_images))
+
+print(len(x))
+print(len(y))
+
+
+
+np.save("/its/home/ts468/PhD/Intel-Neuromorphic-Research-Project/output/full_100_epoch/input_spikes.npy", x)
+
+print("saved successfully")
+
+print(os.getcwd())

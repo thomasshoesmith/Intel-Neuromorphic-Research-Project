@@ -34,6 +34,7 @@ import random
 import librosa
 
 import augmentation_tools
+from SC_dataset_loader import load_gsc
 
 schedule_epoch_total = 0
 
@@ -53,51 +54,11 @@ def eventprop(params):
 
     os.chdir(params.get("output_dir") + params.get("sweeping_suffix"))
 
-    # Load dataset
-    x_train = np.load(os.path.expanduser(params.get("dataset_directory")) + "training_x_data.npy")
-    y_train = np.load(os.path.expanduser(params.get("dataset_directory")) + "training_y_data.npy")
-    
-    x_test = np.load(os.path.expanduser(params.get("dataset_directory")) + "testing_x_data.npy")
-    y_test = np.load(os.path.expanduser(params.get("dataset_directory")) + "testing_y_data.npy")
-    
-    #TODO: Redundant? any point to have a NUM_INPUT if data can be obtained through dataset shape
-    assert x_train.shape[1] == params.get("NUM_INPUT"), "dataset input size doesn't match passed input parameter size"
-    
-    if params.get("NETWORK_SCALE") < 1:
-        assert len(x_train) == len(y_train)
-        p = np.random.permutation(len(x_train))
-        x_train, y_train = x_train[p], y_train[p]
-        print(f"original network size: {len(x_train)}")
-        x_train = x_train[:int(len(x_train) * params.get("NETWORK_SCALE"))]
-        y_train = y_train[:int(len(y_train) * params.get("NETWORK_SCALE"))]
-        print(f"reduced network size: {len(x_train)}")
-        print("!! network reduced")
-
     if params.get("cross_validation"):
         training_details = pd.read_csv(os.path.expanduser(params.get("dataset_directory")) + "training_details.csv")
         testing_details = pd.read_csv(os.path.expanduser(params.get("dataset_directory")) + "testing_details.csv")
 
-    training_images = np.swapaxes(x_train, 1, 2) 
-    testing_images = np.swapaxes(x_test, 1, 2) 
- 
-    training_images = training_images + abs(np.floor(training_images.min()))
-    testing_images = testing_images + abs(np.floor(testing_images.min()))
-
-    training_labels = y_train
-    testing_labels = y_test
-    
-    # adding validation data if exists
-    validation_images = np.array([])
-    validation_labels = np.array([])
-    if os.path.isfile(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy"):
-        print("!! validation dataset loaded successfully")
-        x_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_x_data.npy")
-        y_validation = np.load(os.path.expanduser(params.get("dataset_directory")) + "validation_y_data.npy")
-        
-        validation_images = np.swapaxes(x_validation, 1, 2) 
-        validation_images = validation_images + abs(np.floor(validation_images.min()))
-        
-        validation_labels = y_validation
+    training_images, training_labels, validation_images, validation_labels, testing_images, testing_labels = load_gsc(dataset_directory = params.get("dataset_directory"))
     
     # readout class
     class CSVTrainLog(Callback):
@@ -232,8 +193,8 @@ def eventprop(params):
                                             key = "hidden_spike_counts", 
                                             record_counts = True,
                                             example_filter = list(range(7, # random sample from trial, in this case the trial chosen is 7
-                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
-                                                                        int(math.ceil((len(x_train) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
+                                                                        params.get("NUM_EPOCH") * int(math.ceil((len(training_images) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE"), 
+                                                                        int(math.ceil((len(training_images) * 0.9) / params.get("BATCH_SIZE"))) * params.get("BATCH_SIZE")))))
 
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
@@ -378,21 +339,21 @@ def eventprop(params):
                                             record_counts = False,
                                             example_filter = 7))
                     
-                    callbacks.append(VarRecorder(output, var = "v"))
+                    callbacks.append(VarRecorder(output, 
+                                                 var = "v",
+                                                 example_filter = 7))
                     
                 if params.get("record_all_hidden_spikes"):
                     callbacks.append(SpikeRecorder(hidden, 
                                             key = "hidden_spike_counts_unfiltered", 
                                             record_counts = True))
-
-                # save to t (temporary) dictionaries
                 
                 if not bool(validation_images.any()):    
                     metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: train_spikes * params.get("INPUT_SCALE")},
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = False,
+                                                                                                    shuffle = True, # TO BE REVERSED BACK TO TRUE!!!
                                                                                                     validation_split = 0.1,
                                                                                                     callbacks = callbacks)    
                      
@@ -401,7 +362,7 @@ def eventprop(params):
                                                                                                     {output: train_labels},
                                                                                                     start_epoch = e,
                                                                                                     num_epochs = 1,
-                                                                                                    shuffle = False,
+                                                                                                    shuffle = True, # TO BE REVERSED BACK TO TRUE!!!
                                                                                                     callbacks = callbacks,
                                                                                                     validation_x = {input: validation_images * params.get("INPUT_SCALE")},
                                                                                                     validation_y = {output: validation_labels})  
@@ -434,6 +395,9 @@ def eventprop(params):
             with open(f'hidden_training_spike_counts.npy', 'wb') as f:     
                 hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
                 np.save(f, hidden_spike_counts)
+
+            np.save("x_train.npy", train_spikes)
+            np.save("y_train.npy", train_labels)
                 
         # save parameters for reference
         json_object = json.dumps(params, indent = 4)
