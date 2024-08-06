@@ -13,7 +13,7 @@
     "debug": false,
     "record_all_hidden_spikes": false,
     "lr": 5e-3,
-    "lr_decay": 0.95,
+    "lr_decay": 1.0,
     "lr_decay_rate": 1,
     "dt": 1,
     "reg_lambda_lower": 1e-11,
@@ -35,6 +35,6 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "testing_1",
+    "output_dir": "testing_2",
     "model_description": "SC"
 }

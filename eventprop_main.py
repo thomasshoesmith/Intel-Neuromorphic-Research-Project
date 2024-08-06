@@ -28,7 +28,7 @@ import nvsmi
 from ml_genn.utils.data import (calc_latest_spike_time, linear_latency_encode_data)
 from ml_genn.compilers.event_prop_compiler import default_params
 
-from pygenn.genn_wrapper.CUDABackend import DeviceSelect_MANUAL
+#from pygenn.genn_wrapper.CUDABackend import DeviceSelect_MANUAL
 
 import random
 import librosa
@@ -133,9 +133,9 @@ def eventprop(params):
                             reg_lambda_upper = params.get("reg_lambda_upper"),
                             reg_nu_upper = params.get("reg_nu_upper"),
                             dt = params.get("dt"),
-                            max_spikes=1500,
-                            selectGPUByDeviceID=True, 
-                            deviceSelectMethod=DeviceSelect_MANUAL)
+                            max_spikes=1500)
+                            #selectGPUByDeviceID=True, 
+                            #deviceSelectMethod=DeviceSelect_MANUAL)
 
     compiled_net = compiler.compile(network)
     
