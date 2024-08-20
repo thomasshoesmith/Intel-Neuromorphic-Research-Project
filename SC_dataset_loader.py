@@ -34,9 +34,9 @@ def load_gsc(dataset_directory,
         train_y = train_y[shuffler]
 
         # unnecessary, but being used for debugging 
-        shuffler = np.random.permutation(len(train_x))
-        train_x = train_x[shuffler]
-        train_y = train_y[shuffler]
+        shuffler = np.random.permutation(len(test_x))
+        test_x = test_x[shuffler]
+        test_y = test_y[shuffler]
 
     # crop the num of samples
     train_x, train_y = train_x[:num_samples], train_y[:num_samples]
