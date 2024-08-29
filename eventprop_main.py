@@ -281,6 +281,12 @@ def eventprop(params):
         
     #if params.get("cross_validation") == False:
     else:
+
+        # save parameters for reference
+        json_object = json.dumps(params, indent = 4)
+        with open("params.json", "w") as outfile:
+            outfile.write(json_object)
+
         with compiled_net:
             # Evaluate model on numpy dataset
             start_time = perf_counter()
@@ -398,11 +404,6 @@ def eventprop(params):
 
             np.save("x_train.npy", train_spikes)
             np.save("y_train.npy", train_labels)
-                
-        # save parameters for reference
-        json_object = json.dumps(params, indent = 4)
-        with open("params.json", "w") as outfile:
-            outfile.write(json_object)
                 
          # get hidden spikes if param is true
         if params.get("record_all_hidden_spikes"):
