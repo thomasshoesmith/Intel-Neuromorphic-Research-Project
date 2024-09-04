@@ -175,6 +175,12 @@ compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * para
 compiled_net = compiler.compile(network)
 
 with compiled_net:
+
+    # save parameters for reference
+    json_object = json.dumps(params, indent = 4)
+    with open("params.json", "w") as outfile:
+        outfile.write(json_object)
+
     # Evaluate model on numpy dataset
     start_time = perf_counter() 
     
@@ -257,11 +263,6 @@ with compiled_net:
         with open(f'hidden_training_spike_counts.npy', 'wb') as f:     
             hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
             np.save(f, hidden_spike_counts)
-            
-    # save parameters for reference
-    json_object = json.dumps(params, indent = 4)
-    with open("params.json", "w") as outfile:
-        outfile.write(json_object)
             
         # get hidden spikes if param is true
     if params.get("record_all_hidden_spikes"):
