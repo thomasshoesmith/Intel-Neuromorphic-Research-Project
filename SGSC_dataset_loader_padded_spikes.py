@@ -16,14 +16,7 @@ def SGSC_Loader(dir,
                 num_samples = None,
                 shuffle = False,
                 number_of_neurons = 80,
-                number_of_timesteps = 2000,
-                save_dataset = False,
-                save_dataset_dir = None):
-    
-    # check if save_directory, has it been saved?
-    # TODO check
-    if save_dataset:
-        pass
+                number_of_timesteps = 2000):
     
     # loading x spike times
     x_train_spike_times = np.load(os.path.expanduser(dir) + "training_x_spikes.npy", allow_pickle = True)
@@ -75,12 +68,4 @@ def SGSC_Loader(dir,
                      x_validation_spike_times[trial]["x"], 
                      x_validation_spike_times[trial]["t"]] = 1
 
-    if not save_dataset:
-        return x_train, y_train, x_test, y_test, x_validation, y_validation
-    
-    else:
-        pass
-        # save dataset
-        # TODO: is this needed? currenly only issue is sys memory
-        # 13G currently used
-        #np.save()
+    return x_train, y_train, x_test, y_test, x_validation, y_validation
