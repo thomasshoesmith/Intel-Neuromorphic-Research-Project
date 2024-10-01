@@ -12,7 +12,7 @@ import soundfile as sf
 import wget
 
 params = {}
-params["target_steps"] = 1000
+params["target_steps"] = 100
 params["num_bands"] = 80
 params["num_classes"] = 35
 params["sample_rate"] = 16000
@@ -21,7 +21,7 @@ params["frame_length"] = 0.025
 params["hop_length"] = 0.001
 params["fft_size"] = 512
 params["scale_value"] = 0.0009
-params["save_directory_name"] = "rawSC_80input"
+params["save_directory_name"] = "rawSC_80input_updated"
 
 ### (1) download and allocate folders for google speech commands dataset ###
 
