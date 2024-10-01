@@ -43,7 +43,7 @@ x_validation = np.load("spiking-google-speech-commands/validation_x_spikes.npy",
 y_validation = np.load("spiking-google-speech-commands/validation_y_spikes.npy", allow_pickle=True)
 
 
-with open("SC_params.json", "r") as f: 
+with open("SGSC_params.json", "r") as f: 
     params = json.load(f)
 
 schedule_epoch_total = 0
@@ -55,12 +55,12 @@ for i in range(len(x_train)):
     events = x_train[i]
     x_train_spikes.append(preprocess_tonic_spikes(events, 
                                                   x_train[0].dtype.names,
-                                                  (80, 1, 1),
+                                                  (params["NUM_INPUT"], 1, 1),
                                                   time_scale = 1))
 
 # Determine max spikes and latest spike time
 max_spikes = calc_max_spikes(x_train_spikes)
-latest_spike_time = calc_latest_spike_time(x_train_spikes)
+latest_spike_time = 1000 #calc_latest_spike_time(x_train_spikes)
 print(f"Max spikes {max_spikes}, latest spike time {latest_spike_time}")
 
 # Preprocess
@@ -69,14 +69,8 @@ for i in range(len(x_validation)):
     events = x_validation[i]
     x_validation_spikes.append(preprocess_tonic_spikes(events, 
                                                        x_validation[0].dtype.names, 
-                                                       (80, 1, 1),
+                                                       (params["NUM_INPUT"], 1, 1),
                                                        time_scale = 1))
-
-# Get number of input and output neurons from dataset 
-# and round up outputs to power-of-two
-num_input = 80 #int(np.prod(x.sensor_size))
-num_output = 35 #len(x.classes)
-
 
 os.chdir("output")
 
@@ -123,17 +117,9 @@ network = Network(default_params)
 
 with network:
     # Populations
-    """
-    input = Population(LeakyIntegrateFireInput(v_thresh=1, 
-                                            tau_mem=20,    
-                                            input_frames=params.get("NUM_FRAMES"), 
-                                            input_frame_timesteps=params.get("INPUT_FRAME_TIMESTEP")),
-                        params.get("NUM_INPUT"), 
-                        record_spikes = True)
-    """
     
     input = Population(SpikeInput(max_spikes = params["BATCH_SIZE"] * max_spikes),
-                       num_input,
+                       params["NUM_INPUT"],
                        record_spikes=True)
     
     hidden = Population(LeakyIntegrateFire(v_thresh=1.0, 
@@ -206,45 +192,57 @@ with compiled_net:
         if params.get("lr_decay_rate") > 0 and schedule_epoch_total % (params.get("lr_decay_rate") * 2) != 0 and epoch != 0:
             return alpha * params.get("lr_decay")
         return alpha
-                
-    callbacks = [CSVTrainLog(f"train_output.csv", 
-                        output,
-                        False),
-                Checkpoint(serialiser)]
-
-    if params.get("recurrent"):
-        callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
-        pass
-
-    if params.get("verbose"):
-        callbacks.append("batch_progress_bar")
-        
-    if params.get("debug"):
-        callbacks.append(SpikeRecorder(input, 
-                                key = "input_spike_counts", 
-                                example_filter = 7))
-
-        callbacks.append(SpikeRecorder(hidden, 
-                                key = "hidden_spike_counts", 
-                                example_filter = 7))
-        
-        callbacks.append(VarRecorder(output, 
-                                        var = "v",
-                                        example_filter = 7))
-        
-    if params.get("record_all_hidden_spikes"):
-        callbacks.append(SpikeRecorder(hidden, 
-                                key = "hidden_spike_counts_unfiltered", 
-                                record_counts = True))
-
-    metrics, metrics_val, cb_data_training, cb_data_validation = compiled_net.train({input: x_train_spikes},
-                                                                                    {output: y_train},
-                                                                                    num_epochs = params["NUM_EPOCH"],
-                                                                                    shuffle = True,
-                                                                                    callbacks = callbacks,
-                                                                                    validation_x = {input: x_validation_spikes},
-                                                                                    validation_y = {output: y_validation})  
     
+    for e in trange(params["NUM_EPOCH"]):
+
+                
+        callbacks = [CSVTrainLog(f"train_output.csv", 
+                            output,
+                            e > 0),
+                    Checkpoint(serialiser)]
+
+        if params.get("recurrent"):
+            callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
+            pass
+
+        if params.get("verbose"):
+            callbacks.append("batch_progress_bar")
+            
+        if params.get("debug"):
+            callbacks.append(SpikeRecorder(input, 
+                                    key = "input_spike_counts", 
+                                    example_filter = 7))
+
+            callbacks.append(SpikeRecorder(hidden, 
+                                    key = "hidden_spike_counts", 
+                                    example_filter = 7))
+            
+            callbacks.append(VarRecorder(output, 
+                                            var = "v",
+                                            example_filter = 7))
+            
+        if params.get("record_all_hidden_spikes"):
+            callbacks.append(SpikeRecorder(hidden, 
+                                    key = "hidden_spike_counts_unfiltered", 
+                                    record_counts = True))
+
+        metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: x_train_spikes},
+                                                                                            {output: y_train},
+                                                                                            start_epoch = e,
+                                                                                            num_epochs = 1,
+                                                                                            shuffle = True,
+                                                                                            callbacks = callbacks,
+                                                                                            validation_x = {input: x_validation_spikes},
+                                                                                            validation_y = {output: y_validation})  
+            
+        for key in list(cb_data_training.keys()):
+            cb_data_training[key].append(t_cb_data_training[key])
+            cb_data_validation[key].append(t_cb_data_validation[key])
+
+        # breaking out early if network is under performing
+        if metrics[output].correct / metrics[output].total < .1:
+            print("exiting early due to collapsed network / poor performance")
+            break
 
     end_time = perf_counter()
     print(f"Time = {end_time - start_time}s")
