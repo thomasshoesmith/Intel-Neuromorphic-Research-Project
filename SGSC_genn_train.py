@@ -27,24 +27,35 @@ import opendatasets as od
 
 from ml_genn.compilers.event_prop_compiler import default_params
 
+from SGSC_dataset_loader_padded_spikes import SGSC_Loader
+
 # Kaggle dataset directory
-dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
+#dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
 
 # Using opendatasets to download SGSC dataset
-od.download(dataset)
+#od.download(dataset)
+#spiking-google-speech-commands
 
-x_train = np.load("spiking-google-speech-commands/training_x_spikes.npy", allow_pickle=True)
-y_train = np.load("spiking-google-speech-commands/training_y_spikes.npy", allow_pickle=True)
+#x_train = np.load("spiking-google-speech-commands/training_x_spikes.npy", allow_pickle=True)
+#y_train = np.load("spiking-google-speech-commands/training_y_spikes.npy", allow_pickle=True)
 
-x_test = np.load("spiking-google-speech-commands/testing_x_spikes.npy", allow_pickle=True)
-y_test = np.load("spiking-google-speech-commands/testing_y_spikes.npy", allow_pickle=True)
+#x_test = np.load("spiking-google-speech-commands/testing_x_spikes.npy", allow_pickle=True)
+#y_test = np.load("spiking-google-speech-commands/testing_y_spikes.npy", allow_pickle=True)
 
-x_validation = np.load("spiking-google-speech-commands/validation_x_spikes.npy", allow_pickle=True)
-y_validation = np.load("spiking-google-speech-commands/validation_y_spikes.npy", allow_pickle=True)
+#x_validation = np.load("spiking-google-speech-commands/validation_x_spikes.npy", allow_pickle=True)
+#y_validation = np.load("spiking-google-speech-commands/validation_y_spikes.npy", allow_pickle=True)
 
 
 with open("SGSC_params.json", "r") as f: 
     params = json.load(f)
+    
+params["num_samples"] = None
+    
+x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/data/", #/spiking-google-speech-commands/",
+                                                                           num_samples=params["num_samples"],
+                                                                           shuffle = True,
+                                                                           shuffle_seed = 0,
+                                                                           process_padded_spikes = False)
 
 schedule_epoch_total = 0
 
@@ -60,7 +71,7 @@ for i in range(len(x_train)):
 
 # Determine max spikes and latest spike time
 max_spikes = calc_max_spikes(x_train_spikes)
-latest_spike_time = 1000 #calc_latest_spike_time(x_train_spikes)
+latest_spike_time = 2000 #calc_latest_spike_time(x_train_spikes)
 print(f"Max spikes {max_spikes}, latest spike time {latest_spike_time}")
 
 # Preprocess
@@ -133,18 +144,18 @@ with network:
                 record_spikes=True)
 
     # Connections
-    Connection(input, hidden, Dense(Normal(mean = params.get("input_hidden_w_mean"), 
+    i2h = Connection(input, hidden, Dense(Normal(mean = params.get("input_hidden_w_mean"), 
                                             sd = params.get("input_hidden_w_sd"))),
-                Exponential(2.0))
+                Exponential(5.0))
     
     if params.get("recurrent"):
-        Connection(hidden, hidden, Dense(Normal(mean = params.get("hidden_hidden_w_mean"), 
+        h2h = Connection(hidden, hidden, Dense(Normal(mean = params.get("hidden_hidden_w_mean"), 
                                                 sd = params.get("hidden_hidden_w_sd"))),
-                Exponential(2.0))
+                Exponential(5.0))
     
-    Connection(hidden, output, Dense(Normal(mean = params.get("hidden_output_w_mean"),
+    h2o = Connection(hidden, output, Dense(Normal(mean = params.get("hidden_output_w_mean"),
                                 sd = params.get("hidden_output_w_sd"))),
-                Exponential(2.0))
+                Exponential(5.0))
     
 compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                         losses="sparse_categorical_crossentropy",
@@ -154,7 +165,10 @@ compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * para
                         reg_lambda_upper = params.get("reg_lambda_upper"),
                         reg_nu_upper = params.get("reg_nu_upper"),
                         dt = params.get("dt"),
-                        max_spikes=max_spikes)
+                        max_spikes=max_spikes,
+                        clamp_weight_conns={i2h: (-10, 10),
+                                            #h2h: (-10, 10),
+                                            h2o: (-10, 10)})
                         #selectGPUByDeviceID=True, 
                         #deviceSelectMethod=DeviceSelect_MANUAL)
 
@@ -203,7 +217,6 @@ with compiled_net:
 
         if params.get("recurrent"):
             callbacks.append(OptimiserParamSchedule("alpha", alpha_schedule))
-            pass
 
         if params.get("verbose"):
             callbacks.append("batch_progress_bar")
@@ -237,9 +250,9 @@ with compiled_net:
             
         for key in list(cb_data_training.keys()):
             cb_data_training[key].append(t_cb_data_training[key])
-            cb_data_validation[key].append(t_cb_data_validation[key])
+            #cb_data_validation[key].append(t_cb_data_validation[key])
 
-        # breaking out early if network is under performing
+        # breaking out early if network is under performing (<10%)
         if metrics[output].correct / metrics[output].total < .1:
             print("exiting early due to collapsed network / poor performance")
             break
