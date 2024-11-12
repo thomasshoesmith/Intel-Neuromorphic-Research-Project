@@ -14,8 +14,8 @@ from SGSC_dataset_loader_padded_spikes import SGSC_Loader
 params = {}
 params["DT_MS"] = 1.0
 params["TAU_MEM"] = 20.0
-params["TAU_SYN"] = 2.0
-params["num_samples"] = 100 #11005
+params["TAU_SYN"] = 5.0
+params["num_samples"] = 1 #11005
 params["sample_id"] = 0     #sample used for graph generation (starting at 0, < num_samples)
 
 params["NUM_INPUT"] = 80
@@ -24,8 +24,8 @@ params["NUM_OUTPUT"] = 35
 
 params["timesteps"] = 2000
 
-params["recurrent"] = False
-params["weights_dir"] = "SGSC_pretrained_weights_4"
+params["recurrent"] = True
+params["weights_dir"] = "SGSC_pretrained_weights_recurrent"
 
 # toggle to record spikes, useful for debugging, but memory intensive
 params["record_network_ih_activity"] =  False
