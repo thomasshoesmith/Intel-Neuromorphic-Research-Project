@@ -12,7 +12,7 @@ from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback, 
 from ml_genn.compilers import EventPropCompiler
 from ml_genn.connectivity import Dense
 from ml_genn.initializers import Normal
-from ml_genn.neurons import LeakyIntegrate, LeakyIntegrateFire, SpikeInput, LeakyIntegrateFireInput
+from ml_genn.neurons import LeakyIntegrate, LeakyIntegrateFire, SpikeInput
 from ml_genn.optimisers import Adam
 from ml_genn.serialisers import Numpy
 from ml_genn.synapses import Exponential
@@ -30,28 +30,17 @@ from ml_genn.compilers.event_prop_compiler import default_params
 from SGSC_dataset_loader_padded_spikes import SGSC_Loader
 
 # Kaggle dataset directory
-#dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
+dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
 
 # Using opendatasets to download SGSC dataset
-#od.download(dataset)
-#spiking-google-speech-commands
-
-#x_train = np.load("spiking-google-speech-commands/training_x_spikes.npy", allow_pickle=True)
-#y_train = np.load("spiking-google-speech-commands/training_y_spikes.npy", allow_pickle=True)
-
-#x_test = np.load("spiking-google-speech-commands/testing_x_spikes.npy", allow_pickle=True)
-#y_test = np.load("spiking-google-speech-commands/testing_y_spikes.npy", allow_pickle=True)
-
-#x_validation = np.load("spiking-google-speech-commands/validation_x_spikes.npy", allow_pickle=True)
-#y_validation = np.load("spiking-google-speech-commands/validation_y_spikes.npy", allow_pickle=True)
-
+od.download(dataset)
 
 with open("SGSC_params.json", "r") as f: 
     params = json.load(f)
     
 params["num_samples"] = None
     
-x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/data/", #/spiking-google-speech-commands/",
+x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/spiking-google-speech-commands/",
                                                                            num_samples=params["num_samples"],
                                                                            shuffle = True,
                                                                            shuffle_seed = 0,
@@ -71,7 +60,7 @@ for i in range(len(x_train)):
 
 # Determine max spikes and latest spike time
 max_spikes = calc_max_spikes(x_train_spikes)
-latest_spike_time = 2000 #calc_latest_spike_time(x_train_spikes)
+latest_spike_time = 2000 #calc_latest_spike_time(x_train_spikes) #TODO: Fix
 print(f"Max spikes {max_spikes}, latest spike time {latest_spike_time}")
 
 # Preprocess
@@ -128,7 +117,6 @@ network = Network(default_params)
 
 with network:
     # Populations
-    
     input = Population(SpikeInput(max_spikes = params["BATCH_SIZE"] * max_spikes),
                        params["NUM_INPUT"],
                        record_spikes=True)
@@ -157,6 +145,9 @@ with network:
                                 sd = params.get("hidden_output_w_sd"))),
                 Exponential(5.0))
     
+clamp_weight_conns_dir = {i2h: (-10, 10), h2o: (-10, 10)}
+if params["recurrent"] : clamp_weight_conns_dir = {i2h: (-10, 10), h2h: (-10, 10), h2o: (-10, 10)}
+
 compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                         losses="sparse_categorical_crossentropy",
                         optimiser=Adam(params.get("lr")), 
@@ -166,11 +157,7 @@ compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * para
                         reg_nu_upper = params.get("reg_nu_upper"),
                         dt = params.get("dt"),
                         max_spikes=max_spikes,
-                        clamp_weight_conns={i2h: (-10, 10),
-                                            #h2h: (-10, 10),
-                                            h2o: (-10, 10)})
-                        #selectGPUByDeviceID=True, 
-                        #deviceSelectMethod=DeviceSelect_MANUAL)
+                        clamp_weight_conns=clamp_weight_conns_dir)
 
 compiled_net = compiler.compile(network)
 
@@ -198,7 +185,7 @@ with compiled_net:
         cb_data_training["hidden_spike_counts_unfiltered"] = []
         cb_data_validation["hidden_spike_counts_unfiltered"] = []
     
-    # alpha decay after 1st epoch at a rate of 0.95
+    # alpha decay after 1st epoch at a rate of lr_decay_rate
     def alpha_schedule(epoch, alpha):
         global schedule_epoch_total # TODO: remove this
         schedule_epoch_total = schedule_epoch_total + 1

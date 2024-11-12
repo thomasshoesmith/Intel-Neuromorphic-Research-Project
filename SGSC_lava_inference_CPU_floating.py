@@ -14,7 +14,7 @@ from SGSC_dataset_loader_padded_spikes import SGSC_Loader
 params = {}
 params["DT_MS"] = 1.0
 params["TAU_MEM"] = 20.0
-params["TAU_SYN"] = 2.0
+params["TAU_SYN"] = 5.0
 params["num_samples"] = 100 #11005
 params["sample_id"] = 0     #sample used for graph generation (starting at 0, < num_samples)
 
@@ -22,10 +22,9 @@ params["NUM_INPUT"] = 80
 params["NUM_HIDDEN"] = 512
 params["NUM_OUTPUT"] = 35
 
+params["recurrent"] = True
+params["weights_dir"] = "SGSC_pretrained_weights_recurrent"
 params["timesteps"] = 2000
-
-params["recurrent"] = False
-params["weights_dir"] = "SGSC_pretrained_weights_4"
 
 # toggle to record spikes, useful for debugging, but memory intensive
 params["record_network_ih_activity"] =  False
@@ -36,7 +35,7 @@ dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech
 # Using opendatasets to download SGSC dataset
 od.download(dataset)
 
-x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/data/", #/spiking-google-speech-commands/",
+x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/spiking-google-speech-commands/",
                                                                            num_samples=params["num_samples"],
                                                                            shuffle = True,
                                                                            shuffle_seed = 0)
