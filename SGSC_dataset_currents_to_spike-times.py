@@ -59,8 +59,8 @@ def load_gsc(dataset_directory,
     return train_x, train_y, validation_x, validation_y, test_x, test_y
 
 # load current injection gsc dataset
-train_x, train_y, validation_x, validation_y, test_x, test_y = load_gsc("/its/home/ts468/data/rawSC/rawSC_80input_updated_100frames/",
-                                                                        num_frames = 10,
+train_x, train_y, validation_x, validation_y, test_x, test_y = load_gsc("/its/home/ts468/data/rawSC/rawSC_80input/",
+                                                                        num_frames = 2,
                                                                         shuffle=False,
                                                                         num_samples=None)
 
