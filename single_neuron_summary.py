@@ -264,6 +264,8 @@ plt.scatter(lava_fixed_S,
             alpha = 0.2)
 
 plt.xlim(0, params["timesteps"])
+plt.ylabel("voltage")
+plt.xlabel("timesteps")
+plt.title("Comparing voltage traces of various LIF frameworks")
 plt.legend()
 plt.show()
-
