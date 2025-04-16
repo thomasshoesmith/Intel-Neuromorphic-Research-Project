@@ -6,6 +6,7 @@
 import numpy as np
 import os
 from tqdm import trange
+import pandas as pd
 
 def rawHD_Loader(dir, 
                  num_samples = None,
@@ -29,11 +30,19 @@ def rawHD_Loader(dir,
     y_test = np.load(os.path.expanduser(dir) + "testing_y_spikes.npy", 
                      allow_pickle = True)
     
+    # loading z labels (speakers)
+    training_details = pd.read_csv(os.path.expanduser(dir) + "training_details.csv")
+    testing_details = pd.read_csv(os.path.expanduser(dir) + "testing_details.csv")
+    z_train = np.array(list(training_details.loc[:, "Speaker"]))
+    z_test = np.array(list(testing_details.loc[:, "Speaker"]))
+    
     # validation split
     x_validation = x_train[:int(validation_split * x_train.shape[0])]
     y_validation = y_train[:int(validation_split * y_train.shape[0])]
+    z_validation = z_train[:int(validation_split * z_train.shape[0])]
     x_train = x_train[int(validation_split * x_train.shape[0]):]
     y_train = y_train[int(validation_split * y_train.shape[0]):]
+    z_train = z_train[int(validation_split * z_train.shape[0]):]
     
     # shuffle array
     if shuffle:
@@ -41,12 +50,16 @@ def rawHD_Loader(dir,
         shuffler = np.random.permutation(len(x_train))
         x_train = x_train[shuffler]
         y_train = y_train[shuffler]
-
+        z_train = z_train[shuffler]
+        
         # unnecessary, but being used for debugging 
         np.random.seed(shuffle_seed)
         shuffler = np.random.permutation(len(x_test))
         x_test = x_test[shuffler]
         y_test = y_test[shuffler]
+        z_test = z_test[shuffler]
+        
+        
 
     # crop the num of samples
     if return_single_sample is None:
@@ -63,6 +76,9 @@ def rawHD_Loader(dir,
                                      y_validation[return_single_sample: return_single_sample + 1]
         x_test, y_test = x_test[return_single_sample: return_single_sample + 1], \
                          y_test[return_single_sample: return_single_sample + 1]
+                         
+        z_test, z_validation = z_test[return_single_sample: return_single_sample + 1], \
+                               z_validation[return_single_sample: return_single_sample + 1]
 
     # define the empty zeroed arrays
     x_train_new = np.zeros((x_train.shape[0], 
@@ -79,7 +95,7 @@ def rawHD_Loader(dir,
                                 dtype = np.int8)
 
     if not process_padded_spikes:
-        return x_train, y_train, x_test, y_test, x_validation, y_validation
+        return x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation
 
     # flipping bits
     print("loading training")
@@ -100,4 +116,4 @@ def rawHD_Loader(dir,
                          x_validation[trial]["x"], 
                          x_validation[trial]["t"]] = 1
 
-    return x_train_new, y_train, x_test_new, y_test, x_validation_new, y_validation
+    return x_train_new, y_train, z_train, x_test_new, y_test, z_test, x_validation_new, y_validation, z_validation
