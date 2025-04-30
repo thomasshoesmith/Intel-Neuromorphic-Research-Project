@@ -53,8 +53,6 @@ ani = animation.FuncAnimation(fig, animate, interval=20000)
 #plt.tight_layout()
 plt.show()
 
-
-
 """
 df = pd.read_csv(output_results_to_track)
 

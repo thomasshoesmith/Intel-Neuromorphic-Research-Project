@@ -156,8 +156,8 @@ compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * para
                         reg_lambda_upper = params.get("reg_lambda_upper"),
                         reg_nu_upper = params.get("reg_nu_upper"),
                         dt = params.get("dt"),
-                        max_spikes=max_spikes,
-                        clamp_weight_conns=clamp_weight_conns_dir)
+                        max_spikes=max_spikes)
+                        #clamp_weight_conns=clamp_weight_conns_dir)
 
 compiled_net = compiler.compile(network)
 

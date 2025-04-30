@@ -13,6 +13,8 @@
     "debug": true,
     "record_all_hidden_spikes": true,
     "lr": 0.008,
+    "lr_decay": 0.9,
+    "lr_decay_rate": 1,
     "dt": 1,
     "reg_lambda_lower": 1e-10,
     "reg_lambda_upper": 1e-10,

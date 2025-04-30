@@ -43,6 +43,7 @@ with open("rawHD_params.json", "r") as f:
 params["num_samples"] = None
 params["NUM_OUTPUT"] = 12
 params["output_dir"] = "rawHD_speaker_training_1"
+params["NUM_EPOCH"] = 20
 
 x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
                                                                                                            num_samples=params["num_samples"],

@@ -8,29 +8,35 @@ import numpy as np
 from tqdm import trange
 import os
 
-# Load dataset
-def load_gsc(dataset_directory,
-             num_samples = None,
-             to_concatenate = False, 
-             num_frames = 1,
-             shuffle = True):
+params = {}
+params["to_convert_directory"] = "/its/home/ts468/data/rawHD/rawHD_80input_updated/" #"/its/home/ts468/data/rawSC/rawSC_40input_updated/"
+params["output_directory"] = "spiking-heidleberg-digits-80input" # "spiking-google-speech-commands-40input"
+params["num_frames"] = 2
+params["shuffle"] = False
+params["num_samples"] = None
+params["tau_mem"] = 20.0
+params["dt_ms"] = 1.0
+params["vth"] = 1.0
+params["to_concatenate"] = False
 
-    train_x = np.load(os.path.expanduser(dataset_directory) + "training_x_data.npy")
-    train_y = np.load(os.path.expanduser(dataset_directory) + "training_y_data.npy")
+# Load dataset
+def load_gsc(params):
+    train_x = np.load(os.path.expanduser(params["to_convert_directory"]) + "training_x_data.npy")
+    train_y = np.load(os.path.expanduser(params["to_convert_directory"]) + "training_y_data.npy")
     
-    test_x = np.load(os.path.expanduser(dataset_directory) + "testing_x_data.npy")
-    test_y = np.load(os.path.expanduser(dataset_directory) + "testing_y_data.npy")
+    test_x = np.load(os.path.expanduser(params["to_convert_directory"]) + "testing_x_data.npy")
+    test_y = np.load(os.path.expanduser(params["to_convert_directory"]) + "testing_y_data.npy")
    
     # adding validation data if exists
     validation_x = np.array([])
     validation_y = np.array([])
-    if os.path.isfile(os.path.expanduser(dataset_directory) + "validation_y_data.npy"):
+    if os.path.isfile(os.path.expanduser(params["to_convert_directory"]) + "validation_y_data.npy"):
         print("!! validation dataset loaded successfully !!")
-        validation_x = np.load(os.path.expanduser(dataset_directory) + "validation_x_data.npy")
-        validation_y = np.load(os.path.expanduser(dataset_directory) + "validation_y_data.npy")
+        validation_x = np.load(os.path.expanduser(params["to_convert_directory"]) + "validation_x_data.npy")
+        validation_y = np.load(os.path.expanduser(params["to_convert_directory"]) + "validation_y_data.npy")
 
     # shuffle array before stacking (stacking like ring buffer) 
-    if shuffle:
+    if params["shuffle"]:
         shuffler = np.random.permutation(len(train_x))
         train_x = train_x[shuffler]
         train_y = train_y[shuffler]
@@ -41,17 +47,17 @@ def load_gsc(dataset_directory,
         train_y = train_y[shuffler]
 
     # crop the num of samples
-    train_x, train_y = train_x[:num_samples], train_y[:num_samples]
-    validation_x, validation_y = validation_x[:num_samples], validation_y[:num_samples]
-    test_x, test_y = test_x[:num_samples], test_y[:num_samples]
+    train_x, train_y = train_x[:params["num_samples"]], train_y[:params["num_samples"]]
+    validation_x, validation_y = validation_x[:params["num_samples"]], validation_y[:params["num_samples"]]
+    test_x, test_y = test_x[:params["num_samples"]], test_y[:params["num_samples"]]
 
     # repeat frames for current injection over (frame) time
-    train_x = np.repeat(train_x, num_frames, axis = 1)
-    validation_x = np.repeat(validation_x, num_frames, axis = 1)
-    test_x = np.repeat(test_x, num_frames, axis = 1)
+    train_x = np.repeat(train_x, params["num_frames"], axis = 1)
+    validation_x = np.repeat(validation_x, params["num_frames"], axis = 1)
+    test_x = np.repeat(test_x, params["num_frames"], axis = 1)
 
     # to concatenate
-    if to_concatenate:
+    if params["to_concatenate"]:
         train_x = np.concatenate(train_x, axis = 0)
         validation_x = np.concatenate(validation_x, axis = 0)
         test_x = np.concatenate(test_x, axis = 0)
@@ -59,16 +65,10 @@ def load_gsc(dataset_directory,
     return train_x, train_y, validation_x, validation_y, test_x, test_y
 
 # load current injection gsc dataset
-train_x, train_y, validation_x, validation_y, test_x, test_y = load_gsc("/its/home/ts468/data/rawSC/rawSC_80input/",
-                                                                        num_frames = 2,
-                                                                        shuffle=False,
-                                                                        num_samples=None)
+train_x, train_y, validation_x, validation_y, test_x, test_y = load_gsc(params)
 
-def convert_currents_to_spike_times(this_x):
-    tau_mem = 20.0
-    dt_ms = 1.0
-    vth = 1.0
-    alpha = np.exp(-dt_ms / tau_mem)
+def convert_currents_to_spike_times(params, this_x):
+    alpha = np.exp(-params["dt_ms"] / params["tau_mem"])
 
     number_of_trials = this_x.shape[0]      
     number_of_frames = this_x.shape[1]
@@ -83,7 +83,7 @@ def convert_currents_to_spike_times(this_x):
 
         for timestep in range(number_of_frames):
             v[:] = (v * alpha) + this_x[trial][timestep]
-            spikes_out = v > vth
+            spikes_out = v > params["vth"]
             v[spikes_out] = 0
 
             spike_indexes = np.where(spikes_out == True)[0]
@@ -93,24 +93,25 @@ def convert_currents_to_spike_times(this_x):
 
         spike_times.append(np.array(spike_times_per_trial, 
                                     dtype = ([('x', np.int8), 
-                                            ('t', np.uint16),
-                                            ('p', np.int8)])))
+                                              ('t', np.uint16),
+                                              ('p', np.int8)])))
         
     return np.array(spike_times, dtype = object)
 
 try:
-    os.makedirs("data")
+    os.makedirs(params["output_directory"])
 except:
     pass
 
 print("converting training dataset")
-np.save("data/training_x_spikes.npy", convert_currents_to_spike_times(train_x))
-np.save("data/training_y_spikes.npy", np.array(train_y, dtype = np.uint8))
+np.save(f"{params['output_directory']}/training_x_spikes.npy", convert_currents_to_spike_times(params, train_x))
+np.save(f"{params['output_directory']}/training_y_spikes.npy", np.array(train_y, dtype = np.uint8))
 
 print("converting testing dataset")
-np.save("data/testing_x_spikes.npy", convert_currents_to_spike_times(test_x))
-np.save("data/testing_y_spikes.npy", np.array(test_y, dtype = np.uint8))
+np.save(f"{params['output_directory']}/testing_x_spikes.npy", convert_currents_to_spike_times(params, test_x))
+np.save(f"{params['output_directory']}/testing_y_spikes.npy", np.array(test_y, dtype = np.uint8))
 
-print("converting validation dataset")
-np.save("data/validation_x_spikes.npy", convert_currents_to_spike_times(validation_x))
-np.save("data/validation_y_spikes.npy", np.array(validation_y, dtype = np.uint8))
+if os.path.isfile(os.path.expanduser(params["to_convert_directory"]) + "validation_y_data.npy"):
+    print("converting validation dataset")
+    np.save(f"{params['output_directory']}/validation_x_spikes.npy", convert_currents_to_spike_times(params, validation_x))
+    np.save(f"{params['output_directory']}/validation_y_spikes.npy", np.array(validation_y, dtype = np.uint8))

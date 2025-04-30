@@ -7,7 +7,7 @@
     "INPUT_FRAME_TIMESTEP": 20,
     "INPUT_SCALE": 1,
     "NETWORK_SCALE": 1,
-    "NUM_EPOCH": 2,
+    "NUM_EPOCH": 100,
     "NUM_FRAMES": 80,
     "verbose": true,
     "debug": false,

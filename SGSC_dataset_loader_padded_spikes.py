@@ -9,6 +9,7 @@ from tqdm import trange
 
 def SGSC_Loader(dir, 
                 num_samples = None,
+                return_single_sample = None,
                 shuffle = False,
                 shuffle_seed = None,
                 number_of_neurons = 80,
@@ -16,14 +17,20 @@ def SGSC_Loader(dir,
                 process_padded_spikes = True):
     
     # loading x spike times
-    x_train = np.load(os.path.expanduser(dir) + "training_x_spikes.npy", allow_pickle = True)
-    x_test = np.load(os.path.expanduser(dir) + "testing_x_spikes.npy", allow_pickle = True)
-    x_validation = np.load(os.path.expanduser(dir) + "validation_x_spikes.npy", allow_pickle = True)
+    x_train = np.load(os.path.expanduser(dir) + "training_x_spikes.npy", 
+                      allow_pickle = True)
+    x_test = np.load(os.path.expanduser(dir) + "testing_x_spikes.npy", 
+                     allow_pickle = True)
+    x_validation = np.load(os.path.expanduser(dir) + "validation_x_spikes.npy", 
+                           allow_pickle = True)
 
     # loading y labels to returning
-    y_train = np.load(os.path.expanduser(dir) + "training_y_spikes.npy", allow_pickle = True)
-    y_test = np.load(os.path.expanduser(dir) + "testing_y_spikes.npy", allow_pickle = True)
-    y_validation = np.load(os.path.expanduser(dir) + "validation_y_spikes.npy", allow_pickle = True)
+    y_train = np.load(os.path.expanduser(dir) + "training_y_spikes.npy", 
+                      allow_pickle = True)
+    y_test = np.load(os.path.expanduser(dir) + "testing_y_spikes.npy", 
+                     allow_pickle = True)
+    y_validation = np.load(os.path.expanduser(dir) + "validation_y_spikes.npy", 
+                           allow_pickle = True)
 
     # shuffle array
     if shuffle:
@@ -39,14 +46,34 @@ def SGSC_Loader(dir,
         y_test = y_test[shuffler]
 
     # crop the num of samples
-    x_train, y_train = x_train[:num_samples], y_train[:num_samples]
-    x_validation, y_validation = x_validation[:num_samples], y_validation[:num_samples]
-    x_test, y_test = x_test[:num_samples], y_test[:num_samples]
+    if return_single_sample is None:
+        x_train, y_train = x_train[:num_samples], y_train[:num_samples]
+        x_validation, y_validation = x_validation[:num_samples], y_validation[:num_samples]
+        x_test, y_test = x_test[:num_samples], y_test[:num_samples]
+        
+    # return specific value for testing / viewing
+    # ugly by saves reshaping?
+    if return_single_sample is not None:
+        x_train, y_train = x_train[return_single_sample: return_single_sample + 1], \
+                           y_train[return_single_sample: return_single_sample + 1]
+        x_validation, y_validation = x_validation[return_single_sample: return_single_sample + 1], \
+                                     y_validation[return_single_sample: return_single_sample + 1]
+        x_test, y_test = x_test[return_single_sample: return_single_sample + 1], \
+                         y_test[return_single_sample: return_single_sample + 1]
 
     # define the empty zeroed arrays
-    x_train_new = np.zeros((x_train.shape[0], number_of_neurons, number_of_timesteps), dtype = np.int8)
-    x_test_new = np.zeros((x_test.shape[0], number_of_neurons, number_of_timesteps), dtype = np.int8)
-    x_validation_new = np.zeros((x_validation.shape[0], number_of_neurons, number_of_timesteps), dtype = np.int8)
+    x_train_new = np.zeros((x_train.shape[0], 
+                            number_of_neurons, 
+                            number_of_timesteps), 
+                           dtype = np.int8)
+    x_test_new = np.zeros((x_test.shape[0], 
+                           number_of_neurons, 
+                           number_of_timesteps), 
+                          dtype = np.int8)
+    x_validation_new = np.zeros((x_validation.shape[0], 
+                                 number_of_neurons, 
+                                 number_of_timesteps), 
+                                dtype = np.int8)
 
     if not process_padded_spikes:
         return x_train, y_train, x_test, y_test, x_validation, y_validation

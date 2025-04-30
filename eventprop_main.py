@@ -112,18 +112,18 @@ def eventprop(params):
                     record_spikes=True)
 
         # Connections
-        Connection(input, hidden, Dense(Normal(mean = params.get("input_hidden_w_mean"), 
+        i2h = Connection(input, hidden, Dense(Normal(mean = params.get("input_hidden_w_mean"), 
                                                sd = params.get("input_hidden_w_sd"))),
-                    Exponential(2.0))
+                    Exponential(5.0))
         
         if params.get("recurrent"):
-            Connection(hidden, hidden, Dense(Normal(mean = params.get("hidden_hidden_w_mean"), 
+            h2h = Connection(hidden, hidden, Dense(Normal(mean = params.get("hidden_hidden_w_mean"), 
                                                     sd = params.get("hidden_hidden_w_sd"))),
-                    Exponential(2.0))
+                    Exponential(5.0))
         
-        Connection(hidden, output, Dense(Normal(mean = params.get("hidden_output_w_mean"),
+        h2o = Connection(hidden, output, Dense(Normal(mean = params.get("hidden_output_w_mean"),
                                     sd = params.get("hidden_output_w_sd"))),
-                   Exponential(2.0))
+                   Exponential(5.0))
         
     compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * params.get("INPUT_FRAME_TIMESTEP"),
                             losses="sparse_categorical_crossentropy",
@@ -133,9 +133,10 @@ def eventprop(params):
                             reg_lambda_upper = params.get("reg_lambda_upper"),
                             reg_nu_upper = params.get("reg_nu_upper"),
                             dt = params.get("dt"),
-                            max_spikes=1500)
-                            #selectGPUByDeviceID=True, 
-                            #deviceSelectMethod=DeviceSelect_MANUAL)
+                            max_spikes=1500,
+                            clamp_weight_conns={i2h: (-10.0, 10.0),
+                                                #h2h: (-10.0, 10.0), 
+                                                h2o: (-10.0, 10.0)})
 
     compiled_net = compiler.compile(network)
     

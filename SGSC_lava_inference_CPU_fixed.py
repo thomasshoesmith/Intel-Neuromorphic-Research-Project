@@ -21,8 +21,9 @@ params = {}
 params["DT_MS"] = 1.0
 params["TAU_MEM"] = 20.0
 params["TAU_SYN"] = 5.0
-params["num_samples"] = 100 #11005
+params["num_samples"] = 10 #11005
 params["sample_id"] = 0     #sample used for graph generation (starting at 0, < num_samples)
+params["return_single_sample"] = None
 
 params["NUM_INPUT"] = 80
 params["NUM_HIDDEN"] = 512
@@ -45,7 +46,8 @@ od.download(dataset)
 x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/spiking-google-speech-commands/",
                                                                            num_samples=params["num_samples"],
                                                                            shuffle = True,
-                                                                           shuffle_seed = 0)
+                                                                           shuffle_seed = 0,
+                                                                           return_single_sample = params["return_single_sample"])
 
 the_x = x_test
 the_y = y_test
@@ -56,7 +58,7 @@ tau_mem_fac_int = int(np.round(tau_mem_fac*(2**12)))
 tau_syn_fac = 1.0-np.exp(-params["DT_MS"]/params["TAU_SYN"])
 tau_syn_fac_int = int(np.round(tau_syn_fac*(2**12)))
 
-weight_scale = (params["TAU_SYN"] / params["DT_MS"]) * tau_syn_fac
+weight_scale = 1 #(params["TAU_SYN"] / params["DT_MS"]) * tau_syn_fac
 
 # load connections
 w_i2h = np.load(f"{params['weights_dir']}/SGSC_Pop0_Pop1-g.npy")
@@ -102,6 +104,13 @@ vth_hid_int = int(np.round(weight_scale))
 
 sample_image_start = the_x.shape[2] * params["sample_id"]
 sample_image_end = (the_x.shape[2] * params["sample_id"]) + the_x.shape[2]
+
+save_weights = False
+if save_weights:
+    np.save("SGSC_pretrained_weights_recurrent_quantised/SGSC_Pop0_Pop1-g.npy", np.reshape(w_i2h_int, params["NUM_INPUT"] * params["NUM_HIDDEN"]))
+    np.save("SGSC_pretrained_weights_recurrent_quantised/SGSC_Pop1_Pop1-g.npy", np.reshape(w_h2h_int, params["NUM_HIDDEN"] * params["NUM_HIDDEN"]))
+    np.save("SGSC_pretrained_weights_recurrent_quantised/SGSC_Pop1_Pop2-g.npy", np.reshape(w_h2o_int, params["NUM_HIDDEN"] * params["NUM_OUTPUT"]))
+    exit()
 
 the_x= np.hstack(the_x)
 print(the_x.shape)
@@ -156,6 +165,7 @@ monitor_output.probe(output.v, the_x.shape[1])
 
 num_steps = int(params["timesteps"]/params["DT_MS"])
 print("number of samples:", params["num_samples"])
+if params["return_single_sample"] != None: print("! overridden, selected sample run !")
 
 # run something
 run_condition = RunSteps(num_steps=num_steps)
@@ -177,5 +187,5 @@ for i in range(the_x.shape[1] // params["timesteps"]):
     if pred == the_y[i]:
         good += 1
 
-print(f"test accuracy: {good/n_sample*100}")
+print(f"test accuracy: {good/len(the_y)*100}")
 output.stop()

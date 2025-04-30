@@ -1,4 +1,4 @@
-from SGSC_lava_inference_Loihi_plot_script import Lava_Run
+from SGSC_lava_inference_Loihi_plot_script_cpu import Lava_Run
 
 scan_combinations_2=[(30, 2.0),
                      (28, 2.0),

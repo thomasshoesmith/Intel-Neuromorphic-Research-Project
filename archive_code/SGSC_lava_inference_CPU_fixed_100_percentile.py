@@ -11,24 +11,26 @@ import os
 import opendatasets as od
 from SGSC_dataset_loader_padded_spikes import SGSC_Loader
 
+def rescale_factor(w, bits, percentile = 100):
+    rng = float(2**(bits-1))
+    mx = max(np.percentile(w,percentile), np.percentile(-w,percentile))
+    fac = (rng-1)/mx
+    mn = -(rng-2)/fac
+    return (fac, mn, mx)
+
 params = {}
 params["DT_MS"] = 1.0
 params["TAU_MEM"] = 20.0
-params["TAU_SYN"] = 5.0
-params["num_samples"] = 11005
+params["TAU_SYN"] = 2.0
+params["num_samples"] = 1 #int(11005 / 8)
 params["sample_id"] = 0     #sample used for graph generation (starting at 0, < num_samples)
-params["return_single_sample"] = 10
 
 params["NUM_INPUT"] = 80
 params["NUM_HIDDEN"] = 512
 params["NUM_OUTPUT"] = 35
 
-params["recurrent"] = True
-params["weights_dir"] = "SGSC_pretrained_weights_recurrent"
-params["timesteps"] = 2000
-
 # toggle to record spikes, useful for debugging, but memory intensive
-params["record_network_ih_activity"] =  False
+params["record_network_ih_activity"] =  True
 
 # Kaggle dataset directory
 dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
@@ -38,37 +40,62 @@ od.download(dataset)
 
 x_train, y_train, x_test, y_test, x_validation, y_validation = SGSC_Loader(dir = os.getcwd() + "/spiking-google-speech-commands/",
                                                                            num_samples=params["num_samples"],
-                                                                           shuffle = True,
-                                                                           shuffle_seed = 0,
-                                                                           return_single_sample = params["return_single_sample"])
- 
+                                                                           shuffle = False,
+                                                                           shuffle_seed = 0)
+
 the_x = x_test
 the_y = y_test
 
 # transform some parmeters
 tau_mem_fac = 1.0-np.exp(-params["DT_MS"]/params["TAU_MEM"])
+tau_mem_fac_int = int(np.round(tau_mem_fac*(2**12)))
+
 tau_syn_fac = 1.0-np.exp(-params["DT_MS"]/params["TAU_SYN"])
+tau_syn_fac_int = int(np.round(tau_syn_fac*(2**12)))
+
 weight_scale = (params["TAU_SYN"] / params["DT_MS"]) * tau_syn_fac
 
 # load connections
-w_i2h = np.load(f"{params['weights_dir']}/SGSC_Pop0_Pop1-g.npy")
-w_i2h = w_i2h.reshape((params["NUM_INPUT"],
-                       params["NUM_HIDDEN"])).T
+w_i2h = np.load("SGSC_pretrained_weights/SGSC_Pop0_Pop1-g.npy")
+w_i2h = w_i2h.reshape((80,512)).T
 w_i2h *= weight_scale
 w_i2h *= tau_mem_fac
 
-if params["recurrent"]:
-    w_h2h = np.load(f"{params['weights_dir']}/SGSC_Pop1_Pop1-g.npy")
-    w_h2h = w_h2h.reshape((params["NUM_HIDDEN"],
-                           params["NUM_HIDDEN"])).T
-    w_h2h *= weight_scale
-    w_h2h *= tau_mem_fac
+w_h2h = np.load("SGSC_pretrained_weights/SGSC_Pop1_Pop1-g.npy")
+w_h2h = w_h2h.reshape((512,512)).T
+w_h2h *= weight_scale
+w_h2h *= tau_mem_fac
 
-w_h2o = np.load(f"{params['weights_dir']}/SGSC_Pop1_Pop2-g.npy")
-w_h2o = w_h2o.reshape((params["NUM_HIDDEN"],
-                       params["NUM_OUTPUT"])).T
+w_h2o = np.load("SGSC_pretrained_weights/SGSC_Pop1_Pop2-g.npy")
+w_h2o = w_h2o.reshape((512,35)).T
 w_h2o *= weight_scale
 w_h2o *= tau_mem_fac
+
+weight_bits= 8
+
+w = np.hstack([w_i2h,w_h2h])
+w_2h_fac, mn, mx = rescale_factor(w,weight_bits)
+w_i2h[w_i2h > mx] = mx
+w_i2h[w_i2h < mn] = mn
+w_i2h_int = np.round(w_i2h*w_2h_fac).astype(np.int8)
+print(f"i2h: mn == {np.amin(w_i2h_int)}, mx == {np.amax(w_i2h_int)}")
+
+w_h2h[w_h2h > mx] = mx
+w_h2h[w_h2h < mn] = mn
+w_h2h_int = np.round(w_h2h*w_2h_fac).astype(np.int8)
+print(f"h2h: mn == {np.amin(w_h2h_int)}, mx == {np.amax(w_h2h_int)}")
+
+w_2o_fac, mn, mx = rescale_factor(w_h2o,weight_bits)
+w_2o_fac /= 2.0
+mn *= 2.0
+mx *= 2.0
+w_h2o[w_h2o > mx] = mx
+w_h2o[w_h2o < mn] = mn
+w_h2o_int = np.round(w_h2o*w_2o_fac).astype(np.int8)
+print(f"h2o: mn == {np.amin(w_h2o_int)}, mx == {np.amax(w_h2o_int)}")
+
+vth_hid = w_2h_fac
+vth_hid_int = int(np.round(vth_hid))
 
 sample_image_start = the_x.shape[2] * params["sample_id"]
 sample_image_end = (the_x.shape[2] * params["sample_id"]) + the_x.shape[2]
@@ -78,37 +105,36 @@ print(the_x.shape)
 
 input = RingBuffer(data = the_x)
 
-hidden = LIFReset(shape=(params["NUM_HIDDEN"], ),     # Number and topological layout of units in the process
-                  vth=1.,                             # Membrane threshold
-                  dv=tau_mem_fac,                              # Inverse membrane time-constant
-                  du=tau_syn_fac,                              # Inverse synaptic time-constant
+hidden = LIFReset(shape=(512, ),                         # Number and topological layout of units in the process
+                  vth= vth_hid_int,                             # Membrane threshold
+                  dv=tau_mem_fac_int,                              # Inverse membrane time-constant
+                  du=tau_syn_fac_int,                              # Inverse synaptic time-constant
                   bias_mant=0.0,           # Bias added to the membrane voltage in every timestep
                   name="hidden",
-                  reset_interval=params["timesteps"])
+                  reset_interval=2000)
 
-output = LIFReset(shape=(params["NUM_OUTPUT"], ),                         # Number and topological layout of units in the process
-                  vth=2**17,                             # Membrane threshold set so it cannot spike
-                  dv=tau_mem_fac,                              # Inverse membrane time-constant
-                  du=tau_syn_fac,                              # Inverse synaptic time-constant
+output = LIFReset(shape=(35, ),                         # Number and topological layout of units in the process
+                  vth=2**30,                             # Membrane threshold set so it cannot spike
+                  dv=tau_mem_fac_int,                              # Inverse membrane time-constant
+                  du=tau_syn_fac_int,                              # Inverse synaptic time-constant
                   bias_mant=0.0,           # Bias added to the membrane voltage in every timestep
                   name="output",
-                  reset_interval=params["timesteps"])
+                  reset_interval=2000)
 
-in_to_hid = Dense(weights= w_i2h,     # Initial value of the weights, chosen randomly
+in_to_hid = Dense(weights= w_i2h_int,     # Initial value of the weights, chosen randomly
               name='in_to_hid')
 
-if params["recurrent"]:
-    hid_to_hid = Dense(weights=w_h2h,
-                    name='hid_to_hid')
+hid_to_hid = Dense(weights=w_h2h_int,
+                   name='hid_to_hid')
 
-hid_to_out = Dense(weights=w_h2o,
+hid_to_out = Dense(weights=w_h2o_int,
                    name= 'hid_to_out')
 
 input.s_out.connect(in_to_hid.s_in)
 in_to_hid.a_out.connect(hidden.a_in)
-if params["recurrent"]: hidden.s_out.connect(hid_to_hid.s_in)
+hidden.s_out.connect(hid_to_hid.s_in)
 hidden.s_out.connect(hid_to_out.s_in)
-if params["recurrent"]: hid_to_hid.a_out.connect(hidden.a_in)
+hid_to_hid.a_out.connect(hidden.a_in)
 hid_to_out.a_out.connect(output.a_in)
 
 if params["record_network_ih_activity"]:
@@ -116,7 +142,7 @@ if params["record_network_ih_activity"]:
     monitor_input = Monitor()
     monitor_hidden = Monitor()
     monitor_hidden_v = Monitor()
-    
+
     monitor_hidden_v.probe(hidden.v, the_x.shape[1])
 
     monitor_input.probe(input.s_out, the_x.shape[1])
@@ -125,31 +151,30 @@ if params["record_network_ih_activity"]:
 monitor_output = Monitor()
 monitor_output.probe(output.v, the_x.shape[1])
 
-num_steps = int(params["timesteps"]/params["DT_MS"])
+num_steps = int(2000/params["DT_MS"])
 print("number of samples:", params["num_samples"])
-if params["return_single_sample"] != None: print("! overridden, selected sample run !")
 
 # run something
 run_condition = RunSteps(num_steps=num_steps)
-run_cfg = Loihi2SimCfg(select_tag="floating_pt") # changed 1 -> 2
+run_cfg = Loihi2SimCfg(select_tag="fixed_pt") # changed 1 -> 2
 
 n_sample = params.get("num_samples")
 
-for i in tqdm(range(the_x.shape[1] // params["timesteps"])):
+for i in tqdm(range(the_x.shape[1] // 2000)):
     output.run(condition=run_condition, run_cfg=run_cfg)
 
 output_v = monitor_output.get_data()
 good = 0
 
-for i in range(the_x.shape[1] // params["timesteps"]):
+for i in range(the_x.shape[1] // 2000):
     out_v = output_v["output"]["v"][i*num_steps:(i+1)*num_steps,:]
     sum_v = np.sum(out_v,axis=0)
     pred = np.argmax(sum_v)
-    print(f"Pred: {pred}, True:{the_y[i]}")
+    print(f"prediction {pred} vs ground truth {the_y[i]}")
     if pred == the_y[i]:
         good += 1
 
-print(f"test accuracy: {good/len(the_y)*100}")
+print(f"test accuracy: {good/n_sample*100}")
 output.stop()
 
 if params["record_network_ih_activity"]:
@@ -186,7 +211,7 @@ if params["record_network_ih_activity"]:
     fig.tight_layout()
 
     plt.show()
-    
+
 if params["record_network_ih_activity"]:
     # Hidden layer activity 
 
@@ -210,9 +235,10 @@ if params["record_network_ih_activity"]:
     plt.ylabel("layer")
     plt.xlabel("timesteps")
     plt.show()
-    
+
 if params["record_network_ih_activity"]:
-    # hidden voltage activity
+    # output voltage activity
+    # high voltage levels are explained by a mega high threshold, to enable non-spiking
     hidden_voltage = monitor_hidden_v.get_data()
 
     process = list(hidden_voltage.keys())[0]
@@ -221,62 +247,17 @@ if params["record_network_ih_activity"]:
 
     single_image = hidden_v[sample_image_start:sample_image_end]
     plt.figure(figsize=(12, 3), dpi=80)
-    for i in range(params["NUM_HIDDEN"]):
-        if i == 299:
-            plt.plot(single_image[:,i])
+    for i in range(params["NUM_OUTPUT"]):
+        if i == 16:
+            plt.plot(single_image[:,i] / 64 / (2 ** weight_bits / 2)) 
         
     plt.title("Hidden layer voltage activity")
     plt.ylabel("voltage (v)")
     plt.xlabel("timesteps")
     plt.xlim(0, the_x.shape[1] / params["num_samples"])
-    #plt.xlim(450, 600)
-    """
-    plt.xlim(490, 520)
-    plt.ylim(0, 1.0)
-
-    for i in range(1000):
-        plt.axvline(i * 2, color = "red", alpha=0.5, linestyle = "dashed", label = f"timestep {256 * 4}")
-    plt.axhline(1 * 0.25, color = "red", alpha=0.5, linestyle = "dashed")
-    plt.axhline(1 * 0.50, color = "red", alpha=0.5, linestyle = "dashed")
-    plt.axhline(1 * 0.75, color = "red", alpha=0.5, linestyle = "dashed")
-    """
-    plt.show()
-    
-if params["record_network_ih_activity"]:
-    # hidden voltage activity
-    hidden_voltage = monitor_hidden_v.get_data()
-
-    process = list(hidden_voltage.keys())[0]
-    spikes_out = list(hidden_voltage[process].keys())[0]
-    hidden_v = hidden_voltage[process][spikes_out]
-
-    single_image = hidden_v[sample_image_start:sample_image_end]
-    plt.figure(figsize=(12, 3), dpi=80)
-    for i in range(params["NUM_HIDDEN"]):
-        if i == 299:
-            plt.plot(single_image[:,i]) # / (2 ** weight_bits / 2))
-    
-    plt.scatter(np.where(hidden_single_image[:,299] > 0)[0], 
-                np.where(hidden_single_image[:,299] > 0)[0].shape[0] * [1.0],
-                c = "r",
-                label = "spikes")
-        
-    plt.title("Hidden layer voltage activity (floating)")
-    plt.ylabel("voltage (v)")
-    plt.xlabel("timesteps")
-    plt.xlim(0, the_x.shape[1] / params["num_samples"])
-    #plt.xlim(1600, 1900)
     plt.xlim(450, 600)
-    plt.ylim(0, 1 * 1.1)
-
-    for i in range(1000):
-        plt.axvline(i * 10, color = "grey", alpha=0.5, linestyle = "dashed")
-
-    plt.axhline(1.0, color = "red", alpha=0.5, linestyle = "dashed", label = "threshold")
-
-    plt.legend()
     plt.show()
-    
+
 if params["record_network_ih_activity"]:
     # output voltage activity
     # high voltage levels are explained by a mega high threshold, to enable non-spiking
@@ -289,14 +270,16 @@ if params["record_network_ih_activity"]:
     single_image = output_v[sample_image_start:sample_image_end]
     plt.figure(figsize=(12, 3), dpi=80)
     for i in range(params["NUM_OUTPUT"]):
-        plt.plot(single_image[:,i])
-        
+        plt.plot(single_image[:,i] / 64)
+
     plt.title("Output layer voltage activity")
     plt.ylabel("voltage (v)")
     plt.xlabel("timesteps")
-    plt.xlim(0, the_x.shape[1] / params["num_samples"])
+    #plt.xlim(0, the_x.shape[1] / params["num_samples"])
+    #plt.xlim(500, 600)
+
     plt.show()
-    
+
 if params["record_network_ih_activity"]:
     # output voltage activity
     # high voltage levels are explained by a mega high threshold, to enable non-spiking
@@ -310,10 +293,12 @@ if params["record_network_ih_activity"]:
     plt.figure(figsize=(12, 3), dpi=80)
     for i in range(params["NUM_OUTPUT"]):
         if i == 16:
-            plt.plot(single_image[:,i])
-        
+            plt.plot(single_image[:,i] / 64)
+
     plt.title("Output layer voltage activity")
     plt.ylabel("voltage (v)")
     plt.xlabel("timesteps")
-    plt.xlim(0, the_x.shape[1] / params["num_samples"])
+    #plt.xlim(0, the_x.shape[1] / params["num_samples"])
+    #plt.xlim(500, 600)
+
     plt.show()
