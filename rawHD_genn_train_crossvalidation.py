@@ -46,12 +46,12 @@ params["num_samples"] = None
 params["cross_validation"] = True
 params["cross_validation_run_all"] = False # is this needed?
     
-x_train, y_train, x_test, y_test, x_validation, y_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
-                                                                           num_samples=params["num_samples"],
-                                                                           shuffle = False,
-                                                                           shuffle_seed = 0,
-                                                                           process_padded_spikes = False,
-                                                                           validation_split = 0.0)
+x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
+                                                                                                           num_samples=params["num_samples"],
+                                                                                                           shuffle = False,
+                                                                                                           shuffle_seed = 0,
+                                                                                                           process_padded_spikes = False,
+                                                                                                           validation_split = 0.0)
 
 if params.get("cross_validation"):
     training_details = pd.read_csv(os.getcwd() + params.get("dataset_directory") + "training_details.csv")

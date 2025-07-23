@@ -46,8 +46,8 @@ params["num_samples"] = None
 params["cross_validation"] = True
 params["cross_validation_run_all"] = False # is this needed?
 params["NUM_OUTPUT"] = 12
-params["NUM_EPOCH"] = 5
-params["output_dir"] = "rawHD_speaker_training_3_cross_validation"
+params["NUM_EPOCH"] = 10
+params["output_dir"] = "rawHD_chapter_write_up_speaker_cross_validation"
     
 x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
                                                                                                            num_samples=params["num_samples"],
@@ -387,7 +387,7 @@ if params["cross_validation"]:
     plt.bar(x - width/2, training, width, label='train')
     plt.bar(x + width/2, validation, width, label='validation')
 
-    plt.xlabel('Speaker ID')
+    plt.xlabel('Digit')
     plt.ylabel('Accuracy')
     plt.title('Cross Validation Accuracy for rawHD')
     plt.xticks(x, speaker)

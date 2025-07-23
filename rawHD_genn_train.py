@@ -40,12 +40,15 @@ with open("rawHD_params.json", "r") as f:
     params = json.load(f)
     
 params["num_samples"] = None
-    
-x_train, y_train, x_test, y_test, x_validation, y_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
-                                                                           num_samples=params["num_samples"],
-                                                                           shuffle = True,
-                                                                           shuffle_seed = 0,
-                                                                           process_padded_spikes = False)
+params["output_dir"] = "rawHD_chapter_write_up_cross_validation_single_speaker"
+
+
+
+x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
+                                                                                                           num_samples=params["num_samples"],
+                                                                                                           shuffle = True,
+                                                                                                           shuffle_seed = 0,
+                                                                                                           process_padded_spikes = False)
 
 schedule_epoch_total = 0
 

@@ -7,7 +7,7 @@
     "INPUT_FRAME_TIMESTEP": 20,
     "INPUT_SCALE": 1,
     "NETWORK_SCALE": 1,
-    "NUM_EPOCH": 100,
+    "NUM_EPOCH": 10,
     "NUM_FRAMES": 80,
     "verbose": true,
     "debug": false,
@@ -35,7 +35,7 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "rawHD_test_run_11_cross_validation",
+    "output_dir": "rawHD_chapter_write_up_cross_validation_single_speaker",
     "model_description": "rawHD",
     "num_samples": null
 }

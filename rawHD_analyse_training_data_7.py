@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from rawHD_dataset_loader_padded_spikes import rawHD_Loader
 from scipy.signal import convolve2d
 from tqdm import trange
+from copy import deepcopy
 
 params = {} 
 params["dataset_directory"] = "/raw-spiking-heidleberg-digits-80input/"
@@ -89,43 +90,48 @@ def get_vr_distance_2d(spike_train1,
 
 # iterate through all digits of speaker x, and get COM
 
-def get_com_for_speaker_digit(speaker, digit, 
-                              x_train, 
-                              y_train,
-                              x_lim = 80,
-                              t_lim = 1600):
-
-    # get COM of each digit spoken by speaker
-    t_com_across_speaker_digit, x_com_across_speaker_digit = [], []
-
-    for index in range(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
-
-        t_com = np.mean(x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]["t"])
-        x_com = np.mean(x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]["x"])
-
-        t_com_across_speaker_digit.append(t_com)
-        x_com_across_speaker_digit.append(x_com)
-        
-    #print(f" mean COM for t : {int(np.mean(t_com_across_speaker_digit))}")
-    #print(f" mean COM for x : {int(np.mean(x_com_across_speaker_digit))}")
+def normalise_dataset(x_train, 
+                      y_train,
+                      x_lim = 80,
+                      t_lim = 1600):
     
-    # shift on both x and t
-    for index in range(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
-        x_train_array = x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]
-        
-        x_train_array["t"] += int(np.mean(t_com_across_speaker_digit)) - int(t_com_across_speaker_digit[index])
-        x_train_array["t"] += int(np.mean(x_com_across_speaker_digit)) - int(x_com_across_speaker_digit[index])
-        
-        x_train_array = x_train_array[x_train_array["x"] >= 0]
-        x_train_array = x_train_array[x_train_array["x"] < x_lim]
-        x_train_array = x_train_array[x_train_array["t"] >= 0]
-        x_train_array = x_train_array[x_train_array["t"] < t_lim]
+    x_train_new = deepcopy(x_train)
+    
+    for speaker in np.unique(speakers_list): 
+        for digit in np.unique(y_train):
+
+            # get COM of each digit spoken by speaker
+            t_com_across_speaker_digit, x_com_across_speaker_digit = [], []
+
+            for index in range(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
+
+                t_com = np.mean(x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]["t"])
+                x_com = np.mean(x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]["x"])
+
+                t_com_across_speaker_digit.append(t_com)
+                x_com_across_speaker_digit.append(x_com)
+                
+            #print(f" mean COM for t : {int(np.mean(t_com_across_speaker_digit))}")
+            #print(f" mean COM for x : {int(np.mean(x_com_across_speaker_digit))}")
+            
+            # shift on both x and t
+            for index in range(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
+                x_train_array = x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index]
+                
+                x_train_array["t"] += int(np.mean(t_com_across_speaker_digit)) - int(t_com_across_speaker_digit[index])
+                x_train_array["t"] += int(np.mean(x_com_across_speaker_digit)) - int(x_com_across_speaker_digit[index])
+                
+                #x_train_array = x_train_array[x_train_array["x"] >= 0]
+                #x_train_array = x_train_array[x_train_array["x"] < x_lim]
+                x_train_array = x_train_array[x_train_array["t"] >= 0]
+                x_train_array = x_train_array[x_train_array["t"] < t_lim]
+                
+                x_train_new[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index] = deepcopy(x_train_array)
+                
+    return x_train_new, y_train
 
 # normalise all data
-for speaker in np.unique(speakers_list):
-    for digit in np.unique(y_train):
-        get_com_for_speaker_digit(speaker,
-                                  digit)
+x, y = normalise_dataset(x_train, y_train)
 
 intra_VR_distance_mean = np.zeros((10, 20))
 intra_VR_distance_std = np.zeros((10, 20))
@@ -136,8 +142,8 @@ for speaker_index, speaker in enumerate(np.unique(speakers_list)):
         distance_across_digits_from_speaker = []
         for index_to_compare in trange(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
             for index in range(y_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)].shape[0]):
-                distance, S, _ = get_vr_distance_2d(x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index],
-                                                    x_train[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index_to_compare],
+                distance, S, _ = get_vr_distance_2d(x[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index],
+                                                    x[np.where(speakers_list == speaker)][np.where(y_train[np.where(speakers_list == speaker)] == digit)][index_to_compare],
                                                     display = False,
                                                     size_t = 80)
                 
