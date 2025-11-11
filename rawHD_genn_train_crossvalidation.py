@@ -10,6 +10,7 @@ import pandas as pd
 import copy
 import matplotlib.pyplot as plt
 import re
+import torch
 
 from ml_genn import Network, Population, Connection
 from ml_genn.callbacks import Checkpoint, SpikeRecorder, VarRecorder, Callback, OptimiserParamSchedule
@@ -44,8 +45,7 @@ with open("rawHD_params.json", "r") as f:
     
 params["num_samples"] = None
 params["cross_validation"] = True
-params["cross_validation_run_all"] = False # is this needed?
-    
+# params["cross_validation_run_all"] = False # is this needed    
 x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
                                                                                                            num_samples=params["num_samples"],
                                                                                                            shuffle = False,
@@ -73,15 +73,6 @@ for i in range(len(x_train)):
 max_spikes = calc_max_spikes(x_train_spikes)
 latest_spike_time = 2000 #calc_latest_spike_time(x_train_spikes) #TODO: Fix
 print(f"Max spikes {max_spikes}, latest spike time {latest_spike_time}")
-
-# Preprocess
-x_validation_spikes = []
-for i in range(len(x_validation)):
-    events = x_validation[i]
-    x_validation_spikes.append(preprocess_tonic_spikes(events, 
-                                                       x_validation[0].dtype.names, 
-                                                       (params["NUM_INPUT"], 1, 1),
-                                                       time_scale = 1))
 
 os.chdir("output")
 
@@ -188,7 +179,7 @@ compiler = EventPropCompiler(example_timesteps = params.get("NUM_FRAMES") * para
                         max_spikes=max_spikes)
                         #clamp_weight_conns=clamp_weight_conns_dir)
 
-compiled_net = compiler.compile(network)
+# compiled_net = compiler.compile(network)
 
 if params.get("verbose"): print(training_details.head())
 speaker_id = np.sort(training_details.Speaker.unique())
@@ -205,8 +196,11 @@ speaker = list(training_details.loc[:, "Speaker"])
 # Evaluate model on numpy dataset
 start_time = perf_counter() 
 
-for count, speaker_left in enumerate(speaker_id):
+for count, speaker_left in enumerate(speaker_id[::-1]):
     #reset gpu memory
+    torch.cuda.empty_cache()
+    compiled_net = compiler.compile(network)
+    
     print(f"speaker {speaker_left} of {len(speaker_id)}")
 
     train_spikes, train_labels = [],[]
@@ -297,20 +291,57 @@ for count, speaker_left in enumerate(speaker_id):
 
             # breaking out early if network is under performing (<10%)
             if metrics[output].correct / metrics[output].total < .1:
-                print("exiting early due to collapsed network / poor performance")
-                break
+                # gives a buffer incase of slow start, however 50% is expected
+                if e > 2:
+                    print("exiting early due to collapsed network / poor performance")
+                    exit()
 
     end_time = perf_counter()
     print(f"Time = {end_time - start_time}s")
     
 if params["cross_validation_run_all"]: 
+    #reset gpu memory
+    torch.cuda.empty_cache()
+    compiled_net = compiler.compile(network)
     print("\n\nrun across all values ")
+    # validation split
+    validation_split = 0.2
+    x_validation = x_train[:int(validation_split * x_train.shape[0])]
+    y_validation = y_train[:int(validation_split * y_train.shape[0])]
+    z_validation = z_train[:int(validation_split * z_train.shape[0])]
+    x_train = x_train[int(validation_split * x_train.shape[0]):]
+    y_train = y_train[int(validation_split * y_train.shape[0]):]
+    z_train = z_train[int(validation_split * z_train.shape[0]):]
+    
+    # Preprocess
+    x_train_spikes = []
+    for i in range(len(x_train)):
+        events = x_train[i]
+        x_train_spikes.append(preprocess_tonic_spikes(events, 
+                                                    x_train[0].dtype.names,
+                                                    (params["NUM_INPUT"], 1, 1),
+                                                    time_scale = 1))
+
+    # Determine max spikes and latest spike time
+    max_spikes = calc_max_spikes(x_train_spikes)
+    latest_spike_time = 2000 #calc_latest_spike_time(x_train_spikes) #TODO: Fix
+    print(f"Max spikes {max_spikes}, latest spike time {latest_spike_time}")
+
+    # Preprocess
+    x_validation_spikes = []
+    for i in range(len(x_validation)):
+        events = x_validation[i]
+        x_validation_spikes.append(preprocess_tonic_spikes(events, 
+                                                        x_validation[0].dtype.names, 
+                                                        (params["NUM_INPUT"], 1, 1),
+                                                        time_scale = 1))
+    
     combined_serialiser = Numpy("serialiser_all")
 
     with compiled_net:
         # Evaluate model on numpy dataset
         callbacks = [Checkpoint(combined_serialiser), 
-                        CSVTrainLog(f"train_output_combined.csv", 
+                        CSVTrainLog(f"combined_train_output.csv", 
                                     output,
                                     False)]
         
@@ -329,12 +360,14 @@ if params["cross_validation_run_all"]:
                                     key = "hidden_spike_counts_record", 
                                     record_counts = True))
             
-        metrics, cb_data_training = compiled_net.train({input: x_train_spikes},
-                                                        {output: y_train},
-                                                        num_epochs = params.get("NUM_EPOCH"), 
-                                                        shuffle = not(params.get("debug")),
-                                                        callbacks=callbacks)
-        
+        metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: x_train_spikes},
+                                                                                            {output: y_train},
+                                                                                            num_epochs = params["NUM_EPOCH"],
+                                                                                            shuffle = True,
+                                                                                            callbacks = callbacks,
+                                                                                            validation_x = {input: x_validation_spikes},
+                                                                                            validation_y = {output: y_validation})  
+            
 if params.get("debug"):
     # pickle serialisers
     with open('serialisers.pkl', 'wb') as f:

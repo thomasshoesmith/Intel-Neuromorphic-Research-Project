@@ -40,7 +40,7 @@ with open("rawHD_params.json", "r") as f:
     params = json.load(f)
     
 params["num_samples"] = None
-params["output_dir"] = "rawHD_chapter_write_up_cross_validation_single_speaker"
+#params["output_dir"] = "rawHD_chapter_write_up_cross_validation_single_speaker"
 
 
 
@@ -185,6 +185,7 @@ with compiled_net:
         cb_data_training["hidden_spike_counts"] = []
         cb_data_validation["hidden_spike_counts"] = []
         
+    # same as count, just data transfer cost # TODO 
     if params.get("record_all_hidden_spikes"):
         cb_data_training["hidden_spike_counts_unfiltered"] = []
         cb_data_validation["hidden_spike_counts_unfiltered"] = []
