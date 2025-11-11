@@ -35,7 +35,7 @@
     "cross_validation": false,
     "cross_validation_run_all": true,
     "sweeping_suffix": "",
-    "output_dir": "testing_delete_5",
+    "output_dir": "model_run_1",
     "model_description": "rawHD",
     "num_samples": null
 }

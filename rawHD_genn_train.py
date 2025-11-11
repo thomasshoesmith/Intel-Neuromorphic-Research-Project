@@ -247,6 +247,7 @@ with compiled_net:
                                     key = "hidden_spike_counts_unfiltered", 
                                     record_counts = True))
         
+        # augmentation locked on, TODO: enable toggle.
         print("! loading augmentation !")    
         #x, y = aug.augmentation_y_shift(x_train, y_train)
         x, y = aug.merge_and_return_a_new(x_train, y_train, percentage_added = 1.0)
@@ -260,7 +261,7 @@ with compiled_net:
                                                         (params["NUM_INPUT"], 1, 1),
                                                         time_scale = 1))
 
-        """
+        """ # For validation runs
         metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: x_train_spikes},
                                                                                             {output: y},
                                                                                             start_epoch = e,
@@ -271,13 +272,11 @@ with compiled_net:
                                                                                             validation_y = {output: y_validation})  
         """                                                                                    
         metrics, t_cb_data_training = compiled_net.train({input: x_train_spikes},
-                                                                                            {output: y},
-                                                                                            start_epoch = e,
-                                                                                            num_epochs = 1,
-                                                                                            shuffle = True,
-                                                                                            callbacks = callbacks)#,
-                                                                                            #validation_x = {input: x_validation_spikes},
-                                                                                            #validation_y = {output: y_validation})      
+                                                         {output: y},
+                                                         start_epoch = e,
+                                                         num_epochs = 1,
+                                                         shuffle = True,
+                                                         callbacks = callbacks)
         
         for key in list(cb_data_training.keys()):
             cb_data_training[key].append(t_cb_data_training[key])
@@ -316,6 +315,9 @@ with compiled_net:
 # reset directory
 os.chdir("..")
 
+# skipping as no longer using validation 
+exit()
+
 # if sweeping, save params and accuracy to csv
 does_summary_file_exist = os.path.exists("summary.csv")
 # Create CSV writer
@@ -323,7 +325,6 @@ print("Writing summary")
 print(os.getcwd())
 file = open("summary.csv", "a" if does_summary_file_exist else "w")
 csv_writer = csv.writer(file, delimiter=",")
-
 # Write header row if we're not resuming from an existing training run
 if not does_summary_file_exist:
     csv_writer.writerow((list(params) + ["accuracy", "validation", "date"]))
