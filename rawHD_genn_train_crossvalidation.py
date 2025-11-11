@@ -23,7 +23,7 @@ from ml_genn.serialisers import Numpy
 from ml_genn.synapses import Exponential
 from time import perf_counter
 
-from ml_genn.utils.data import (calc_latest_spike_time, calc_max_spikes,
+from ml_genn.utils.data import (calc_max_spikes,
                                 preprocess_tonic_spikes)
 
 import nvsmi
@@ -35,9 +35,9 @@ from ml_genn.compilers.event_prop_compiler import default_params
 from rawHD_dataset_loader_padded_spikes import rawHD_Loader
 
 # Kaggle dataset directory
-dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
+dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/raw-spiking-heidelberg-digits/data'
 
-# Using opendatasets to download SGSC dataset
+# Using opendatasets to download rSSC dataset
 od.download(dataset)
 
 with open("rawHD_params.json", "r") as f: 
@@ -45,21 +45,19 @@ with open("rawHD_params.json", "r") as f:
     
 params["num_samples"] = None
 params["cross_validation"] = True
-# params["cross_validation_run_all"] = False # is this needed    
+
 x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
                                                                                                            num_samples=params["num_samples"],
                                                                                                            shuffle = False,
                                                                                                            shuffle_seed = 0,
                                                                                                            process_padded_spikes = False,
                                                                                                            validation_split = 0.0)
-
 if params.get("cross_validation"):
     training_details = pd.read_csv(os.getcwd() + params.get("dataset_directory") + "training_details.csv")
     testing_details = pd.read_csv(os.getcwd() + params.get("dataset_directory") + "testing_details.csv")
 
 schedule_epoch_total = 0
 
-# READ TO BE IMPLEMENTED 
 # Preprocess
 x_train_spikes = []
 for i in range(len(x_train)):
@@ -303,15 +301,16 @@ if params["cross_validation_run_all"]:
     #reset gpu memory
     torch.cuda.empty_cache()
     compiled_net = compiler.compile(network)
+    
     print("\n\nrun across all values ")
     # validation split
     validation_split = 0.2
     x_validation = x_train[:int(validation_split * x_train.shape[0])]
     y_validation = y_train[:int(validation_split * y_train.shape[0])]
-    z_validation = z_train[:int(validation_split * z_train.shape[0])]
+    #z_validation = z_train[:int(validation_split * z_train.shape[0])]
     x_train = x_train[int(validation_split * x_train.shape[0]):]
     y_train = y_train[int(validation_split * y_train.shape[0]):]
-    z_train = z_train[int(validation_split * z_train.shape[0]):]
+    #z_train = z_train[int(validation_split * z_train.shape[0]):]
     
     # Preprocess
     x_train_spikes = []
@@ -383,7 +382,7 @@ if params.get("debug"):
         hidden_spike_counts = np.array(cb_data_training["hidden_spike_counts"], dtype=np.int16)
         np.save(f, hidden_spike_counts)
         
-    # get hidden spikes if param is true
+# get hidden spikes if param is true
 if params.get("record_all_hidden_spikes"):
     # save all hidden spike counts
     with open(f'hidden_spike_counts_unfiltered.npy', 'wb') as f:     

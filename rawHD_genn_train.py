@@ -31,24 +31,22 @@ from ml_genn.compilers.event_prop_compiler import default_params
 from rawHD_dataset_loader_padded_spikes import rawHD_Loader
 
 # Kaggle dataset directory
-dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/spiking-google-speech-commands/data'
+dataset = 'https://www.kaggle.com/datasets/thomasshoesmith/raw-spiking-heidelberg-digits/data'
 
-# Using opendatasets to download SGSC dataset
+# Using opendatasets to download rSSC dataset
 od.download(dataset)
 
 with open("rawHD_params.json", "r") as f: 
     params = json.load(f)
     
 params["num_samples"] = None
-#params["output_dir"] = "rawHD_chapter_write_up_cross_validation_single_speaker"
-
-
 
 x_train, y_train, z_train, x_test, y_test, z_test, x_validation, y_validation, z_validation = rawHD_Loader(dir = os.getcwd() + params["dataset_directory"],
                                                                                                            num_samples=params["num_samples"],
                                                                                                            shuffle = True,
                                                                                                            shuffle_seed = 0,
-                                                                                                           process_padded_spikes = False)
+                                                                                                           process_padded_spikes = False,
+                                                                                                           validation_split=0.0)
 
 schedule_epoch_total = 0
 
@@ -114,6 +112,24 @@ class CSVTrainLog(Callback):
                                 perf_counter() - self.start_time,
                                 process.used_memory])
         self.file.flush()
+
+def CSVValidationLog(filename, epoch, metric, population):
+    file = open(filename, "a" if e > 0 else "w")
+    csv_writer = csv.writer(file, delimiter=",")
+    
+    if e == 0:
+        csv_writer.writerow(["Epoch", "Num trials", "Number correct", "accuracy", "memory"])
+
+    processes = nvsmi.get_gpu_processes()
+    process = next(p for p in processes if p.pid == os.getpid())
+    m = metric[population]
+    
+    csv_writer.writerow([epoch, 
+                            m.total, 
+                            m.correct,
+                            m.correct / m.total,
+                            process.used_memory])
+    file.flush()
         
 # Create sequential model
 serialiser = Numpy(params.get("model_description"))
@@ -231,7 +247,7 @@ with compiled_net:
                                     key = "hidden_spike_counts_unfiltered", 
                                     record_counts = True))
         
-        print("! loading augmentation ! \n")    
+        print("! loading augmentation !")    
         #x, y = aug.augmentation_y_shift(x_train, y_train)
         x, y = aug.merge_and_return_a_new(x_train, y_train, percentage_added = 1.0)
         #x, y = x_train, y_train
@@ -244,16 +260,25 @@ with compiled_net:
                                                         (params["NUM_INPUT"], 1, 1),
                                                         time_scale = 1))
 
-
+        """
         metrics, metrics_val, t_cb_data_training, t_cb_data_validation = compiled_net.train({input: x_train_spikes},
                                                                                             {output: y},
                                                                                             start_epoch = e,
                                                                                             num_epochs = 1,
                                                                                             shuffle = True,
-                                                                                            callbacks = callbacks,
+                                                                                            callbacks = callbacks),
                                                                                             validation_x = {input: x_validation_spikes},
                                                                                             validation_y = {output: y_validation})  
-            
+        """                                                                                    
+        metrics, t_cb_data_training = compiled_net.train({input: x_train_spikes},
+                                                                                            {output: y},
+                                                                                            start_epoch = e,
+                                                                                            num_epochs = 1,
+                                                                                            shuffle = True,
+                                                                                            callbacks = callbacks)#,
+                                                                                            #validation_x = {input: x_validation_spikes},
+                                                                                            #validation_y = {output: y_validation})      
+        
         for key in list(cb_data_training.keys()):
             cb_data_training[key].append(t_cb_data_training[key])
             #cb_data_validation[key].append(t_cb_data_validation[key])
